@@ -5,6 +5,7 @@ using UnityEngine;
 public class StructureManager : MonoBehaviour
 {
     public GameObject prefab_platform;
+    public GameObject prefab_ladder;
 
     void Start()
     {
@@ -22,14 +23,7 @@ public class StructureManager : MonoBehaviour
             if (mapController.isEmpty(new Vector2Int((int)pp.x, (int)pp.y))) {
 
                 // instantiate
-                GameObject platform = (GameObject)Object.Instantiate(prefab_platform);
-                platform.transform.position = new Vector3((int)pp.x, (int)pp.y, 0);
-                //goHeart.transform.SetParent(spriteContainer);
-
-                MapController.Tile t = new MapController.Tile((int)pp.x, (int)pp.y, platform);
-                
-                mapController.spawnTile(t);
-
+                mapController.buildTile((int)pp.x, (int)pp.y, prefab_platform);
             }
         }
     }

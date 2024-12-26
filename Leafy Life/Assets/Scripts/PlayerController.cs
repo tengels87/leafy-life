@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour {
     private bool canMove = true;
 
     void Start() {
-
+        this.transform.position = new Vector3(4, 4, 0);
     }
 
     void Update() {

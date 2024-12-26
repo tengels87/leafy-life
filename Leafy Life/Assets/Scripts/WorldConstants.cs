@@ -7,7 +7,7 @@ public sealed class WorldConstants {
     public static string objName_mapController = "MapController";
     public static string objName_hudManager = "HUDmanager";
     public static string objName_structureManager = "StructureManager";
-    public static string objName_player = "player";
+    public static string objName_player = "Player";
 
     public GameManager gameManager;
     public MapController mapController;
@@ -56,7 +56,7 @@ public sealed class WorldConstants {
         return hudManager;
     }
 
-    public StructureManager getStructuremanager() {
+    public StructureManager getStructureManager() {
         if (structureManager == null) {
             structureManager = GameObject.Find(objName_structureManager).GetComponent<StructureManager>();
         }

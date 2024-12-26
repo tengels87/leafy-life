@@ -61,6 +61,20 @@ public class MapController : MonoBehaviour
                 goGridBG.transform.SetParent(spriteContainer);
             }
         }
+
+        buildTile(4, 4, WorldConstants.Instance.getStructureManager().prefab_platform);
+        buildTile(4, 3, WorldConstants.Instance.getStructureManager().prefab_ladder);
+        buildTile(4, 2, WorldConstants.Instance.getStructureManager().prefab_ladder);
+    }
+
+    public void buildTile(int x, int y, GameObject prefab) {
+        GameObject platform = (GameObject)Object.Instantiate(prefab);
+        platform.transform.position = new Vector3(x, y, 0);
+        //goHeart.transform.SetParent(spriteContainer);
+
+        Tile t = createTile(x, y);
+
+        spawnTile(t);
     }
 
     public static Vector2 pixelPos2WorldPos(Vector2 pixelPos) {
@@ -133,7 +147,7 @@ public class MapController : MonoBehaviour
     }
 
     public Tile createTile(int gridX, int gridY) {
-        Tile t = new Tile(gridX, gridY);
+        Tile t = new Tile(gridX, gridY, null);
 
         return t;
     }
