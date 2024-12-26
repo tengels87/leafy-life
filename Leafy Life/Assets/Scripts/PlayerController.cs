@@ -14,6 +14,17 @@ public class PlayerController : MonoBehaviour {
 
     void Update() {
 
+        // move on tap
+        if (Input.GetMouseButtonDown(1)) {
+            Vector3 targetPos = MapController.pixelPos2WorldPos(Input.mousePosition);
+
+            MapController mapController = WorldConstants.Instance.getMapController();
+
+            if (mapController.checkPath(targetPos, getPosition(), out List<Vector2> result)) {
+                setWaypoints(result);
+            }
+        }
+
         // walk along path
         if (waypointList.Count > 0) {
             Vector2 targetWaypoint = waypointList[0];
