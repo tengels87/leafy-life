@@ -73,7 +73,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: d21a83a1936e54a4ea81d7030803f75e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: bc7e6b8b579cd254c9f38caefce55e2f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 6328117217270616691}
   - component: {fileID: 6328117217270616693}
   m_Layer: 0
-  m_Name: platform_wooden
+  m_Name: ladder_wooden
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
