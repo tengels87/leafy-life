@@ -15,6 +15,7 @@ public class StructureManager : MonoBehaviour
     void Update()
     {
         // Test
+        /*
         if (Input.GetMouseButtonDown(0)) {
             MapController mapController = WorldConstants.Instance.getMapController();
 
@@ -26,5 +27,6 @@ public class StructureManager : MonoBehaviour
                 mapController.buildTile((int)pp.x, (int)pp.y, prefab_platform);
             }
         }
+        */
     }
 }

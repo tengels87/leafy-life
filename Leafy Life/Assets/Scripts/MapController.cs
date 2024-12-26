@@ -33,6 +33,17 @@ public class MapController : MonoBehaviour
         updateCameraFOV(grid.GetLength(0) + margin, 9 + margin);
     }
 
+    public Tile getTile(Vector2 pos) {
+        int x = (int)pos.x;
+        int y = (int)pos.y;
+
+        if (x < grid.GetLength(0) && y < grid.GetLength(1)) {
+            return grid[x, y];
+        } else {
+            return null;
+        }
+    }
+
     public void updateCameraFOV(int gridWidth, int gridHeight) {
         Camera cam = Camera.main;
 
@@ -68,11 +79,14 @@ public class MapController : MonoBehaviour
     }
 
     public void buildTile(int x, int y, GameObject prefab) {
-        GameObject platform = (GameObject)Object.Instantiate(prefab);
-        platform.transform.position = new Vector3(x, y, 0);
-        //goHeart.transform.SetParent(spriteContainer);
+        GameObject buildable = (GameObject)Object.Instantiate(prefab);
+        buildable.transform.position = new Vector3(x, y, 0);
+        //buildable.transform.SetParent(spriteContainer);
+
+        Structure structure = buildable.GetComponent<Structure>();
 
         Tile t = createTile(x, y);
+        t.canConnectAt = "0123";//structure.canConnectAt;
 
         spawnTile(t);
     }
@@ -187,19 +201,13 @@ public class MapController : MonoBehaviour
         }
     }
 
-    public Tile spawnTile(Tile t) {
-        if (this.isEmpty(new Vector2Int(t.gridX, t.gridY))) {
-            t.node = createNode(t.gridX, t.gridY);
-            linkTile(t);
+    public void spawnTile(Tile t) {
+        t.node = createNode(t.gridX, t.gridY);
+        linkTile(t);
 
-            grid[t.gridX, t.gridY] = t;
+        grid[t.gridX, t.gridY] = t;
 
-            tileList.Add(t);
-
-            return t;
-        }
-
-        return null;
+        tileList.Add(t);
     }
 
     private Node createNode(int posX, int posY) {
