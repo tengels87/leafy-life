@@ -14,31 +14,33 @@ public class PlayerController : MonoBehaviour {
 
     void Update() {
 
+        MapController mapController = WorldConstants.Instance.getMapController();
+
         // move on tap
         if (Input.GetMouseButtonDown(1)) {
             Vector3 targetPos = MapController.pixelPos2WorldPos(Input.mousePosition);
 
-            MapController mapController = WorldConstants.Instance.getMapController();
-
-            if (mapController.checkPath(targetPos, getPosition(), out List<Vector2> result)) {
-                setWaypoints(result);
+            if (mapController.getTile(new Vector2(targetPos.x, targetPos.y)) != null) {
+                addTarget(new Vector2(targetPos.x, targetPos.y));
             }
         }
 
-        // walk along path
-        if (waypointList.Count > 0) {
-            Vector2 targetWaypoint = waypointList[0];
-            float dist = Vector2.Distance(targetWaypoint, getPosition());
-            if (dist > 0.1f) {
-                if (canMove) {
-                    Vector3 moveDIr = (targetWaypoint - getPosition()).normalized;
 
-                    this.transform.position = transform.position + moveDIr * 4 * Time.deltaTime;
+        List<Vector2> allTargets = getTargetList();
+        if (allTargets.Count > 0) {
+
+            // if all waypoint are done, pick next target
+            // and calculate path
+            if (waypointList.Count == 0) {
+                if (mapController.checkPath(allTargets[0], getPosition(), out List<Vector2> resultPath)) {
+                    setWaypoints(resultPath);
+                    removeTarget(allTargets[0]);
                 }
-            } else {
-                waypointList.RemoveAt(0);
             }
         }
+
+        // walk along current path
+        navigateAllWaypoints();
     }
 
     public Vector2 getPosition() {
@@ -75,6 +77,22 @@ public class PlayerController : MonoBehaviour {
 
     public void clearTargets() {
         targetList.Clear();
+    }
+
+    public void navigateAllWaypoints() {
+        if (waypointList.Count > 0) {
+            Vector2 targetWaypoint = waypointList[0];
+            float dist = Vector2.Distance(targetWaypoint, getPosition());
+            if (dist > 0.1f) {
+                if (canMove) {
+                    Vector3 moveDIr = (targetWaypoint - getPosition()).normalized;
+
+                    this.transform.position = transform.position + moveDIr * 4 * Time.deltaTime;
+                }
+            } else {
+                waypointList.RemoveAt(0);
+            }
+        }
     }
 
     IEnumerator CoroutineFreeze(Action callback = null) {
