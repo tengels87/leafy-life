@@ -8,7 +8,7 @@ public class PlayerController : MonoBehaviour {
 
     private Vector3 moveDirection;
     private List<Vector2> waypointList = new List<Vector2>();
-    private List<Vector2> targetList = new List<Vector2>();
+    private List<GameAction> actionList = new List<GameAction>();
     private bool canMove = true;
 
     private SpriteRenderer spriteRenderer;
@@ -30,23 +30,13 @@ public class PlayerController : MonoBehaviour {
             Vector3 targetPos = MapController.pixelPos2WorldPos(Input.mousePosition);
 
             if (mapController.getTile(new Vector2(targetPos.x, targetPos.y)) != null) {
-                addTarget(new Vector2(targetPos.x, targetPos.y));
+                GameAction gameAction = new GameAction(GameAction.ActionType.WALKTO, new Vector2(targetPos.x, targetPos.y));
+                addAction(gameAction);
             }
         }
 
+        processAllActions();
 
-        List<Vector2> allTargets = getTargetList();
-        if (allTargets.Count > 0) {
-
-            // if all waypoint are done, pick next target
-            // and calculate path
-            if (waypointList.Count == 0) {
-                if (mapController.checkPath(allTargets[0], getPosition(), out List<Vector2> resultPath)) {
-                    setWaypoints(resultPath);
-                    removeTarget(allTargets[0]);
-                }
-            }
-        }
 
         // walk along current path
         navigateAllWaypoints();
@@ -76,31 +66,56 @@ public class PlayerController : MonoBehaviour {
         waypointList.AddRange(waypoints);
     }
 
-    public void addTarget(Vector2 target) {
-        targetList.Add(target);
+    public void addAction(GameAction action) {
+        actionList.Add(action);
     }
 
-    public void addTargetFirst(Vector2 target) {
-        targetList.Insert(0, target);
+    public void addActionFirst(GameAction action) {
+        actionList.Insert(0, action);
     }
 
-    public void removeTarget(Vector2 target) {
-        targetList.Remove(target);
+    public void removeAction(GameAction action) {
+        actionList.Remove(action);
     }
 
-    public List<Vector2> getTargetList() {
-        return targetList;
+    public List<GameAction> getActionList() {
+        return actionList;
     }
 
     public void clearWaypoints() {
         waypointList.Clear();
     }
 
-    public void clearTargets() {
-        targetList.Clear();
+    public void clearActions() {
+        actionList.Clear();
     }
 
-    public void navigateAllWaypoints() {
+    private void processAllActions() {
+        MapController mapController = WorldConstants.Instance.getMapController();
+
+        List<GameAction> allActions = getActionList();
+        if (allActions.Count > 0) {
+
+            switch(allActions[0].actionType) {
+                case GameAction.ActionType.WALKTO:
+                    // if all waypoint are done, pick next target
+                    // and calculate path
+                    if (waypointList.Count == 0) {
+                        if (mapController.checkPath(allActions[0].targetPosition, getPosition(), out List<Vector2> resultPath)) {
+                            setWaypoints(resultPath);
+                            removeAction(allActions[0]);
+                        }
+                    }
+
+                    break;
+
+                default:
+                    break;
+            }
+        }
+    }
+
+    private void navigateAllWaypoints() {
         if (waypointList.Count > 0) {
             anim.SetFloat("speed", 1f);
 
