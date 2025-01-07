@@ -28,7 +28,7 @@ public class AStar {
 			for (int nn = 0; nn < adjacencies.Count; nn++) {
 				Node n = adjacencies[nn];
 
-				if (!ClosedList.Contains(n))// && n.Walkable)
+				if (!ClosedList.Contains(n))
 				{
 					if (!OpenList.Contains(n)) {
 						n.parent = current;

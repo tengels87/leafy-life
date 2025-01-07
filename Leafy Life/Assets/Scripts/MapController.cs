@@ -37,7 +37,7 @@ public class MapController : MonoBehaviour
         int x = (int)pos.x;
         int y = (int)pos.y;
 
-        if (x < grid.GetLength(0) && y < grid.GetLength(1)) {
+        if (isInBounds(new Vector2Int(x, y))) {
             return grid[x, y];
         } else {
             return null;
@@ -128,19 +128,33 @@ public class MapController : MonoBehaviour
     }
 
     public Node getNode(Vector2 pos) {
-        return grid[(int)pos.x, (int)pos.y].node;
+        Vector2Int posInt = new Vector2Int((int)pos.x, (int)pos.y);
+
+        if (isInBounds(posInt) && grid[posInt.x, posInt.y] != null) {
+            return grid[posInt.x, posInt.y].node;
+        } else {
+            return null;
+        }
     }
 
     public bool checkPath(Vector2 target, Vector2 start, out List<Vector2> resultList) {
+        resultList = new List<Vector2>();
+
         Node startNode = getNode(new Vector2(Mathf.RoundToInt(start.x), Mathf.RoundToInt(start.y)));
+        Node targetNode = getNode(target);
+
+        if (startNode == null || targetNode == null) {
+            return false;
+        }
+
+        if (startNode.posX == targetNode.posX && startNode.posY == targetNode.posY) {
+            return false;
+        }
 
         AStar astar = new AStar();
 
-        Node targetNode = getNode(target);
-
         List<Node> resultPath = astar.findPath(startNode, targetNode);
 
-        resultList = new List<Vector2>();
         if (resultPath.Count > 0) {
             resultList = AStar.nodeList2posList(resultPath);
 
@@ -202,8 +216,10 @@ public class MapController : MonoBehaviour
     }
 
     public void spawnTile(Tile t) {
-        t.node = createNode(t.gridX, t.gridY);
-        linkTile(t);
+        if (t.isWalkable) {
+            t.node = createNode(t.gridX, t.gridY);
+            linkTile(t);
+        }
 
         grid[t.gridX, t.gridY] = t;
 
