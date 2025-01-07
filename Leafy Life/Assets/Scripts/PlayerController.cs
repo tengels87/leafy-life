@@ -67,7 +67,28 @@ public class PlayerController : MonoBehaviour {
     }
 
     public void addAction(GameAction action) {
-        actionList.Add(action);
+        switch (action.actionType) {
+            case GameAction.ActionType.WALKTO:
+
+                // find start position for path fiding
+                // use current position or target position from last action in queue
+                Vector2 startPosition = getPosition();
+                if (actionList.Count > 0) {
+                    startPosition = actionList[actionList.Count - 1].targetPosition;
+                }
+
+                MapController mapController = WorldConstants.Instance.getMapController();
+                if (mapController.checkPath(action.targetPosition, startPosition, out List<Vector2> resultPath)) {
+                    addWaypoints(resultPath);
+
+                    actionList.Add(action);
+                }
+                break;
+
+            default:
+                actionList.Add(action);
+                break;
+        }
     }
 
     public void addActionFirst(GameAction action) {
@@ -101,12 +122,15 @@ public class PlayerController : MonoBehaviour {
                     // if all waypoint are done, pick next target
                     // and calculate path
                     if (waypointList.Count == 0) {
-                        if (mapController.checkPath(allActions[0].targetPosition, getPosition(), out List<Vector2> resultPath)) {
-                            setWaypoints(resultPath);
-                            removeAction(allActions[0]);
-                        }
+                        removeAction(allActions[0]);
                     }
 
+                    break;
+
+                case GameAction.ActionType.BUILD:
+                    Vector2Int targetPositionInt = new Vector2Int((int)allActions[0].targetPosition.x, (int)allActions[0].targetPosition.y);
+                    mapController.buildTile(targetPositionInt.x, targetPositionInt.y, (UnityEngine.GameObject)allActions[0].customData);
+                    removeAction(allActions[0]);
                     break;
 
                 default:

@@ -14,6 +14,7 @@ public sealed class WorldConstants {
     public HudManager hudManager;
     public StructureManager structureManager;
     public Transform player;
+    public PlayerController playerController;
 
     private System.Random rnd = new System.Random();
 
@@ -70,5 +71,13 @@ public sealed class WorldConstants {
         }
 
         return player;
+    }
+
+    public PlayerController getPlayerController() {
+        if (playerController == null) {
+            playerController = GameObject.Find(objName_player).GetComponent<PlayerController>();
+        }
+
+        return playerController;
     }
 }

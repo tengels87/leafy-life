@@ -44,6 +44,64 @@ public class MapController : MonoBehaviour
         }
     }
 
+    public Tile getNearestWalkableTile(Vector2Int rootLocation) {
+        List<Vector2Int> locations = new List<Vector2Int>();
+
+        locations.Add(rootLocation + Vector2Int.left);
+        locations.Add(rootLocation + Vector2Int.right);
+
+        foreach (Vector2Int pos in locations) {
+            if (isInBounds(pos)) {
+                if (grid[pos.x, pos.y] != null) {
+                    if (grid[pos.x, pos.y].isWalkable) {
+                        return grid[pos.x, pos.y];
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public List<Vector2Int> getBuildLocationsForPlatform() {
+        List<Vector2Int> locations = new List<Vector2Int>();
+
+        foreach (Tile t in grid) {
+            if (t != null) {
+                if (t.isWalkable) {
+
+                    // look for empty location on left and right side of walkable tile
+                    Vector2Int left = t.getPositionAsVector() + Vector2Int.left;
+                    Vector2Int right = t.getPositionAsVector() + Vector2Int.right;
+
+                    if (isEmpty(left)) {
+                        locations.Add(left);
+                    }
+
+                    if (isEmpty(right)) {
+                        locations.Add(right);
+                    }
+                }
+            }
+        }
+
+        return locations;
+    }
+
+    public List<Vector2Int> getBuildLocationsWithSlot() {
+        List<Vector2Int> locations = new List<Vector2Int>();
+
+        foreach (Tile t in grid) {
+            if (t != null) {
+                if (t.isSlot) {
+                    locations.Add( t.getPositionAsVector() );
+                }
+            }
+        }
+
+        return locations;
+    }
+
     public void updateCameraFOV(int gridWidth, int gridHeight) {
         Camera cam = Camera.main;
 
@@ -85,10 +143,16 @@ public class MapController : MonoBehaviour
 
         Structure structure = buildable.GetComponent<Structure>();
 
-        Tile t = createTile(x, y);
-        t.canConnectAt = "0123";//structure.canConnectAt;
+        foreach (Structure.GridFootprint footprint in structure.gridFootprint) {
+            Tile t = createTile(x + footprint.gridX, y + footprint.gridY);
+            t.canConnectAt = "0123";//structure.canConnectAt;
+            if (footprint.isWalkable) {
+                t.isWalkable = footprint.isWalkable;
+            }
+            t.isSlot = footprint.isSlot;
 
-        spawnTile(t);
+            spawnTile(t);
+        }
     }
 
     public static Vector2 pixelPos2WorldPos(Vector2 pixelPos) {
@@ -237,13 +301,10 @@ public class MapController : MonoBehaviour
         public GameObject attachedGameObject;
         public string canConnectAt = "0123";
 
-        public bool hasBonusItem = false;
-
         public int gridX;
         public int gridY;
-        public bool isLocked;
         public bool isWalkable;
-        public bool isInteractable;
+        public bool isSlot;
 
         public Tile(int gridX, int gridY, GameObject attachedGameObject) {
             this.gridX = gridX;
@@ -252,8 +313,8 @@ public class MapController : MonoBehaviour
             this.attachedGameObject = attachedGameObject;
         }
 
-        public Vector2 getPosition() {
-            return new Vector2(gridX, gridY);
+        public Vector2Int getPositionAsVector() {
+            return new Vector2Int(gridX, gridY);
         }
     }
 }

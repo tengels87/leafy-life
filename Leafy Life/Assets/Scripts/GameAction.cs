@@ -13,6 +13,7 @@ public class GameAction {
     public bool isCancelable;
     public float duration;
     public Vector2 targetPosition;
+    public System.Object customData;
 
     public GameAction(ActionType actionType, Vector2 targetPosition) {
         this.actionType = actionType;
