@@ -7,6 +7,7 @@ public class BuildMenuItem : MonoBehaviour {
 
     private Structure currentDragged;
     private GameObject dragVisualizer;
+    private Vector2 dragVisualizerOffset;
     private Sprite spriteIcon;
     private List<Vector2Int> currentBuildLocations;
     private List<GameObject> buildLocationVisualizers = new List<GameObject>();
@@ -22,8 +23,10 @@ public class BuildMenuItem : MonoBehaviour {
         // visualize drag with structure sprite
         if (currentDragged != null) {
 
-            // position and snap to possible build location
-            dragVisualizer.transform.position = new Vector3(mouseWorldPos.x, mouseWorldPos.y, 0);
+            // position visual at mouse position
+            dragVisualizer.transform.position = new Vector3(mouseWorldPos.x + dragVisualizerOffset.x, mouseWorldPos.y + dragVisualizerOffset.y, 0);
+
+            // snap visual to possible build location
             bool canBuild = false;
             Vector2Int currentBuildLocation = Vector2Int.zero;
             foreach (Vector2Int loc in currentBuildLocations) {
@@ -85,6 +88,7 @@ public class BuildMenuItem : MonoBehaviour {
             // instantiate drag visuls
             MapController mapController = WorldConstants.Instance.getMapController();
             dragVisualizer = mapController.createSpriteInstance(spriteIcon, 0, 0);
+            dragVisualizerOffset = new Vector2(this.transform.position.x, this.transform.position.y) - MapController.pixelPos2WorldPos(Input.mousePosition);
 
             // determine location where structure can be placed
             currentBuildLocations = mapController.getBuildLocations(structure.structureType);
