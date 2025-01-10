@@ -33,7 +33,7 @@ public class MapController : MonoBehaviour
         
     }
 
-    public Tile getTile(Vector2 pos) {
+    public Tile getTile(Vector2Int pos) {
         int x = (int)pos.x;
         int y = (int)pos.y;
 
@@ -47,6 +47,8 @@ public class MapController : MonoBehaviour
     public Tile getNearestWalkableTile(Vector2Int rootLocation) {
         List<Vector2Int> locations = new List<Vector2Int>();
 
+        locations.Add(rootLocation + Vector2Int.up);
+        locations.Add(rootLocation + Vector2Int.down);
         locations.Add(rootLocation + Vector2Int.left);
         locations.Add(rootLocation + Vector2Int.right);
 

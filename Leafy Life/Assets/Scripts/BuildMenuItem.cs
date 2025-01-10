@@ -24,19 +24,22 @@ public class BuildMenuItem : MonoBehaviour {
 
             // position and snap to possible build location
             dragVisualizer.transform.position = new Vector3(mouseWorldPos.x, mouseWorldPos.y, 0);
+            bool canBuild = false;
+            Vector2Int currentBuildLocation = Vector2Int.zero;
             foreach (Vector2Int loc in currentBuildLocations) {
                 if (mouseWorldPos.x > loc.x && mouseWorldPos.x < loc.x + 1 && mouseWorldPos.y > loc.y && mouseWorldPos.y < loc.y + 1) {
                     dragVisualizer.transform.position = new Vector3(loc.x, loc.y, 0);
+
+                    currentBuildLocation = loc;
+                    canBuild = true;
+
                     break;
                 }
             }
-        }
 
-        // drop structure to build it
-        if (Input.GetMouseButtonUp(0)) {
-            if (currentDragged != null) {
 
-                MapController mapController = WorldConstants.Instance.getMapController();
+            // drop structure to build it
+            if (Input.GetMouseButtonUp(0)) {
 
                 // destroy location visualizers
                 foreach (GameObject locationVis in buildLocationVisualizers) {
@@ -44,40 +47,31 @@ public class BuildMenuItem : MonoBehaviour {
                 }
                 buildLocationVisualizers.Clear();
 
-                // position to build at
-                Vector2Int buildPosition = new Vector2Int((int)mouseWorldPos.x, (int)mouseWorldPos.y);
-
-                bool isEmpty = mapController.isEmpty(buildPosition);
-                MapController.Tile tileAtBuildPosition = mapController.getTile(buildPosition);
-                bool currentIsPlatform = currentDragged.gridFootprint[0].isWalkable;
-
-
-                bool canBuildHere = (currentIsPlatform && isEmpty)
-                    || (currentDragged.attachesToPlatform && tileAtBuildPosition != null && tileAtBuildPosition.isWalkable)
-                    || (!currentDragged.attachesToSlot && tileAtBuildPosition != null && tileAtBuildPosition.isSlot);
-
-
                 currentDragged = null;
                 if (dragVisualizer != null) {
                     Destroy(dragVisualizer);
                 }
 
-                PlayerController playerController = WorldConstants.Instance.getPlayerController();
 
-                // find valid tile under mouse
+                if (canBuild) {
+                    MapController mapController = WorldConstants.Instance.getMapController();
 
-                // position to walk to before building
-                MapController.Tile walkableTile = mapController.getNearestWalkableTile(buildPosition);
-                if (canBuildHere && walkableTile != null) {
-                    Vector2 walktoPosition = new Vector2(walkableTile.gridX, walkableTile.gridY);
+                    // position to walk to before building
+                    MapController.Tile walkableTile = mapController.getNearestWalkableTile(currentBuildLocation);
+                    if (walkableTile != null) {
 
-                    // add walk and build actions{
-                    GameAction gameAction = new GameAction(GameAction.ActionType.WALKTO, walktoPosition);
-                    playerController.addAction(gameAction);
+                        // add walk and build actions
+                        Vector2 walktoPosition = new Vector2(walkableTile.gridX, walkableTile.gridY);
 
-                    gameAction = new GameAction(GameAction.ActionType.BUILD, buildPosition);
-                    gameAction.customData = prefab;
-                    playerController.addAction(gameAction);
+                        PlayerController playerController = WorldConstants.Instance.getPlayerController();
+
+                        GameAction gameAction = new GameAction(GameAction.ActionType.WALKTO, walktoPosition);
+                        playerController.addAction(gameAction);
+
+                        gameAction = new GameAction(GameAction.ActionType.BUILD, currentBuildLocation);
+                        gameAction.customData = prefab;
+                        playerController.addAction(gameAction);
+                    }
                 }
             }
         }

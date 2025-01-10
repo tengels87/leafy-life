@@ -27,10 +27,11 @@ public class PlayerController : MonoBehaviour {
 
         // move on tap
         if (Input.GetMouseButtonDown(1)) {
-            Vector3 targetPos = MapController.pixelPos2WorldPos(Input.mousePosition);
+            Vector2 targetPos = MapController.pixelPos2WorldPos(Input.mousePosition);
+            Vector2Int targetPosInt = new Vector2Int((int)targetPos.x, (int)targetPos.y);
 
-            if (mapController.getTile(targetPos) != null) {
-                GameAction gameAction = new GameAction(GameAction.ActionType.WALKTO, targetPos);
+            if (mapController.getTile(targetPosInt) != null) {
+                GameAction gameAction = new GameAction(GameAction.ActionType.WALKTO, targetPosInt);
                 addAction(gameAction);
             }
         }
