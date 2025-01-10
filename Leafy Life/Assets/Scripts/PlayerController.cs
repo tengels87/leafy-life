@@ -17,8 +17,8 @@ public class PlayerController : MonoBehaviour {
     void Start() {
         this.transform.position = new Vector3(4, 4, 0);
 
-        spriteRenderer = this.GetComponent<SpriteRenderer>();
-        anim = this.GetComponent<Animator>();
+        spriteRenderer = this.GetComponentInChildren<SpriteRenderer>();
+        anim = this.GetComponentInChildren<Animator>();
     }
 
     void Update() {
@@ -29,8 +29,8 @@ public class PlayerController : MonoBehaviour {
         if (Input.GetMouseButtonDown(1)) {
             Vector3 targetPos = MapController.pixelPos2WorldPos(Input.mousePosition);
 
-            if (mapController.getTile(new Vector2(targetPos.x, targetPos.y)) != null) {
-                GameAction gameAction = new GameAction(GameAction.ActionType.WALKTO, new Vector2(targetPos.x, targetPos.y));
+            if (mapController.getTile(targetPos) != null) {
+                GameAction gameAction = new GameAction(GameAction.ActionType.WALKTO, targetPos);
                 addAction(gameAction);
             }
         }
@@ -42,16 +42,13 @@ public class PlayerController : MonoBehaviour {
         navigateAllWaypoints();
 
         // flip sprite according to movementDirection
-        Vector3 scale = spriteRenderer.transform.localScale;
         if (Mathf.Abs(moveDirection.x) > Mathf.Abs(moveDirection.y)) {
-
-            scale.x = 0.1f * moveDirection.x;
+            bool doFlip = (moveDirection.x < 0);
+            spriteRenderer.flipX = doFlip;
             anim.SetBool("isClimbing", false);
         } else if (Mathf.Abs(moveDirection.x) < Mathf.Abs(moveDirection.y)) {
-            scale.x = 0.1f;
             anim.SetBool("isClimbing", true);
         }
-            spriteRenderer.transform.localScale = scale;
     }
 
     public Vector2 getPosition() {
@@ -144,6 +141,7 @@ public class PlayerController : MonoBehaviour {
             anim.SetFloat("speed", 1f);
 
             Vector2 targetWaypoint = waypointList[0];
+            
             float dist = Vector2.Distance(targetWaypoint, getPosition());
             if (dist > 0.1f) {
                 if (canMove) {

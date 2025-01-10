@@ -30,7 +30,7 @@ public class MapController : MonoBehaviour
 
     void Update()
     {
-        updateCameraFOV(grid.GetLength(0) + margin, 9 + margin);
+        
     }
 
     public Tile getTile(Vector2 pos) {
@@ -63,24 +63,30 @@ public class MapController : MonoBehaviour
         return null;
     }
 
-    public List<Vector2Int> getBuildLocationsForPlatform() {
+    public List<Vector2Int> getBuildLocations(Structure.StructureType typeToBuild) {
         List<Vector2Int> locations = new List<Vector2Int>();
 
         foreach (Tile t in grid) {
-            if (t != null) {
-                if (t.isWalkable) {
+            if (t != null && t.attachedGameObject != null) {
+                // look for empty location around tile
+                Vector2Int up = t.getPositionAsVector() + Vector2Int.up;
+                Vector2Int down = t.getPositionAsVector() + Vector2Int.down;
+                Vector2Int left = t.getPositionAsVector() + Vector2Int.left;
+                Vector2Int right = t.getPositionAsVector() + Vector2Int.right;
 
-                    // look for empty location on left and right side of walkable tile
-                    Vector2Int left = t.getPositionAsVector() + Vector2Int.left;
-                    Vector2Int right = t.getPositionAsVector() + Vector2Int.right;
+                Structure s = t.attachedGameObject.GetComponent<Structure>();
 
-                    if (isEmpty(left)) {
-                        locations.Add(left);
+                if (typeToBuild == Structure.StructureType.PLATFORM) {
+                    if (s.structureType == Structure.StructureType.PLATFORM) {
+                        if (isEmpty(left)) locations.Add(left);
+                        if (isEmpty(right)) locations.Add(right);
+                    } else if (s.structureType == Structure.StructureType.LADDER) {
+                        if (isEmpty(up)) locations.Add(up);
+                        if (isEmpty(down)) locations.Add(down);
                     }
-
-                    if (isEmpty(right)) {
-                        locations.Add(right);
-                    }
+                } else if (typeToBuild == Structure.StructureType.LADDER) {
+                    if (isEmpty(up)) locations.Add(up);
+                    if (isEmpty(down)) locations.Add(down);
                 }
             }
         }
@@ -124,16 +130,14 @@ public class MapController : MonoBehaviour
         for (int i = 0; i < grid.GetLength(0); i++) {
             for (int j = 0; j < grid.GetLength(1); j++) {
                 grid[i, j] = null;
-
-                GameObject goGridBG = createSpriteInstance(gridBackground, i, j);
-                goGridBG.transform.position += new Vector3(0, 0, 1);    // set z position, so it is shifted to background
-                goGridBG.transform.SetParent(spriteContainer);
+                //GameObject vis = createSpriteInstance(gridBackground, i, j);
+                //vis.transform.position += new Vector3(0, 0, 1);    // set z position, so it is shifted to background
             }
         }
 
         buildTile(4, 4, WorldConstants.Instance.getStructureManager().prefab_platform);
-        buildTile(4, 3, WorldConstants.Instance.getStructureManager().prefab_ladder);
-        buildTile(4, 2, WorldConstants.Instance.getStructureManager().prefab_ladder);
+        buildTile(4, 5, WorldConstants.Instance.getStructureManager().prefab_ladder);
+        buildTile(4, 6, WorldConstants.Instance.getStructureManager().prefab_platform);
     }
 
     public void buildTile(int x, int y, GameObject prefab) {
@@ -145,6 +149,7 @@ public class MapController : MonoBehaviour
 
         foreach (Structure.GridFootprint footprint in structure.gridFootprint) {
             Tile t = createTile(x + footprint.gridX, y + footprint.gridY);
+            t.attachedGameObject = prefab;
             t.canConnectAt = "0123";//structure.canConnectAt;
             if (footprint.isWalkable) {
                 t.isWalkable = footprint.isWalkable;
@@ -158,14 +163,12 @@ public class MapController : MonoBehaviour
     public static Vector2 pixelPos2WorldPos(Vector2 pixelPos) {
         Camera cam = Camera.main;
 
-        int spacing = 1;
-
         Vector3 mousePos = pixelPos;
 
         Vector3 relSize = (mousePos / cam.pixelHeight);
         Vector3 gridPos = relSize * (cam.orthographicSize * 2);
 
-        return new Vector2(gridPos.x, gridPos.y);
+        return new Vector2(gridPos.x, gridPos.y) - Vector2.one;
     }
 
     public bool isInBounds(Vector2Int _pos) {
