@@ -8,7 +8,9 @@ public class Structure : MonoBehaviour {
     public enum StructureType {
         PLATFORM,
         LADDER,
-        FURNITURE
+        FURNITURE,
+        GRASSLAND,
+        AGRICULTURAL
     }
 
     public SpriteRenderer spriteRenderer;
@@ -34,6 +36,6 @@ public class Structure : MonoBehaviour {
         public int gridY;
         public bool isWalkable;
         public bool isInteractable;
-        public bool isSlot;
+        public bool hasSlot;
     }
 }

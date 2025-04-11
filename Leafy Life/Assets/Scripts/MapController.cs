@@ -2,35 +2,33 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MapController : MonoBehaviour
-{
+public class MapController : MonoBehaviour {
+    public enum MapType {
+        TREEHOUSE,
+        GARDEN
+    }
     public Sprite gridBackground;
+
+    [SerializeField]
+    private MapType mapType;
 
     private Tile[,] grid;
     private List<Tile> tileList = new List<Tile>();
     private int nodeID = 1;
-    private Vector2Int pos = Vector2Int.zero;
-
-    private Tile tileStart;
-    private Tile tileEnd;
-
-    private int margin = 2;
 
     private Transform spriteContainer;
 
     private System.Random rnd = new System.Random();
 
-    void Start()
-    {
+    void Start() {
         spriteContainer = new GameObject("sprite_container_" + rnd.Next(10000)).transform;
         spriteContainer.SetParent(this.transform);
 
         init();
     }
 
-    void Update()
-    {
-        
+    void Update() {
+
     }
 
     public Tile getTile(Vector2Int pos) {
@@ -69,26 +67,40 @@ public class MapController : MonoBehaviour
         List<Vector2Int> locations = new List<Vector2Int>();
 
         foreach (Tile t in grid) {
-            if (t != null && t.attachedGameObject != null) {
-                // look for empty location around tile
-                Vector2Int up = t.getPositionAsVector() + Vector2Int.up;
-                Vector2Int down = t.getPositionAsVector() + Vector2Int.down;
-                Vector2Int left = t.getPositionAsVector() + Vector2Int.left;
-                Vector2Int right = t.getPositionAsVector() + Vector2Int.right;
+            if (t != null) {
+                if (t.attachedGameObject != null) {
+                    // look for empty location around tile
+                    Vector2Int currentPos = t.getPositionAsVector();
+                    Vector2Int up = t.getPositionAsVector() + Vector2Int.up;
+                    Vector2Int down = t.getPositionAsVector() + Vector2Int.down;
+                    Vector2Int left = t.getPositionAsVector() + Vector2Int.left;
+                    Vector2Int right = t.getPositionAsVector() + Vector2Int.right;
 
-                Structure s = t.attachedGameObject.GetComponent<Structure>();
+                    Structure s = t.attachedGameObject.GetComponent<Structure>();
 
-                if (typeToBuild == Structure.StructureType.PLATFORM) {
-                    if (s.structureType == Structure.StructureType.PLATFORM) {
-                        if (isEmpty(left)) locations.Add(left);
-                        if (isEmpty(right)) locations.Add(right);
-                    } else if (s.structureType == Structure.StructureType.LADDER) {
-                        if (isEmpty(up)) locations.Add(up);
-                        if (isEmpty(down)) locations.Add(down);
+                    if (t.hasSlot) {
+                        if (typeToBuild == Structure.StructureType.PLATFORM) {
+                            // furniture goes here
+                        } else if (typeToBuild == Structure.StructureType.AGRICULTURAL) {
+                            if (s.structureType == Structure.StructureType.GRASSLAND) {
+                                locations.Add(currentPos);
+                            }
+                        }
+                    } else {
+
+                        if (typeToBuild == Structure.StructureType.PLATFORM) {
+                            if (s.structureType == Structure.StructureType.PLATFORM) {
+                                if (isEmpty(left)) locations.Add(left);
+                                if (isEmpty(right)) locations.Add(right);
+                            } else if (s.structureType == Structure.StructureType.LADDER) {
+                                if (isEmpty(up)) locations.Add(up);
+                                if (isEmpty(down)) locations.Add(down);
+                            }
+                        } else if (typeToBuild == Structure.StructureType.LADDER) {
+                            if (isEmpty(up)) locations.Add(up);
+                            if (isEmpty(down)) locations.Add(down);
+                        }
                     }
-                } else if (typeToBuild == Structure.StructureType.LADDER) {
-                    if (isEmpty(up)) locations.Add(up);
-                    if (isEmpty(down)) locations.Add(down);
                 }
             }
         }
@@ -101,7 +113,7 @@ public class MapController : MonoBehaviour
 
         foreach (Tile t in grid) {
             if (t != null) {
-                if (t.isSlot) {
+                if (t.hasSlot) {
                     locations.Add( t.getPositionAsVector() );
                 }
             }
@@ -137,9 +149,17 @@ public class MapController : MonoBehaviour
             }
         }
 
-        buildTile(4, 4, WorldConstants.Instance.getStructureManager().prefab_platform);
-        buildTile(4, 5, WorldConstants.Instance.getStructureManager().prefab_ladder);
-        buildTile(4, 6, WorldConstants.Instance.getStructureManager().prefab_platform);
+        if (mapType == MapType.TREEHOUSE) {
+            buildTile(4, 4, WorldConstants.Instance.getStructureManager().prefab_platform);
+            buildTile(4, 5, WorldConstants.Instance.getStructureManager().prefab_ladder);
+            buildTile(4, 6, WorldConstants.Instance.getStructureManager().prefab_platform);
+        } else if (mapType == MapType.GARDEN) {
+            for (int i = 1; i < 10; i++) {
+                for (int j = 1; j < 10; j++) {
+                    buildTile(i, j, WorldConstants.Instance.getStructureManager().prefab_grass);
+                }
+            }
+        }
     }
 
     public void buildTile(int x, int y, GameObject prefab) {
@@ -156,21 +176,23 @@ public class MapController : MonoBehaviour
             if (footprint.isWalkable) {
                 t.isWalkable = footprint.isWalkable;
             }
-            t.isSlot = footprint.isSlot;
+            t.hasSlot = footprint.hasSlot;
 
             spawnTile(t);
         }
     }
 
-    public static Vector2 pixelPos2WorldPos(Vector2 pixelPos) {
-        Camera cam = Camera.main;
+    public static Vector2 pixelPos2WorldPos(Vector3 pixelPos) {
+        Vector3 worldPos = Camera.main.ScreenToWorldPoint(pixelPos);
 
         Vector3 mousePos = pixelPos;
 
-        Vector3 relSize = (mousePos / cam.pixelHeight);
-        Vector3 gridPos = relSize * (cam.orthographicSize * 2);
+        //Vector3 relSize = (mousePos / cam.pixelHeight);
+        //Vector3 gridPos = relSize * (cam.orthographicSize * 2);
 
-        return new Vector2(gridPos.x, gridPos.y) - Vector2.one;
+        Vector2Int targetPosInt = new Vector2Int((int)worldPos.x, (int)worldPos.y);
+        print(targetPosInt);
+        return worldPos;//new Vector2(gridPos.x, gridPos.y) - Vector2.one;
     }
 
     public bool isInBounds(Vector2Int _pos) {
@@ -309,7 +331,7 @@ public class MapController : MonoBehaviour
         public int gridX;
         public int gridY;
         public bool isWalkable;
-        public bool isSlot;
+        public bool hasSlot;
 
         public Tile(int gridX, int gridY, GameObject attachedGameObject) {
             this.gridX = gridX;

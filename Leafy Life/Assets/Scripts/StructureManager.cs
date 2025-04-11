@@ -7,6 +7,9 @@ public class StructureManager : MonoBehaviour
     public GameObject prefab_platform;
     public GameObject prefab_ladder;
 
+    public GameObject prefab_grass;
+    public GameObject prefab_soil;
+
     void Start()
     {
         

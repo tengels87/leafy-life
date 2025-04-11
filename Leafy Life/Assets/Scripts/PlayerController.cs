@@ -23,10 +23,10 @@ public class PlayerController : MonoBehaviour {
 
     void Update() {
 
-        MapController mapController = WorldConstants.Instance.getMapController();
-
         // move on tap
         if (Input.GetMouseButtonDown(1)) {
+            MapController mapController = WorldConstants.Instance.getMapController();
+
             Vector2 targetPos = MapController.pixelPos2WorldPos(Input.mousePosition);
             Vector2Int targetPosInt = new Vector2Int((int)targetPos.x, (int)targetPos.y);
 
@@ -110,8 +110,6 @@ public class PlayerController : MonoBehaviour {
     }
 
     private void processAllActions() {
-        MapController mapController = WorldConstants.Instance.getMapController();
-
         List<GameAction> allActions = getActionList();
         if (allActions.Count > 0) {
 
@@ -127,6 +125,7 @@ public class PlayerController : MonoBehaviour {
 
                 case GameAction.ActionType.BUILD:
                     Vector2Int targetPositionInt = new Vector2Int((int)allActions[0].targetPosition.x, (int)allActions[0].targetPosition.y);
+                    MapController mapController = WorldConstants.Instance.getMapController();
                     mapController.buildTile(targetPositionInt.x, targetPositionInt.y, (UnityEngine.GameObject)allActions[0].customData);
                     removeAction(allActions[0]);
                     break;

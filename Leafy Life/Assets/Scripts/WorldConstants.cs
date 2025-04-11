@@ -42,11 +42,11 @@ public sealed class WorldConstants {
     }
 
     public MapController getMapController() {
-        if (mapController == null) {
+        //if (mapController == null) {
             mapController = GameObject.Find(objName_mapController).GetComponent<MapController>();
-        }
+        //}
 
-        return mapController;
+         return mapController;
     }
 
     public HudManager getHudManager() {
