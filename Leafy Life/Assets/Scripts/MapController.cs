@@ -187,6 +187,11 @@ public class MapController : MonoBehaviour {
 
             spawnTile(t);
         }
+
+        Crop crop = structure.GetComponentInChildren<Crop>();
+        if (crop != null) {
+            crop.init();
+        }
     }
 
     public static Vector2 pixelPos2WorldPos(Vector3 pixelPos) {

@@ -8,12 +8,11 @@ public class BuildMenuItem : MonoBehaviour {
     private Structure currentDragged;
     private GameObject dragVisualizer;
     private Vector2 dragVisualizerOffset;
-    private Sprite spriteIcon;
     private List<Vector2Int> currentBuildLocations;
     private List<GameObject> buildLocationVisualizers = new List<GameObject>();
 
     void Start() {
-        spriteIcon = this.GetComponent<SpriteRenderer>().sprite;
+
     }
 
     void Update() {
