@@ -10,7 +10,10 @@ public class Structure : MonoBehaviour {
         LADDER,
         FURNITURE,
         GRASSLAND,
-        AGRICULTURAL
+        AGRICULTURAL,
+        PLANT,
+        BED,
+        FRIDGE
     }
 
     public SpriteRenderer spriteRenderer;

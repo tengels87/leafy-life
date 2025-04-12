@@ -85,8 +85,13 @@ public class MapController : MonoBehaviour {
                             if (s.structureType == Structure.StructureType.GRASSLAND) {
                                 locations.Add(currentPos);
                             }
+                        // plants, crops
+                        } else if (typeToBuild == Structure.StructureType.PLANT) {
+                            if (s.structureType == Structure.StructureType.AGRICULTURAL) {
+                                locations.Add(currentPos);
+                            }
                         }
-                    } else {
+                    //} else {
 
                         if (typeToBuild == Structure.StructureType.PLATFORM) {
                             if (s.structureType == Structure.StructureType.PLATFORM) {
@@ -100,7 +105,7 @@ public class MapController : MonoBehaviour {
                             if (isEmpty(up)) locations.Add(up);
                             if (isEmpty(down)) locations.Add(down);
                         }
-                    }
+                    //}
                 }
             }
         }
