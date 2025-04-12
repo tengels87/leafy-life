@@ -24,7 +24,7 @@ public class BuildMenuItem : MonoBehaviour {
         if (currentDragged != null) {
 
             // position visual at mouse position
-            dragVisualizer.transform.position = new Vector3(mouseWorldPos.x + dragVisualizerOffset.x, mouseWorldPos.y + dragVisualizerOffset.y, 0);
+            dragVisualizer.transform.position = new Vector3(mouseWorldPos.x + dragVisualizerOffset.x, mouseWorldPos.y + dragVisualizerOffset.y, -2);
 
             // snap visual to possible build location
             bool canBuild = false;
@@ -101,7 +101,7 @@ public class BuildMenuItem : MonoBehaviour {
             
             foreach (Vector2Int location in currentBuildLocations) {
                 GameObject vis = mapController.createSpriteInstance(mapController.gridBackground, location.x, location.y);
-                vis.transform.position += new Vector3(0, 0, 1);    // set z position, so it is shifted to background
+                vis.transform.position += new Vector3(0, 0, -1);    // set z position, so it is shifted to background
                 buildLocationVisualizers.Add(vis);
             }
         }

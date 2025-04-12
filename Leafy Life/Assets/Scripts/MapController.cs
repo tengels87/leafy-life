@@ -140,7 +140,7 @@ public class MapController : MonoBehaviour {
 
         cam.orthographicSize = (float)maxGridHeight * 0.5f;
 
-        cam.transform.position = new Vector3((float)(maxGridHeight) * aspect / zoom - 0.5f, (float)(maxGridHeight) / zoom - 0.5f, -1);
+        cam.transform.position = new Vector3((float)(maxGridHeight) * aspect / zoom - 0.5f, (float)(maxGridHeight) / zoom - 0.5f, cam.transform.position.z);
     }
 
     public void init() {
