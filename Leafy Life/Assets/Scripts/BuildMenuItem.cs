@@ -87,10 +87,13 @@ public class BuildMenuItem : MonoBehaviour {
 
             // instantiate drag visuls
             MapController mapController = WorldConstants.Instance.getMapController();
-            dragVisualizer = mapController.createSpriteInstance(spriteIcon, 0, 0);
+
+            dragVisualizer = (GameObject)Object.Instantiate(prefab);
+            dragVisualizer.transform.position = new Vector3(0, 0, 0);
+
             dragVisualizerOffset = new Vector2(this.transform.position.x, this.transform.position.y) - MapController.pixelPos2WorldPos(Input.mousePosition);
 
-            // determine location where structure can be placed
+            // determine lofbuildtilcation where structure can be placed
             currentBuildLocations = mapController.getBuildLocations(structure.structureType);
 
             // clean and instantiate location visualizers
