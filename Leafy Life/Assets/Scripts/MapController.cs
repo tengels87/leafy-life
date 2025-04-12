@@ -78,9 +78,11 @@ public class MapController : MonoBehaviour {
 
                     Structure s = t.attachedGameObject.GetComponent<Structure>();
 
-                    if (t.hasSlot) {
-                        if (typeToBuild == Structure.StructureType.PLATFORM) {
-                            // furniture goes here
+                    //if (t.hasSlot) {
+                        if (typeToBuild == Structure.StructureType.BED) {
+                            if (s.structureType == Structure.StructureType.PLATFORM) {
+                                locations.Add(currentPos);
+                            }
                         } else if (typeToBuild == Structure.StructureType.AGRICULTURAL) {
                             if (s.structureType == Structure.StructureType.GRASSLAND) {
                                 locations.Add(currentPos);
