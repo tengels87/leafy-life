@@ -23,7 +23,7 @@ public class Structure : MonoBehaviour {
     public bool attachesToSlot;
 
     [SerializeField]
-    public List<GridFootprint> gridFootprint = new List<GridFootprint>();
+    public List<GridFootprint> gridFootprint = new List<GridFootprint>(1);
 
     void Start() {
 
@@ -39,6 +39,7 @@ public class Structure : MonoBehaviour {
         public int gridY;
         public bool isWalkable;
         public bool isInteractable;
+        public PlayerController.InteractionType interactionType;
         public bool hasSlot;
     }
 }
