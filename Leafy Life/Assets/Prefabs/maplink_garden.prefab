@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 6328117217153012980}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: 2}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -73,7 +73,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: e7e99d997e0352d4fb2e20dd585a86f1, type: 3}
+  m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -81,7 +81,7 @@ SpriteRenderer:
   m_Size: {x: 4.171875, y: 1.0625}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &6328117217270616688
@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 6328117217270616693}
   - component: {fileID: 6328117217270616691}
   m_Layer: 0
-  m_Name: wall_wooden
+  m_Name: maplink_garden
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -131,21 +131,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 6328117217153012982}
-  canConnectAt: 
-  structureType: 2
-  attachesToPlatform: 1
+  canConnectAt: 0123
+  structureType: 8
+  attachesToPlatform: 0
   attachesToSlot: 0
   gridFootprint:
   - gridX: 0
     gridY: 0
-    isWalkable: 0
+    isWalkable: 1
     isInteractable: 0
+    interactionType: 0
     hasSlot: 0
-  - gridX: 0
-    gridY: 1
-    isWalkable: 0
-    isInteractable: 0
-    hasSlot: 0
+    linkToMapType: 1
 --- !u!61 &6328117217270616691
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -178,7 +175,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.0040978193, y: -0.011321723}
+  m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -189,5 +186,5 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.0985439, y: 2.0388231}
+  m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0

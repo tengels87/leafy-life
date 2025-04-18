@@ -29,7 +29,7 @@ public class PlayerController : MonoBehaviour {
     }
 
     void Start() {
-        this.transform.position = new Vector3(4, 4, 0);
+        setPosition(new Vector3(8, 2, 0));
 
         spriteRenderer = this.GetComponentInChildren<SpriteRenderer>();
         anim = this.GetComponentInChildren<Animator>();
@@ -38,7 +38,13 @@ public class PlayerController : MonoBehaviour {
     }
 
     void Update() {
-        
+
+        // camera follow player
+        Camera cam = Camera.main;
+        if (cam != null) {
+            cam.transform.position = this.gameObject.transform.position + new Vector3(0, 1, -10);
+        }
+
         // move on tap
         if (Input.GetMouseButtonDown(1)) {
             MapController mapController = WorldConstants.Instance.getMapController();
@@ -52,14 +58,12 @@ public class PlayerController : MonoBehaviour {
 
                 // set walk target there
                 GameAction gameAction = new GameAction(GameAction.ActionType.WALKTO, targetPosInt);
+                gameAction.customData = t.attachedGameObject;
                 addAction(gameAction);
 
-
                 // if there is a structure to interact with, do that
-                Structure structureOnTile = null;
-                
                 if (t.attachedGameObject != null) {
-                    structureOnTile = t.attachedGameObject.GetComponent<Structure>();
+                    Structure structureOnTile = t.attachedGameObject.GetComponent<Structure>();
                     if (structureOnTile != null && structureOnTile.gridFootprint[0].isInteractable) {
                         gameAction = new GameAction(GameAction.ActionType.INTERACT, targetPosInt);
                         gameAction.customData = t.attachedGameObject;
@@ -77,6 +81,7 @@ public class PlayerController : MonoBehaviour {
             navigateAllWaypoints();
         }
 
+
         // flip sprite according to movementDirection
         if (Mathf.Abs(moveDirection.x) > Mathf.Abs(moveDirection.y)) {
             bool doFlip = (moveDirection.x < 0);
@@ -87,8 +92,15 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
-    public Vector2 getPosition() {
+    public Vector2 getPosition2D() {
         return new Vector2(this.transform.position.x, this.transform.position.y);
+    }
+
+    public void setPosition(Vector3 pos) {
+        this.transform.position = pos;
+    }
+    public void setPosition2D(Vector2Int pos) {
+        this.transform.position = new Vector3(pos.x, pos.y, this.transform.position.z);
     }
 
     public void setWaypoints(List<Vector2> waypoints) {
@@ -105,7 +117,7 @@ public class PlayerController : MonoBehaviour {
 
                 // find start position for path finding algorithm
                 // start psition: use current position or target position from last action in queue
-                Vector2 startPosition = getPosition();
+                Vector2 startPosition = getPosition2D();
                 if (actionList.Count > 0) {
                     startPosition = actionList[actionList.Count - 1].targetPosition;
                 }
@@ -150,6 +162,7 @@ public class PlayerController : MonoBehaviour {
             Vector2Int targetPositionInt = new Vector2Int((int)allActions[0].targetPosition.x, (int)allActions[0].targetPosition.y);
             MapController mapController = WorldConstants.Instance.getMapController();
             GameObject customDataObj = (GameObject)allActions[0].customData;
+            Structure structure = customDataObj?.GetComponent<Structure>();
 
             switch (allActions[0].actionType) {
                 case GameAction.ActionType.WALKTO:
@@ -157,6 +170,14 @@ public class PlayerController : MonoBehaviour {
                     // and calculate path
                     if (waypointList.Count == 0) {
                         removeAction(allActions[0]);
+
+                        // teleport, if there is a map link
+                        if (structure != null && structure.structureType == Structure.StructureType.MAPLINK) {
+                            SceneManager sceneManager = WorldConstants.Instance.getSceneManager();
+                            if (sceneManager != null) {
+                                sceneManager.activateMap(structure.gridFootprint[0].linkToMapType);
+                            }
+                        }
                     }
 
                     break;
@@ -169,9 +190,8 @@ public class PlayerController : MonoBehaviour {
                 case GameAction.ActionType.INTERACT:
                     removeAction(allActions[0]);
 
-                    Structure structure = customDataObj.GetComponent<Structure>();
                     startInteraction(interactionData[(int)(structure.gridFootprint[0].interactionType)]);
-                    
+
                     break;
 
                 default:
@@ -191,10 +211,10 @@ public class PlayerController : MonoBehaviour {
 
             Vector2 targetWaypoint = waypointList[0];
             
-            float dist = Vector2.Distance(targetWaypoint, getPosition());
+            float dist = Vector2.Distance(targetWaypoint, getPosition2D());
             if (dist > 0.1f) {
-                moveDirection = (targetWaypoint - getPosition()).normalized;
-                this.transform.position = this.transform.position + moveDirection * movementSpeed * Time.deltaTime;
+                moveDirection = (targetWaypoint - getPosition2D()).normalized;
+                setPosition(this.transform.position + moveDirection * movementSpeed * Time.deltaTime);
             } else {
                 waypointList.RemoveAt(0);
             }

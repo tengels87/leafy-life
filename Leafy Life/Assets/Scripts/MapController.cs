@@ -12,6 +12,9 @@ public class MapController : MonoBehaviour {
     [SerializeField]
     private MapType mapType;
 
+    private bool isInitiated = false;
+    private Vector2Int spawnPosition;
+
     private Tile[,] grid;
     private List<Tile> tileList = new List<Tile>();
     private int nodeID = 1;
@@ -23,8 +26,6 @@ public class MapController : MonoBehaviour {
     void Start() {
         spriteContainer = new GameObject("sprite_container_" + rnd.Next(10000)).transform;
         spriteContainer.SetParent(this.transform);
-
-        init();
     }
 
     void Update() {
@@ -79,17 +80,17 @@ public class MapController : MonoBehaviour {
                     Structure s = t.attachedGameObject.GetComponent<Structure>();
 
                     //if (t.hasSlot) {
-                        if (typeToBuild == Structure.StructureType.BED) {
+                        if (typeToBuild == Structure.StructureType.SLEEPABLE) {
                             if (s.structureType == Structure.StructureType.PLATFORM) {
                                 locations.Add(currentPos);
                             }
-                        } else if (typeToBuild == Structure.StructureType.AGRICULTURAL) {
-                            if (s.structureType == Structure.StructureType.GRASSLAND) {
+                        } else if (typeToBuild == Structure.StructureType.SOIL) {
+                            if (s.structureType == Structure.StructureType.GRASS) {
                                 locations.Add(currentPos);
                             }
                         // plants, crops
-                        } else if (typeToBuild == Structure.StructureType.PLANT) {
-                            if (s.structureType == Structure.StructureType.AGRICULTURAL) {
+                        } else if (typeToBuild == Structure.StructureType.CROP) {
+                            if (s.structureType == Structure.StructureType.SOIL) {
                                 locations.Add(currentPos);
                             }
                         }
@@ -129,21 +130,9 @@ public class MapController : MonoBehaviour {
         return locations;
     }
 
-    public void updateCameraFOV(int gridWidth, int gridHeight) {
-        Camera cam = Camera.main;
-
-        float aspect = (float)cam.pixelWidth / (float)cam.pixelHeight;
-
-        int maxGridHeight = gridHeight;
-
-        float zoom = (float)maxGridHeight / cam.orthographicSize;
-
-        cam.orthographicSize = (float)maxGridHeight * 0.5f;
-
-        cam.transform.position = new Vector3((float)(maxGridHeight) * aspect / zoom - 0.5f, (float)(maxGridHeight) / zoom - 0.5f, cam.transform.position.z);
-    }
-
     public void init() {
+        if (isInitiated) return;
+
         int gridWidth = 20;
         int gridHeight = 20;
 
@@ -157,22 +146,37 @@ public class MapController : MonoBehaviour {
         }
 
         if (mapType == MapType.TREEHOUSE) {
-            buildTile(4, 4, WorldConstants.Instance.getStructureManager().prefab_platform);
-            buildTile(4, 5, WorldConstants.Instance.getStructureManager().prefab_ladder);
-            buildTile(4, 6, WorldConstants.Instance.getStructureManager().prefab_platform);
+
+            buildTile(8, 1, WorldConstants.Instance.getStructureManager().prefab_ladder);
+            buildTile(8, 2, WorldConstants.Instance.getStructureManager().prefab_ladder);
+            buildTile(8, 3, WorldConstants.Instance.getStructureManager().prefab_platform);
+            for (int i = 1; i < grid.GetLength(0); i++) {
+                buildTile(i, 0, WorldConstants.Instance.getStructureManager().prefab_grass);
+            }
+
+            spawnPosition = new Vector2Int(8, 0);
+            buildTile(spawnPosition.x, spawnPosition.y, WorldConstants.Instance.getStructureManager().prefab_maplink_garden);
+
         } else if (mapType == MapType.GARDEN) {
-            for (int i = 1; i < 10; i++) {
-                for (int j = 1; j < 10; j++) {
+
+            for (int i = 0; i < grid.GetLength(0); i++) {
+                for (int j = 0; j < grid.GetLength(1); j++) {
                     buildTile(i, j, WorldConstants.Instance.getStructureManager().prefab_grass);
                 }
             }
+
+            spawnPosition = new Vector2Int(7, 7);
+            buildTile(spawnPosition.x, spawnPosition.y, WorldConstants.Instance.getStructureManager().prefab_maplink_treehouse);
+
         }
+
+        isInitiated = true;
     }
 
     public void buildTile(int x, int y, GameObject prefab) {
         GameObject buildable = (GameObject)Object.Instantiate(prefab);
         buildable.transform.position = new Vector3(x, y, 0);
-        //buildable.transform.SetParent(spriteContainer);
+        buildable.transform.SetParent(this.gameObject.transform);
 
         Structure structure = buildable.GetComponent<Structure>();
 
@@ -199,11 +203,6 @@ public class MapController : MonoBehaviour {
 
         Vector3 mousePos = pixelPos;
 
-        //Vector3 relSize = (mousePos / cam.pixelHeight);
-        //Vector3 gridPos = relSize * (cam.orthographicSize * 2);
-
-        Vector2Int targetPosInt = new Vector2Int((int)worldPos.x, (int)worldPos.y);
-        print(targetPosInt);
         return worldPos;//new Vector2(gridPos.x, gridPos.y) - Vector2.one;
     }
 
@@ -265,6 +264,10 @@ public class MapController : MonoBehaviour {
         } else {
             return false;
         }
+    }
+
+    public Vector2Int getSpawnPosition() {
+        return spawnPosition;
     }
 
     public GameObject createSpriteInstance(Sprite spr, float posX, float posY) {

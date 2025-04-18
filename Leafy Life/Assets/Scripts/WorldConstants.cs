@@ -4,12 +4,14 @@ using System.Collections.Generic;
 
 public sealed class WorldConstants {
     public static string objName_gameManager = "GameManager";
+    public static string objName_loadingManager = "LoadingManager";
     public static string objName_mapController = "MapController";
     public static string objName_hudManager = "HUDmanager";
     public static string objName_structureManager = "StructureManager";
     public static string objName_player = "Player";
 
     public GameManager gameManager;
+    public SceneManager sceneManager;
     public MapController mapController;
     public HudManager hudManager;
     public StructureManager structureManager;
@@ -39,6 +41,14 @@ public sealed class WorldConstants {
         }
 
         return gameManager;
+    }
+
+    public SceneManager getSceneManager() {
+        if (sceneManager == null) {
+            sceneManager = GameObject.Find(objName_loadingManager).GetComponent<SceneManager>();
+        }
+
+        return sceneManager;
     }
 
     public MapController getMapController() {

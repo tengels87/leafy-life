@@ -9,11 +9,12 @@ public class Structure : MonoBehaviour {
         PLATFORM,
         LADDER,
         FURNITURE,
-        GRASSLAND,
-        AGRICULTURAL,
-        PLANT,
-        BED,
-        FRIDGE
+        GRASS,
+        SOIL,
+        CROP,
+        SLEEPABLE,
+        BLOCK,
+        MAPLINK
     }
 
     public SpriteRenderer spriteRenderer;
@@ -41,5 +42,6 @@ public class Structure : MonoBehaviour {
         public bool isInteractable;
         public PlayerController.InteractionType interactionType;
         public bool hasSlot;
+        public MapController.MapType linkToMapType;
     }
 }
