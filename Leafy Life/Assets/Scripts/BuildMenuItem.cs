@@ -93,7 +93,7 @@ public class BuildMenuItem : MonoBehaviour {
             dragVisualizerOffset = new Vector2(this.transform.position.x, this.transform.position.y) - MapController.pixelPos2WorldPos(Input.mousePosition);
 
             // determine lofbuildtilcation where structure can be placed
-            currentBuildLocations = mapController.getBuildLocations(structure.structureType);
+            currentBuildLocations = mapController.getBuildLocations(structure);
 
             // clean and instantiate location visualizers
             foreach (GameObject locationVis in buildLocationVisualizers) {

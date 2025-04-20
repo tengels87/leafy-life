@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
     public enum InteractionType {
+        NONE,
         SLEEP
     }
 
@@ -64,10 +65,13 @@ public class PlayerController : MonoBehaviour {
                 // if there is a structure to interact with, do that
                 if (t.attachedGameObject != null) {
                     Structure structureOnTile = t.attachedGameObject.GetComponent<Structure>();
-                    if (structureOnTile != null && structureOnTile.gridFootprint[0].isInteractable) {
-                        gameAction = new GameAction(GameAction.ActionType.INTERACT, targetPosInt);
-                        gameAction.customData = t.attachedGameObject;
-                        addAction(gameAction);
+                    if (structureOnTile != null) {
+                        Structure interactablePart = structureOnTile.getInteractableStructure();
+                        if (interactablePart != null) {
+                            gameAction = new GameAction(GameAction.ActionType.INTERACT, targetPosInt);
+                            gameAction.customData = interactablePart.gameObject;
+                            addAction(gameAction);
+                        }
                     }
                 }
             }
@@ -175,7 +179,7 @@ public class PlayerController : MonoBehaviour {
                         if (structure != null && structure.structureType == Structure.StructureType.MAPLINK) {
                             SceneManager sceneManager = WorldConstants.Instance.getSceneManager();
                             if (sceneManager != null) {
-                                sceneManager.activateMap(structure.gridFootprint[0].linkToMapType);
+                                sceneManager.activateMap(structure.linkToMapType);
                             }
                         }
                     }
@@ -189,8 +193,8 @@ public class PlayerController : MonoBehaviour {
 
                 case GameAction.ActionType.INTERACT:
                     removeAction(allActions[0]);
-
-                    startInteraction(interactionData[(int)(structure.gridFootprint[0].interactionType)]);
+                    
+                    startInteraction(interactionData[(int)(structure.interactionType)-1]);
 
                     break;
 

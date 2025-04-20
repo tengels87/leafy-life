@@ -64,65 +64,57 @@ public class MapController : MonoBehaviour {
         return null;
     }
 
-    public List<Vector2Int> getBuildLocations(Structure.StructureType typeToBuild) {
+    public List<Vector2Int> getBuildLocations(Structure target) {
         List<Vector2Int> locations = new List<Vector2Int>();
+
+        Structure.StructureType targetType = target.structureType;
 
         foreach (Tile t in grid) {
             if (t != null) {
                 if (t.attachedGameObject != null) {
-                    // look for empty location around tile
+
+                    Structure s = t.attachedGameObject.GetComponent<Structure>();
+
+                    // check if slot available, if needed
+                    if ((target.attachesToSlot || target.attachesToPlatform) && s.gridFootprint[0].slot != null) {
+                        continue;
+                    }
+
+
                     Vector2Int currentPos = t.getPositionAsVector();
                     Vector2Int up = t.getPositionAsVector() + Vector2Int.up;
                     Vector2Int down = t.getPositionAsVector() + Vector2Int.down;
                     Vector2Int left = t.getPositionAsVector() + Vector2Int.left;
                     Vector2Int right = t.getPositionAsVector() + Vector2Int.right;
 
-                    Structure s = t.attachedGameObject.GetComponent<Structure>();
-
-                    //if (t.hasSlot) {
-                        if (typeToBuild == Structure.StructureType.SLEEPABLE) {
-                            if (s.structureType == Structure.StructureType.PLATFORM) {
-                                locations.Add(currentPos);
-                            }
-                        } else if (typeToBuild == Structure.StructureType.SOIL) {
-                            if (s.structureType == Structure.StructureType.GRASS) {
-                                locations.Add(currentPos);
-                            }
-                        // plants, crops
-                        } else if (typeToBuild == Structure.StructureType.CROP) {
-                            if (s.structureType == Structure.StructureType.SOIL) {
-                                locations.Add(currentPos);
-                            }
+                    // look for empty location around tile
+                    if (targetType == Structure.StructureType.SLEEPABLE) {
+                        if (s.structureType == Structure.StructureType.PLATFORM) {
+                            locations.Add(currentPos);
                         }
-                    //} else {
+                    } else if (targetType == Structure.StructureType.SOIL) {
+                        if (s.structureType == Structure.StructureType.GRASS) {
+                            locations.Add(currentPos);
+                        }
+                        // plants, crops
+                    } else if (targetType == Structure.StructureType.CROP) {
+                        if (s.structureType == Structure.StructureType.SOIL) {
+                            locations.Add(currentPos);
+                        }
+                    }
 
-                        if (typeToBuild == Structure.StructureType.PLATFORM) {
-                            if (s.structureType == Structure.StructureType.PLATFORM) {
-                                if (isEmpty(left)) locations.Add(left);
-                                if (isEmpty(right)) locations.Add(right);
-                            } else if (s.structureType == Structure.StructureType.LADDER) {
-                                if (isEmpty(up)) locations.Add(up);
-                                if (isEmpty(down)) locations.Add(down);
-                            }
-                        } else if (typeToBuild == Structure.StructureType.LADDER) {
+                    if (targetType == Structure.StructureType.PLATFORM) {
+                        if (s.structureType == Structure.StructureType.PLATFORM) {
+                            if (isEmpty(left)) locations.Add(left);
+                            if (isEmpty(right)) locations.Add(right);
+                        } else if (s.structureType == Structure.StructureType.LADDER) {
                             if (isEmpty(up)) locations.Add(up);
                             if (isEmpty(down)) locations.Add(down);
                         }
-                    //}
-                }
-            }
-        }
-
-        return locations;
-    }
-
-    public List<Vector2Int> getBuildLocationsWithSlot() {
-        List<Vector2Int> locations = new List<Vector2Int>();
-
-        foreach (Tile t in grid) {
-            if (t != null) {
-                if (t.hasSlot) {
-                    locations.Add( t.getPositionAsVector() );
+                    } else if (targetType == Structure.StructureType.LADDER) {
+                        if (isEmpty(up)) locations.Add(up);
+                        if (isEmpty(down)) locations.Add(down);
+                    }
                 }
             }
         }
@@ -175,21 +167,34 @@ public class MapController : MonoBehaviour {
 
     public void buildTile(int x, int y, GameObject prefab) {
         GameObject buildable = (GameObject)Object.Instantiate(prefab);
+        buildable.name = "" + rnd.Next();
         buildable.transform.position = new Vector3(x, y, 0);
         buildable.transform.SetParent(this.gameObject.transform);
 
         Structure structure = buildable.GetComponent<Structure>();
+        
+        if (structure.attachesToPlatform || structure.attachesToSlot) {
 
-        foreach (Structure.GridFootprint footprint in structure.gridFootprint) {
-            Tile t = createTile(x + footprint.gridX, y + footprint.gridY);
-            t.attachedGameObject = prefab;
-            t.canConnectAt = "0123";//structure.canConnectAt;
-            if (footprint.isWalkable) {
-                t.isWalkable = footprint.isWalkable;
+            // attach to slot on existing tile, but do not override tile in grid[,]
+            Tile t = getTile(new Vector2Int(x, y));
+            Structure structureOnTile = t.attachedGameObject.GetComponent<Structure>();
+            if (t != null) {
+                structureOnTile.gridFootprint[0].slot = structure;
             }
-            t.hasSlot = footprint.hasSlot;
+        } else {
+            
+            foreach (Structure.GridFootprint footprint in structure.gridFootprint) {
 
-            spawnTile(t);
+                // place/override tile
+                Tile t = createTile(x + footprint.gridX, y + footprint.gridY);
+                t.attachedGameObject = buildable;
+                t.canConnectAt = "0123";//structure.canConnectAt;
+                if (footprint.isWalkable) {
+                    t.isWalkable = footprint.isWalkable;
+                }
+
+                spawnTile(t);
+            }
         }
 
         Crop crop = structure.GetComponentInChildren<Crop>();
@@ -346,7 +351,6 @@ public class MapController : MonoBehaviour {
         public int gridX;
         public int gridY;
         public bool isWalkable;
-        public bool hasSlot;
 
         public Tile(int gridX, int gridY, GameObject attachedGameObject) {
             this.gridX = gridX;

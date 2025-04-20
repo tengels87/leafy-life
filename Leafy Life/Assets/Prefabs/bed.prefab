@@ -47,16 +47,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 5517438266597545125}
-  canConnectAt: 
   structureType: 6
   attachesToPlatform: 1
-  attachesToSlot: 1
+  attachesToSlot: 0
+  isInteractable: 1
+  interactionType: 1
+  linkToMapType: 0
   gridFootprint:
   - gridX: 0
     gridY: 0
     isWalkable: 1
-    isInteractable: 1
     hasSlot: 0
+    slot: {fileID: 0}
 --- !u!61 &6328117217270616691
 BoxCollider2D:
   m_ObjectHideFlags: 0
