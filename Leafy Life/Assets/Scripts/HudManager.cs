@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class HudManager : MonoBehaviour
 {
-    public GameObject resourcesPanel;
     public GameObject statsPanel;
     public GameObject buildPanel;
 
@@ -12,12 +11,10 @@ public class HudManager : MonoBehaviour
     {
         Camera cam = Camera.main;
 
-        MapController mapController = WorldConstants.Instance.getMapController();
-        mapController.updateCameraFOV(6, 8);
+        updateCameraFOV(8, 8);
 
         float visibleWorldWidth = 2 * cam.orthographicSize * cam.aspect;
 
-        resourcesPanel.transform.localPosition = new Vector3(-0.5f * visibleWorldWidth, cam.orthographicSize, 2);
         statsPanel.transform.localPosition = new Vector3(-0.5f * visibleWorldWidth, cam.orthographicSize, 2);
         buildPanel.transform.localPosition = new Vector3(-0.5f * visibleWorldWidth, cam.orthographicSize, 2);
     }
@@ -25,5 +22,20 @@ public class HudManager : MonoBehaviour
     void Update()
     {
         
+    }
+
+    private void updateCameraFOV(int gridWidth, int gridHeight) {
+        Camera cam = Camera.main;
+        if (cam != null) {
+            float aspect = (float)cam.pixelWidth / (float)cam.pixelHeight;
+
+            int maxGridHeight = gridHeight;
+
+            float zoom = (float)maxGridHeight / cam.orthographicSize;
+
+            cam.orthographicSize = (float)maxGridHeight * 0.5f;
+
+            cam.transform.position = new Vector3((float)(maxGridHeight) * aspect / zoom - 0.5f, (float)(maxGridHeight) / zoom - 0.5f, cam.transform.position.z);
+        }
     }
 }
