@@ -7,6 +7,7 @@ public class StructureManager : MonoBehaviour
     public GameObject prefab_platform;
     public GameObject prefab_ladder;
 
+    public GameObject prefab_ground_invisible;
     public GameObject prefab_grass;
 
     public GameObject prefab_maplink_treehouse;

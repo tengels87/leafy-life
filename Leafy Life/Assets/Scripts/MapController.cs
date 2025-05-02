@@ -139,26 +139,27 @@ public class MapController : MonoBehaviour {
 
         if (mapType == MapType.TREEHOUSE) {
 
-            buildTile(8, 1, WorldConstants.Instance.getStructureManager().prefab_ladder);
-            buildTile(8, 2, WorldConstants.Instance.getStructureManager().prefab_ladder);
-            buildTile(8, 3, WorldConstants.Instance.getStructureManager().prefab_platform);
             for (int i = 1; i < grid.GetLength(0); i++) {
-                buildTile(i, 0, WorldConstants.Instance.getStructureManager().prefab_grass);
+                buildTile(i, 0, WorldConstants.Instance.getStructureManager().prefab_ground_invisible);
             }
+            buildTile(8, 1, WorldConstants.Instance.getStructureManager().prefab_ladder);
+            buildTile(8, 2, WorldConstants.Instance.getStructureManager().prefab_platform);
 
             spawnPosition = new Vector2Int(8, 0);
             buildTile(spawnPosition.x, spawnPosition.y, WorldConstants.Instance.getStructureManager().prefab_maplink_garden);
 
         } else if (mapType == MapType.GARDEN) {
 
-            for (int i = 0; i < grid.GetLength(0); i++) {
-                for (int j = 0; j < grid.GetLength(1); j++) {
-                    buildTile(i, j, WorldConstants.Instance.getStructureManager().prefab_grass);
-                }
-            }
-
             spawnPosition = new Vector2Int(7, 7);
             buildTile(spawnPosition.x, spawnPosition.y, WorldConstants.Instance.getStructureManager().prefab_maplink_treehouse);
+
+            for (int i = 0; i < grid.GetLength(0); i++) {
+                for (int j = 0; j < grid.GetLength(1); j++) {
+                    if (isEmpty(new Vector2Int(i, j))) {
+                        buildTile(i, j, WorldConstants.Instance.getStructureManager().prefab_grass);
+                    }
+                }
+            }
 
         }
 
@@ -188,7 +189,7 @@ public class MapController : MonoBehaviour {
                 // place/override tile
                 Tile t = createTile(x + footprint.gridX, y + footprint.gridY);
                 t.attachedGameObject = buildable;
-                t.canConnectAt = "0123";//structure.canConnectAt;
+                t.canConnectAt = footprint.canConnectAt;
                 if (footprint.isWalkable) {
                     t.isWalkable = footprint.isWalkable;
                 }

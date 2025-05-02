@@ -55,6 +55,7 @@ public class Structure : MonoBehaviour {
     public class GridFootprint {
         public int gridX;
         public int gridY;
+        public string canConnectAt = "0123";
         public bool isWalkable;
         public bool hasSlot;
         

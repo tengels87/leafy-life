@@ -140,6 +140,7 @@ MonoBehaviour:
   gridFootprint:
   - gridX: 0
     gridY: 0
+    canConnectAt: 0123
     isWalkable: 1
     hasSlot: 0
     slot: {fileID: 0}
