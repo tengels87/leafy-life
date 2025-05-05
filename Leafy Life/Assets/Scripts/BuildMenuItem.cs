@@ -17,7 +17,49 @@ public class BuildMenuItem : MonoBehaviour {
 
     void Update() {
 
+
         Vector2 mouseWorldPos = MapController.pixelPos2WorldPos(Input.mousePosition);// - Vector3.one * 16);
+
+        if (Input.GetMouseButtonDown(0)) {
+            RaycastHit2D[] hits = Physics2D.RaycastAll(mouseWorldPos, new Vector3(0, 0, 1));
+            bool hasHit = false;
+            foreach (RaycastHit2D hit in hits) {
+                if (hit.collider.gameObject.Equals(this.gameObject)) {
+                    hasHit = true;
+                    break;
+                }
+            }
+            if (hasHit) {
+                Structure structure = prefab.GetComponent<Structure>();
+
+                if (structure != null) {
+                    currentDragged = structure;
+
+                    // instantiate drag visuls
+                    MapController mapController = WorldConstants.Instance.getMapController();
+
+                    dragVisualizer = (GameObject)Object.Instantiate(prefab);
+                    dragVisualizer.transform.position = new Vector3(0, 0, 0);
+
+                    dragVisualizerOffset = Vector3.zero;// = new Vector2(this.transform.position.x, this.transform.position.y) - MapController.pixelPos2WorldPos(Input.mousePosition);
+
+                    // determine lofbuildtilcation where structure can be placed
+                    currentBuildLocations = mapController.getBuildLocations(structure);
+
+                    // clean and instantiate location visualizers
+                    foreach (GameObject locationVis in buildLocationVisualizers) {
+                        Destroy(locationVis);
+                    }
+                    buildLocationVisualizers.Clear();
+
+                    foreach (Vector2Int location in currentBuildLocations) {
+                        GameObject vis = mapController.createSpriteInstance(mapController.gridBackground, location.x, location.y);
+                        vis.GetComponent<SpriteRenderer>().sortingOrder = 9;    // shift to background
+                        buildLocationVisualizers.Add(vis);
+                    }
+                }
+            }
+        }
 
         // visualize drag with structure sprite
         if (currentDragged != null) {
@@ -80,32 +122,7 @@ public class BuildMenuItem : MonoBehaviour {
     }
 
     private void OnMouseDown() {
-        Structure structure = prefab.GetComponent<Structure>();
-        if (structure != null) {
-            currentDragged = structure;
-
-            // instantiate drag visuls
-            MapController mapController = WorldConstants.Instance.getMapController();
-
-            dragVisualizer = (GameObject)Object.Instantiate(prefab);
-            dragVisualizer.transform.position = new Vector3(0, 0, 0);
-
-            dragVisualizerOffset = new Vector2(this.transform.position.x, this.transform.position.y) - MapController.pixelPos2WorldPos(Input.mousePosition);
-
-            // determine lofbuildtilcation where structure can be placed
-            currentBuildLocations = mapController.getBuildLocations(structure);
-
-            // clean and instantiate location visualizers
-            foreach (GameObject locationVis in buildLocationVisualizers) {
-                Destroy(locationVis);
-            }
-            buildLocationVisualizers.Clear();
-            
-            foreach (Vector2Int location in currentBuildLocations) {
-                GameObject vis = mapController.createSpriteInstance(mapController.gridBackground, location.x, location.y);
-                vis.transform.position += new Vector3(0, 0, -1);    // set z position, so it is shifted to background
-                buildLocationVisualizers.Add(vis);
-            }
-        }
+        
+        
     }
 }
