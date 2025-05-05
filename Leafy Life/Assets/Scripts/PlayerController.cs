@@ -47,10 +47,18 @@ public class PlayerController : MonoBehaviour {
         }
 
         // move on tap
-        if (Input.GetMouseButtonDown(1)) {
+        if (Input.GetMouseButtonDown(0)) {
+            Vector2 targetPos = MapController.pixelPos2WorldPos(Input.mousePosition);
+
+            RaycastHit2D[] hits = Physics2D.RaycastAll(targetPos, new Vector3(0, 0, 1));
+            foreach (RaycastHit2D hit in hits) {
+                if (hit.collider.gameObject.layer == LayerMask.NameToLayer("UI")) {
+                    return;
+                }
+            }
+
             MapController mapController = WorldConstants.Instance.getMapController();
 
-            Vector2 targetPos = MapController.pixelPos2WorldPos(Input.mousePosition);
             Vector2Int targetPosInt = new Vector2Int((int)targetPos.x, (int)targetPos.y);
 
             MapController.Tile t = mapController.getTile(targetPosInt);
