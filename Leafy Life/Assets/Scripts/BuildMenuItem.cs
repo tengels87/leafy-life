@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class BuildMenuItem : MonoBehaviour {
     public GameObject prefab;
+    public MapController.MapType availableInMapType; 
 
     private Structure currentDragged;
     private GameObject dragVisualizer;
@@ -65,7 +66,7 @@ public class BuildMenuItem : MonoBehaviour {
         if (currentDragged != null) {
 
             // position visual at mouse position
-            dragVisualizer.transform.position = new Vector3(mouseWorldPos.x + dragVisualizerOffset.x, mouseWorldPos.y + dragVisualizerOffset.y, -2);
+            dragVisualizer.transform.position = new Vector3(mouseWorldPos.x - 0.5f, mouseWorldPos.y - 0.5f, 0);
 
             // snap visual to possible build location
             bool canBuild = false;

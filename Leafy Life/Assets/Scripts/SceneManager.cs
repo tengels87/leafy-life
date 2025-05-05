@@ -1,10 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
 public class SceneManager : MonoBehaviour
 {
+    public static UnityAction<MapController.MapType> OnMapChanged;
+
     public MapController mapTreehouse;
     public MapController mapGarden;
 
@@ -25,6 +28,10 @@ public class SceneManager : MonoBehaviour
 
     void Update()
     {
+        if (lastActiveMapController == null) {
+            activateMap(MapController.MapType.TREEHOUSE);
+        }
+
         if (Input.GetKeyDown(KeyCode.Space)) {
             activateMap(MapController.MapType.GARDEN);
         }
@@ -48,6 +55,8 @@ public class SceneManager : MonoBehaviour
                 player.setPosition2D(mapController.getSpawnPosition());
 
                 lastActiveMapController = mapController;
+
+                OnMapChanged?.Invoke(mapType);
             }
         }
     }
