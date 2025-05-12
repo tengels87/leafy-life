@@ -10,6 +10,16 @@ public class StatsController : MonoBehaviour
     public GameObject nutritionVisual;
     public GameObject sleepVisual;
 
+    private bool doAddSleep = false;
+
+    void OnEnable() {
+        DaytimeManager.hourTickEvent += OnHourTick;
+    }
+
+    void OnDisable() {
+        DaytimeManager.hourTickEvent -= OnHourTick;
+    }
+
     void Start()
     {
         
@@ -17,16 +27,7 @@ public class StatsController : MonoBehaviour
 
     void Update()
     {
-        if (nutrition > 0) {
-            nutrition -= Time.deltaTime * 1f;
-        }
-
-        if (sleep > 0) {
-            sleep -= Time.deltaTime * 1f;
-        }
-
-        nutritionVisual.transform.localScale = new Vector3(nutrition * 0.01f, 1, 1);
-        sleepVisual.transform.localScale = new Vector3(sleep * 0.01f, 1, 1);
+        
     }
 
     public void changeNutritionValue(float chg) {
@@ -35,5 +36,23 @@ public class StatsController : MonoBehaviour
 
     public void changeSleepValue(float chg) {
         sleep = Mathf.Clamp(sleep + chg, 0, 100);
+    }
+
+    public void addQueueIncreaseSleep() {
+        doAddSleep = true;
+    }
+
+    private void OnHourTick(float timestamp) {
+        changeNutritionValue(-3);
+
+        if (doAddSleep) {
+            changeSleepValue(10);
+            doAddSleep = false;
+        } else {
+            changeSleepValue(-5);
+        }
+
+        nutritionVisual.transform.localScale = new Vector3(nutrition * 0.01f, 1, 1);
+        sleepVisual.transform.localScale = new Vector3(sleep * 0.01f, 1, 1);
     }
 }
