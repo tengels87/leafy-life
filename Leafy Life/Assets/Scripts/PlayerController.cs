@@ -6,7 +6,8 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour {
     public enum InteractionType {
         NONE,
-        SLEEP
+        SLEEP,
+        CRAFT
     }
 
     public float movementSpeed = 1f;
@@ -27,10 +28,11 @@ public class PlayerController : MonoBehaviour {
     void Awake() {
         interactionData.Clear();
         interactionData.Add(new InteractionData("player_sleep", "isSleeping", 2f));
+        interactionData.Add(new InteractionData("player_craft", "isCrafting", 2f));
     }
 
     void Start() {
-        setPosition(new Vector3(8, 2, 0));
+        //setPosition(new Vector3(0, 0, 0));
 
         spriteRenderer = this.GetComponentInChildren<SpriteRenderer>();
         anim = this.GetComponentInChildren<Animator>();
@@ -101,6 +103,8 @@ public class PlayerController : MonoBehaviour {
             anim.SetBool("isClimbing", false);
         } else if (Mathf.Abs(moveDirection.x) < Mathf.Abs(moveDirection.y)) {
             anim.SetBool("isClimbing", true);
+        } else if (moveDirection == Vector3.zero) {
+            anim.SetBool("isClimbing", false);
         }
     }
 
@@ -195,14 +199,22 @@ public class PlayerController : MonoBehaviour {
                     break;
 
                 case GameAction.ActionType.BUILD:
-                    mapController.buildTile(targetPositionInt.x, targetPositionInt.y, customDataObj);
-                    removeAction(allActions[0]);
+                    if (canMove()) {
+                        stopInteraction();
+                        removeAction(allActions[0]);
+
+                        startInteraction(interactionData[(int)(InteractionType.CRAFT) - 1], () => {
+                            stopInteraction();
+                            mapController.buildTile(targetPositionInt.x, targetPositionInt.y, customDataObj);
+                        });
+                    }
+
                     break;
 
                 case GameAction.ActionType.INTERACT:
                     removeAction(allActions[0]);
-                    
-                    startInteraction(interactionData[(int)(structure.interactionType)-1]);
+
+                    startInteraction(interactionData[(int)(structure.interactionType) - 1]);
 
                     break;
 
@@ -229,35 +241,47 @@ public class PlayerController : MonoBehaviour {
                 setPosition(this.transform.position + moveDirection * movementSpeed * Time.deltaTime);
             } else {
                 waypointList.RemoveAt(0);
+                moveDirection = Vector3.zero;
             }
         } else {
             anim.SetFloat("speed", 0);
         }
     }
 
-    private IEnumerator CoroutineInteraction(InteractionData interaction) {
-        float animDuration = interaction.getDuration();
-        float animStartTime = Time.time;
+    private IEnumerator CoroutineInteraction(InteractionData interaction, Action callback) {
+        bool firedCallback = false;
 
         anim.SetBool(interaction.getStateName(), true);
+        interaction.start();
 
         while (true) {
-            if (animStartTime + animDuration < Time.time) {
-                statsController.changeSleepValue(0.01f);
+
+            // affect stats after animation has been finished (i.e. start sleeping after laying dwn was finished)
+            if (interaction.isFinished()) {
+                statsController.addQueueIncreaseSleep();
+
+                if (!firedCallback) {
+                    if (callback != null) {
+                        callback();
+                        firedCallback = true;
+                    };
+                }
             }
 
             yield return new WaitForEndOfFrame();
         }
     }
 
-    private void startInteraction(InteractionData interaction) {
+    private void startInteraction(InteractionData interaction, Action callback = null) {
         currentInteraction = interaction;
 
-        coroutineInteraction = StartCoroutine(CoroutineInteraction(interaction));
+        coroutineInteraction = StartCoroutine(CoroutineInteraction(interaction, () => {
+            callback?.Invoke();
+        }));
     }
 
     private void stopInteraction() {
-        if (coroutineInteraction != null && canMove()) {
+        if (coroutineInteraction != null) {
             anim.SetBool(currentInteraction.getStateName(), false);
 
             StopCoroutine(coroutineInteraction);
@@ -275,14 +299,16 @@ public class PlayerController : MonoBehaviour {
 
     private bool canMove() {
         bool isSleeping = isAnimationStatePlaying("player_sleep");
-        
-        return isSleeping == false;
+        bool isCrafting = !interactionData[(int)(InteractionType.CRAFT) - 1].isFinished();
+
+        return isSleeping == false && isCrafting == false;
     }
 
     public class InteractionData {
         private string name;
         private string stateName;
         private float duration;
+        private float startTime;
 
         public InteractionData(string name, string stateName, float duration) {
             this.name = name;
@@ -300,6 +326,18 @@ public class PlayerController : MonoBehaviour {
 
         public float getDuration() {
             return duration;
+        }
+
+        public void start() {
+            startTime = Time.time;
+        }
+
+        public bool isFinished() {
+            if (startTime + duration < Time.time) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 }
