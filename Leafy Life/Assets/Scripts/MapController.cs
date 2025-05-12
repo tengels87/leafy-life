@@ -75,8 +75,8 @@ public class MapController : MonoBehaviour {
 
                     Structure s = t.attachedGameObject.GetComponent<Structure>();
 
-                    // check if slot available, if needed
-                    if ((target.attachesToSlot || target.attachesToPlatform) && s.gridFootprint[0].slot != null) {
+                    // ignore, if we need a slot but it is already occupied
+                    if ((target.attachesToSlot) && s.gridFootprint[0].slot != null) {
                         continue;
                     }
 
@@ -87,18 +87,18 @@ public class MapController : MonoBehaviour {
                     Vector2Int left = t.getPositionAsVector() + Vector2Int.left;
                     Vector2Int right = t.getPositionAsVector() + Vector2Int.right;
 
-                    // look for empty location around tile
-                    if (targetType == Structure.StructureType.SLEEPABLE) {
-                        if (s.structureType == Structure.StructureType.PLATFORM) {
-                            locations.Add(currentPos);
-                        }
-                    } else if (targetType == Structure.StructureType.SOIL) {
+                    // look for empty location around tile 
+                    if (targetType == Structure.StructureType.SOIL) {
                         if (s.structureType == Structure.StructureType.GRASS) {
                             locations.Add(currentPos);
                         }
                         // plants, crops
                     } else if (targetType == Structure.StructureType.CROP) {
                         if (s.structureType == Structure.StructureType.SOIL) {
+                            locations.Add(currentPos);
+                        }
+                    } else {
+                        if (s.structureType == Structure.StructureType.PLATFORM && target.attachesToPlatform) {
                             locations.Add(currentPos);
                         }
                     }
@@ -177,16 +177,19 @@ public class MapController : MonoBehaviour {
         if (structure.attachesToPlatform || structure.attachesToSlot) {
 
             // attach to slot on existing tile, but do not override tile in grid[,]
-            Tile t = getTile(new Vector2Int(x, y));
-            Structure structureOnTile = t.attachedGameObject.GetComponent<Structure>();
-            if (t != null) {
-                structureOnTile.gridFootprint[0].slot = structure;
+            // only block slot, if attachesToSlot
+            if (structure.attachesToSlot == true) {
+                Tile t = getTile(new Vector2Int(x, y));
+                Structure structureOnTile = t.attachedGameObject.GetComponent<Structure>();
+                if (t != null) {
+                    structureOnTile.gridFootprint[0].slot = structure;
+                }
             }
         } else {
-            
+
+            // place/override tile in grid            
             foreach (Structure.GridFootprint footprint in structure.gridFootprint) {
 
-                // place/override tile
                 Tile t = createTile(x + footprint.gridX, y + footprint.gridY);
                 t.attachedGameObject = buildable;
                 t.canConnectAt = footprint.canConnectAt;
