@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6328117217153012983}
   - component: {fileID: 6328117217153012982}
   m_Layer: 0
-  m_Name: sprite
+  m_Name: sprite_seed
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 6328117217153012980}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 3}
+  m_LocalPosition: {x: 0, y: 0, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -73,7 +73,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 0b6107d814e54eb4181ea48f32769f1e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 69bf4ea767846de45a57c96326fce34e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 6328117217270616693}
   - component: {fileID: 6328117217270616691}
   m_Layer: 0
-  m_Name: grass
+  m_Name: seed_carrot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -115,6 +115,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 4626293446023278497}
   - {fileID: 6328117217153012983}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -131,18 +132,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 6328117217153012982}
-  canConnectAt: 
-  structureType: 3
+  structureType: 5
   attachesToPlatform: 0
-  attachesToSlot: 0
+  attachesToSlot: 1
+  isInteractable: 0
+  interactionType: 0
+  linkToMapType: 0
   gridFootprint:
   - gridX: 0
     gridY: 0
+    canConnectAt: 0123
     isWalkable: 1
-    isInteractable: 0
-    interactionType: 0
-    hasSlot: 1
-    linkToMapType: 0
+    hasSlot: 0
+    slot: {fileID: 0}
 --- !u!61 &6328117217270616691
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -188,3 +190,50 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!1 &9112167382405995503
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4626293446023278497}
+  - component: {fileID: 2133887652156624252}
+  m_Layer: 0
+  m_Name: Crop
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4626293446023278497
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9112167382405995503}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6328117217270616690}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2133887652156624252
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9112167382405995503}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34502a5a79c6dc84a8f4a20de0acf571, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  seedGameobject: {fileID: 6328117217153012980}
+  prefab_itemToSpawn: {fileID: 6328117217270616688, guid: 27685be29d0c2eb49ad94a8f23f326ab, type: 3}
+  timeToGrow: 2

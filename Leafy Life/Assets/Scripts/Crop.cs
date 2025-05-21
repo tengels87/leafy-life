@@ -10,7 +10,7 @@ public class Crop : MonoBehaviour
     }
 
     public GameObject seedGameobject;
-    public GameObject cropGameobject;
+    public GameObject prefab_itemToSpawn;
 
     public float timeToGrow = 2;
 
@@ -33,6 +33,7 @@ public class Crop : MonoBehaviour
 
         if (age >= timeToGrow && growthState != GrowthState.MATURE) {
             setMature();
+            spawnItem();
         }
     }
 
@@ -40,7 +41,6 @@ public class Crop : MonoBehaviour
         timeOfInit = Time.time;
 
         seedGameobject.SetActive(true);
-        cropGameobject.SetActive(false);
 
         isInstantiated = true;
     }
@@ -49,6 +49,12 @@ public class Crop : MonoBehaviour
         growthState = GrowthState.MATURE;
 
         seedGameobject.SetActive(false);
-        cropGameobject.SetActive(true);
+    }
+
+    private void spawnItem() {
+        GameObject instance = Instantiate(prefab_itemToSpawn);
+
+        instance.transform.SetParent(this.transform);
+        instance.transform.localPosition = Vector3.zero;
     }
 }

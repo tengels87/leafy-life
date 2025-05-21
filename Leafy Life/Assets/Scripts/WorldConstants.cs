@@ -9,6 +9,7 @@ public sealed class WorldConstants {
     public static string objName_hudManager = "HUDmanager";
     public static string objName_structureManager = "StructureManager";
     public static string objName_player = "Player";
+    public static string objName_inventory = "Inventory";
 
     public GameManager gameManager;
     public SceneManager sceneManager;
@@ -17,6 +18,7 @@ public sealed class WorldConstants {
     public StructureManager structureManager;
     public Transform player;
     public PlayerController playerController;
+    public Inventory inventory;
 
     private System.Random rnd = new System.Random();
 
@@ -81,6 +83,14 @@ public sealed class WorldConstants {
         }
 
         return player;
+    }
+    //objName_inventory
+    public Inventory getInventory() {
+        if (inventory == null) {
+            inventory = GameObject.Find(objName_inventory).GetComponent<Inventory>();
+        }
+
+        return inventory;
     }
 
     public PlayerController getPlayerController() {
