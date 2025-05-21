@@ -6,8 +6,10 @@ public class HudManager : MonoBehaviour
 {
     public GameObject statsPanel;
     public GameObject buildPanel;
+    public GameObject furniturePanel;
 
-    public List<Object> buildMenuItems = new List<Object>();
+    public List<GameObject> buildMenuItems = new List<GameObject>();
+    public List<GameObject> furnitureMenuItems = new List<GameObject>();
 
     private Dictionary<MapController.MapType, List<GameObject>> buildMenuItemsDict = new Dictionary<MapController.MapType, List<GameObject>>();
 
@@ -29,8 +31,10 @@ public class HudManager : MonoBehaviour
 
         statsPanel.transform.localPosition = new Vector3(-0.5f * visibleWorldWidth, cam.orthographicSize, 2);
         buildPanel.transform.localPosition = new Vector3(-0.5f * visibleWorldWidth, cam.orthographicSize, 2);
+        furniturePanel.transform.localPosition = new Vector3(-0.5f * visibleWorldWidth, cam.orthographicSize, 2);
 
         initBuildPanelItems();
+        initFurniturePanelItems();
     }
 
     void Update()
@@ -54,17 +58,29 @@ public class HudManager : MonoBehaviour
     }
 
     private void initBuildPanelItems() {
-        for (int i = 0; i < buildMenuItems.Count; i++) {
-            GameObject instance = (GameObject)Instantiate(buildMenuItems[i]);
-            instance.transform.SetParent(buildPanel.transform);
+        foreach (GameObject item in buildMenuItems) {
+            item.transform.SetParent(buildPanel.transform);
 
-            BuildMenuItem menuItemData = instance.GetComponent<BuildMenuItem>();
-
+            // some items actually build something, others are just toggles for sub menues
+            BuildMenuItem menuItemData = item.GetComponent<BuildMenuItem>();
             if (menuItemData != null) {
                 if (!buildMenuItemsDict.ContainsKey(menuItemData.availableInMapType)) {
                     buildMenuItemsDict[menuItemData.availableInMapType] = new List<GameObject>();
                 }
-                buildMenuItemsDict[menuItemData.availableInMapType].Add(instance);
+                buildMenuItemsDict[menuItemData.availableInMapType].Add(item);
+            }
+        }
+    }
+
+    private void initFurniturePanelItems() {
+        for (int i = 0; i < furnitureMenuItems.Count; i++) {
+            furnitureMenuItems[i].transform.SetParent(furniturePanel.transform);
+
+            BuildMenuItem menuItemData = furnitureMenuItems[i].GetComponent<BuildMenuItem>();
+
+            if (menuItemData != null) {
+                furnitureMenuItems[i].transform.localPosition = new Vector3(2.25f, -2.5f - i * 1.2f);
+                furnitureMenuItems[i].SetActive(true);
             }
         }
     }

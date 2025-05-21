@@ -131,12 +131,12 @@ public class PlayerController : MonoBehaviour {
         switch (action.actionType) {
             case GameAction.ActionType.WALKTO:
 
-                // find start position for path finding algorithm
-                // start psition: use current position or target position from last action in queue
+                // clear all action when new walking action is queued
+                clearActions();
+
+                // find navigation path
+                // start psition: use current position
                 Vector2 startPosition = getPosition2D();
-                if (actionList.Count > 0) {
-                    startPosition = actionList[actionList.Count - 1].targetPosition;
-                }
 
                 MapController mapController = WorldConstants.Instance.getMapController();
                 if (mapController.checkPath(action.targetPosition, startPosition, out List<Vector2> resultPath)) {
@@ -169,6 +169,7 @@ public class PlayerController : MonoBehaviour {
     }
 
     public void clearActions() {
+        waypointList.Clear();
         actionList.Clear();
     }
 
@@ -200,12 +201,16 @@ public class PlayerController : MonoBehaviour {
 
                 case GameAction.ActionType.BUILD:
                     if (canMove()) {
+                        var buildingDoneCalback = allActions[0].callback;
+
                         stopInteraction();
                         removeAction(allActions[0]);
 
                         startInteraction(interactionData[(int)(InteractionType.CRAFT) - 1], () => {
                             stopInteraction();
                             mapController.buildTile(targetPositionInt.x, targetPositionInt.y, customDataObj);
+
+                            buildingDoneCalback?.Invoke();
                         });
                     }
 
