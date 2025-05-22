@@ -3575,6 +3575,11 @@ MonoBehaviour:
   prefab_ladder: {fileID: 6328117217270616688, guid: df3f5fe28c35c374e94ce62f3065704b, type: 3}
   prefab_ground_invisible: {fileID: 6328117217270616688, guid: c99da0e7484672c4182de5a579ca3b0b, type: 3}
   prefab_grass: {fileID: 6328117217270616688, guid: 2005717aa21c6cf4c81562bc4118456f, type: 3}
+  prefab_pinetree: {fileID: 6328117217270616688, guid: d87df3e2702c9c44ea8171867cfd5691, type: 3}
+  prefab_carrot: {fileID: 6328117217270616688, guid: 27685be29d0c2eb49ad94a8f23f326ab, type: 3}
+  prefab_log: {fileID: 6328117217270616688, guid: 019ab7ff0243225478708efbd1ed9ffc, type: 3}
+  prefab_decal_grass1: {fileID: 6328117217270616688, guid: 111c211b5330fd447bb140391666ba2d, type: 3}
+  prefab_decal_grass2: {fileID: 6328117217270616688, guid: 0a9f3d3a1bd23f547acaae3706bacb11, type: 3}
   prefab_maplink_treehouse: {fileID: 6328117217270616688, guid: e69e67c7a34d0d240a02a5eba599d29a, type: 3}
   prefab_maplink_garden: {fileID: 6328117217270616688, guid: 60913e5f6148b804eab7e6e880324e15, type: 3}
 --- !u!4 &1965369552
@@ -3806,7 +3811,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
+    oldSize: {x: 1.3541666, y: 1.4583334}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -3889,6 +3894,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: 6328117217270616688, guid: dcc636508c3b8db4bba6d27cbdce40c6, type: 3}
   availableInMapType: 0
+  comsumesItemType: 0
   infiniteUse: 0
   canvas_amountIndicator: {fileID: 1433018949}
 --- !u!4 &1596794666523488847
@@ -3981,6 +3987,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: 6328117217270616688, guid: 69f4736e361fafc4faf147a14b7709f5, type: 3}
   availableInMapType: 1
+  comsumesItemType: 1
   infiniteUse: 0
   canvas_amountIndicator: {fileID: 790563639}
 --- !u!114 &2301325155866412130
@@ -3997,6 +4004,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: 6328117217270616688, guid: df3f5fe28c35c374e94ce62f3065704b, type: 3}
   availableInMapType: 0
+  comsumesItemType: 0
   infiniteUse: 0
   canvas_amountIndicator: {fileID: 1791066519}
 --- !u!212 &2596922130198740777
@@ -4040,7 +4048,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 10
-  m_Sprite: {fileID: 21300000, guid: 86fd4aef79f0555488b8979af4d20770, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 1d8b5323658034445b6cf295d4d450fa, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -4188,6 +4196,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: 6328117217270616688, guid: 032eb33ebc01d154b804dde20ee3a2ff, type: 3}
   availableInMapType: 0
+  comsumesItemType: 0
   infiniteUse: 0
   canvas_amountIndicator: {fileID: 858196192}
 --- !u!1 &4208606666520518784
@@ -4242,6 +4251,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: 0}
   availableInMapType: 0
+  comsumesItemType: 0
   infiniteUse: 1
   canvas_amountIndicator: {fileID: 0}
 --- !u!212 &5168719485110537579
@@ -4355,6 +4365,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: 6328117217270616688, guid: 366c5bdcfb5187d469d404618c4fe8a2, type: 3}
   availableInMapType: 1
+  comsumesItemType: 0
   infiniteUse: 1
   canvas_amountIndicator: {fileID: 0}
 --- !u!4 &6318512851110870577
@@ -4387,6 +4398,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: 6328117217270616688, guid: efd566d8cd9df904386181817daf4cb7, type: 3}
   availableInMapType: 0
+  comsumesItemType: 0
   infiniteUse: 0
   canvas_amountIndicator: {fileID: 175758072}
 --- !u!61 &6419298207536153872

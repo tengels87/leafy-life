@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 6328117217270616693}
   - component: {fileID: 6328117217270616691}
   m_Layer: 0
-  m_Name: seed_carrot
+  m_Name: crop_carrot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
