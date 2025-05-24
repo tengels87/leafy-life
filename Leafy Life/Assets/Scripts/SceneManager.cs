@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class SceneManager : MonoBehaviour
 {
-    public static UnityAction<MapController.MapType> OnMapChanged;
+    public static UnityAction<MapController.MapType> MapChangedEvent;
 
     public MapController mapTreehouse;
     public MapController mapGarden;
@@ -28,15 +28,9 @@ public class SceneManager : MonoBehaviour
 
     void Update()
     {
+        // start on garden map
         if (lastActiveMapController == null) {
-            activateMap(MapController.MapType.TREEHOUSE);
-        }
-
-        if (Input.GetKeyDown(KeyCode.Space)) {
             activateMap(MapController.MapType.GARDEN);
-        }
-        if (Input.GetKeyDown(KeyCode.Return)) {
-            activateMap(MapController.MapType.TREEHOUSE);
         }
     }
 
@@ -56,7 +50,7 @@ public class SceneManager : MonoBehaviour
 
                 lastActiveMapController = mapController;
 
-                OnMapChanged?.Invoke(mapType);
+                MapChangedEvent?.Invoke(mapType);
             }
         }
     }
