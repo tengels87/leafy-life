@@ -6,8 +6,9 @@ using UnityEngine.UI;
 public class BuildMenuItem : MonoBehaviour {
     public GameObject prefab;
     public MapController.MapType availableInMapType;
+    public GameObject prefab_comsumesItem;
     public bool infiniteUse = false;
-    public Canvas canvas_amountIndicator;
+    public GameObject canvasGameobject;
 
     private Structure buildableStructure;
     private Structure currentDragged;
@@ -16,6 +17,7 @@ public class BuildMenuItem : MonoBehaviour {
     private List<GameObject> buildLocationVisualizers = new List<GameObject>();
 
     private bool isEnabled;
+    private bool isVisible;
     private int amount = 0;
 
     void OnEnable() {
@@ -50,7 +52,7 @@ public class BuildMenuItem : MonoBehaviour {
             RaycastHit2D[] hits = Physics2D.RaycastAll(mouseWorldPos, new Vector3(0, 0, 1));
             bool hasHit = false;
             foreach (RaycastHit2D hit in hits) {
-                if (hit.collider.gameObject.Equals(this.gameObject)) {
+                if (isVisible && hit.collider.gameObject.Equals(this.gameObject)) {
                     hasHit = true;
                     break;
                 }
@@ -140,22 +142,25 @@ public class BuildMenuItem : MonoBehaviour {
 
                         gameAction = new GameAction(GameAction.ActionType.BUILD, currentBuildLocation, () => {
                             Inventory inventory = WorldConstants.Instance.getInventory();
-                            Crop cropScript = prefab.GetComponentInChildren<Crop>();
 
-                            if (inventory != null && cropScript != null) {
-                                Collectable collectableScript = cropScript.prefab_itemToSpawn.GetComponent<Collectable>();
-                                if (collectableScript != null) {
-                                    inventory.removeItem(collectableScript.itemData);
+                            if (inventory != null) {
+                                if (infiniteUse == false) {
+                                    if (prefab_comsumesItem != null) {
+                                        Inventory.InventoryItem itemToConsume = prefab_comsumesItem.GetComponent<Collectable>()?.itemData;
+                                        if (itemToConsume != null) {
+                                            inventory.removeItem(itemToConsume);
+                                        }
+                                    }
                                 }
                             }
                         });
                         gameAction.customData = prefab;
                         playerController.addAction(gameAction);
                     }
-
+                    
                     // collapse sub menues
-                    MenuCollapse[] subMenues = WorldConstants.Instance.getHudManager().GetComponentsInChildren<MenuCollapse>();
-                    foreach (MenuCollapse menu in subMenues) {
+                    ToggleGameObject[] subMenues = WorldConstants.Instance.getHudManager().GetComponentsInChildren<ToggleGameObject>();
+                    foreach (ToggleGameObject menu in subMenues) {
                         menu.hide();
                     }
                 }
@@ -163,38 +168,47 @@ public class BuildMenuItem : MonoBehaviour {
         }
     }
 
+    public void setVisible(bool val) {
+        isVisible = val;
+
+        if (canvasGameobject != null) {
+            canvasGameobject.SetActive(val);
+        }
+
+        updateLabel();
+    }
+
     public void setEnabled(bool val) {
         isEnabled = val;
 
-        SpriteRenderer renderer = this.GetComponent<SpriteRenderer>();
-        if (renderer != null) {
-            renderer.material.SetFloat("_EffectAmount", val ? 0f : 1f);
+        Image buildIcon = canvasGameobject.GetComponentInChildren<Image>();
+        if (buildIcon != null) {
+            buildIcon.material.SetFloat("_EffectAmount", val ? 0f : 1f);
         }
 
-        if (canvas_amountIndicator != null) {
-            canvas_amountIndicator.enabled = val;
-
-            Text textLabel = canvas_amountIndicator.GetComponentInChildren<Text>();
-            if (textLabel != null && amount > 0) {
-                textLabel.text = "" + amount;
-            }
-        }
+        updateLabel();
     }
 
     public void updateLabel() {
-        if (canvas_amountIndicator != null) {
-            Text textLabel = canvas_amountIndicator.GetComponentInChildren<Text>();
-            if (textLabel != null && amount > 0) {
+        if (canvasGameobject != null) {
+            Image backgroundLabel = canvasGameobject.GetComponentsInChildren<Image>()[1];
+            Text textLabel = canvasGameobject.GetComponentInChildren<Text>();
+
+            if (backgroundLabel != null) {
+                backgroundLabel.enabled = (amount > 0);
+            }
+
+            if (textLabel != null) {
+                textLabel.enabled = (amount > 0);
                 textLabel.text = "" + amount;
             }
+            
         }
     }
 
     private void OnItemAdded(Inventory.InventoryItem item, bool isFirstOfThisKind) {
-        if (buildableStructure != null) {
-            if (item.itemType == Inventory.InventoryItem.ItemType.FOOD
-                && buildableStructure.structureType == Structure.StructureType.CROP) {
-
+        if (buildableStructure != null && prefab_comsumesItem != null) {
+            if (item.itemType == prefab_comsumesItem.GetComponent<Collectable>().itemData.itemType) {
                 amount++;
 
                 updateLabel();
@@ -207,9 +221,8 @@ public class BuildMenuItem : MonoBehaviour {
     }
 
     private void OnItemRemoved(Inventory.InventoryItem item, bool isLastOfThisKind) {
-        if (buildableStructure != null) {
-            if (buildableStructure.structureType == Structure.StructureType.CROP) {
-
+        if (buildableStructure != null && prefab_comsumesItem != null) {
+            if (item.itemType == prefab_comsumesItem.GetComponent<Collectable>().itemData.itemType) {
                 if (amount > 0) {
                     amount--;
 

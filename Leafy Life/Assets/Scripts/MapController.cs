@@ -161,12 +161,13 @@ public class MapController : MonoBehaviour {
                         if (i == 10 || i == 29 || j == 10 || j == 29) {
                             Instantiate(WorldConstants.Instance.getStructureManager().prefab_pinetree, new Vector2(i, j), Quaternion.identity, this.transform);
                         } else if ((i < 15 || i > 25) || (j < 15 || j > 25)) {
-                            if (rand < 0.2f) {
+                            if (rand < 0.1f) {
                                 Instantiate(WorldConstants.Instance.getStructureManager().prefab_pinetree, new Vector2(i, j), Quaternion.identity, this.transform);
-                            } else if (rand < 0.7f) {
+                            } else if (rand < 0.5f) {
                                 // wooden logs
                                 Instantiate(WorldConstants.Instance.getStructureManager().prefab_log, new Vector2(i + 0.5f, j + 0.5f), Quaternion.identity, this.transform);
                             }
+                            Instantiate(WorldConstants.Instance.getStructureManager().prefab_grass, new Vector2(i, j), Quaternion.identity, this.transform);
                         } else {
                             buildTile(i, j, WorldConstants.Instance.getStructureManager().prefab_grass);
                         }
@@ -187,7 +188,7 @@ public class MapController : MonoBehaviour {
                         if (rand < 0.2f) {
                             Instantiate(WorldConstants.Instance.getStructureManager().prefab_decal_grass1, new Vector2(i + rand*3, j + rand*3), Quaternion.identity, this.transform);
                         } else if (rand < 0.4f) {
-                            Instantiate(WorldConstants.Instance.getStructureManager().prefab_decal_grass1, new Vector2(i + rand*3, j + rand*3), Quaternion.identity, this.transform);
+                            Instantiate(WorldConstants.Instance.getStructureManager().prefab_decal_grass2, new Vector2(i + rand*3, j + rand*3), Quaternion.identity, this.transform);
                         }
                     }
                 }

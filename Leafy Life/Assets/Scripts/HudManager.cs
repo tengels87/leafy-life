@@ -14,11 +14,11 @@ public class HudManager : MonoBehaviour
     private Dictionary<MapController.MapType, List<GameObject>> buildMenuItemsDict = new Dictionary<MapController.MapType, List<GameObject>>();
 
     void OnEnable() {
-        SceneManager.OnMapChanged += OnMapChangedEvent;
+        SceneManager.MapChangedEvent += OnMapChangedEvent;
     }
 
     void OnDisable() {
-        SceneManager.OnMapChanged -= OnMapChangedEvent;
+        SceneManager.MapChangedEvent -= OnMapChangedEvent;
     }
 
     void Start()
@@ -88,12 +88,23 @@ public class HudManager : MonoBehaviour
     private void updateBuildPanelItemsVisibility(MapController.MapType mapType) {
         foreach (List<GameObject> list in buildMenuItemsDict.Values) {
             foreach (GameObject go in list) {
-                go.SetActive(false);
+                BuildMenuItem buildMenuScript = go.GetComponent<BuildMenuItem>();
+                if (buildMenuScript != null) {
+                    buildMenuScript.setVisible(false);
+                }
             }
         }
-        for (int i = 0; i < buildMenuItemsDict[mapType].Count; i++) {
-            buildMenuItemsDict[mapType][i].transform.localPosition = new Vector3(0.75f, -2.5f - i * 1.2f);
-            buildMenuItemsDict[mapType][i].SetActive(true);
+
+        // show all build icons which do belong to mapType
+        if (buildMenuItemsDict.ContainsKey(mapType)) {
+            for (int i = 0; i < buildMenuItemsDict[mapType].Count; i++) {
+                buildMenuItemsDict[mapType][i].transform.localPosition = new Vector3(0.75f, -2.5f - i * 1.2f);
+
+                BuildMenuItem buildMenuScript = buildMenuItemsDict[mapType][i].GetComponent<BuildMenuItem>();
+                if (buildMenuScript != null) {
+                    buildMenuScript.setVisible(true);
+                }
+            }
         }
     }
 

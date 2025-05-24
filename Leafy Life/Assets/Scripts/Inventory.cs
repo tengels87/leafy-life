@@ -72,12 +72,13 @@ public class Inventory : MonoBehaviour
 
         public override bool Equals(object obj) {
             return obj is InventoryItem item &&
-                   name == item.name &&
+                   //name == item.name &&
                    itemType == item.itemType;
         }
 
         public override int GetHashCode() {
-            return HashCode.Combine(name, itemType);
+            //return HashCode.Combine(name, itemType);
+            return HashCode.Combine("", itemType);
         }
     }
 }

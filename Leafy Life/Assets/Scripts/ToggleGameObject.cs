@@ -2,15 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MenuCollapse : MonoBehaviour
+public class ToggleGameObject : MonoBehaviour
 {
-    public GameObject menuGameObject;
-    public GameObject collapseButton;
+    public GameObject targetGameObject;
+    public GameObject toggleGameObject;
 
-    private bool isExpanded = false;
+    private bool isTargetEnabled= false;
 
     void Awake() {
-        menuGameObject.SetActive(isExpanded);
+        //targetGameObject.SetActive(isTargetEnabled);
     }
 
     void Start()
@@ -25,7 +25,7 @@ public class MenuCollapse : MonoBehaviour
             RaycastHit2D[] hits = Physics2D.RaycastAll(targetPos, new Vector3(0, 0, 1));
             bool hasHit = false;
             foreach (RaycastHit2D hit in hits) {
-                if (hit.collider.gameObject.Equals(collapseButton)) {
+                if (hit.collider.gameObject.Equals(toggleGameObject)) {
                     hasHit = true;
                     break;
                 }
@@ -37,20 +37,20 @@ public class MenuCollapse : MonoBehaviour
     }
 
     public void show() {
-        isExpanded = true;
+        isTargetEnabled = true;
 
-        menuGameObject.SetActive(true);
+        targetGameObject.SetActive(true);
     }
 
     public void hide() {
-        isExpanded = false;
+        isTargetEnabled = false;
 
-        menuGameObject.SetActive(false);
+        targetGameObject.SetActive(false);
     }
 
     public void toggle() {
-        isExpanded = !isExpanded;
+        isTargetEnabled = !isTargetEnabled;
 
-        menuGameObject.SetActive(isExpanded);
+        targetGameObject.SetActive(isTargetEnabled);
     }
 }
