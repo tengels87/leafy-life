@@ -11,8 +11,14 @@ public class PlayerController : MonoBehaviour {
     }
 
     public float movementSpeed = 1f;
+    [SerializeField]
+    private AudioSource audio_walkWood;
+    [SerializeField]
+    private AudioSource audio_walkDirt;
+    [SerializeField]
+    private AudioSource audio_craft;
 
-    public StatsController statsController;
+    private StatsController statsController;
 
     private Vector3 moveDirection;
     private List<Vector2> waypointList = new List<Vector2>();
@@ -25,8 +31,17 @@ public class PlayerController : MonoBehaviour {
     private InteractionData currentInteraction;
     private Coroutine coroutineInteraction;
 
+    void OnEnable() {
+        AnimationEventHandler.AminationFinishedEvent += playSoundCrafting;
+    }
+
+    void OnDisable() {
+        AnimationEventHandler.AminationFinishedEvent -= playSoundCrafting;
+    }
+
     void Awake() {
         interactionData.Clear();
+
         interactionData.Add(new InteractionData("player_sleep", "isSleeping", 2f));
         interactionData.Add(new InteractionData("player_craft", "isCrafting", 2f));
     }
@@ -307,6 +322,16 @@ public class PlayerController : MonoBehaviour {
         bool isCrafting = !interactionData[(int)(InteractionType.CRAFT) - 1].isFinished();
 
         return isSleeping == false && isCrafting == false;
+    }
+
+    public void playSoundCrafting(string animName) {
+        if (animName == "run") {
+            WorldConstants.Instance.getAudioPool().playImmediate(audio_walkDirt);
+        }
+
+        if (animName == "craft") {
+            WorldConstants.Instance.getAudioPool().playImmediate(audio_craft);
+        }
     }
 
     public class InteractionData {

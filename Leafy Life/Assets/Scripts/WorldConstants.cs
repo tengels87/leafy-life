@@ -10,6 +10,7 @@ public sealed class WorldConstants {
     public static string objName_structureManager = "StructureManager";
     public static string objName_player = "Player";
     public static string objName_inventory = "Inventory";
+    public static string objName_audioManager = "AudioManager";
 
     public GameManager gameManager;
     public SceneManager sceneManager;
@@ -19,6 +20,7 @@ public sealed class WorldConstants {
     public Transform player;
     public PlayerController playerController;
     public Inventory inventory;
+    public AudioPool audioPool;
 
     private System.Random rnd = new System.Random();
 
@@ -84,7 +86,15 @@ public sealed class WorldConstants {
 
         return player;
     }
-    //objName_inventory
+
+    public PlayerController getPlayerController() {
+        if (playerController == null) {
+            playerController = GameObject.Find(objName_player).GetComponent<PlayerController>();
+        }
+
+        return playerController;
+    }
+
     public Inventory getInventory() {
         if (inventory == null) {
             inventory = GameObject.Find(objName_inventory).GetComponent<Inventory>();
@@ -93,11 +103,11 @@ public sealed class WorldConstants {
         return inventory;
     }
 
-    public PlayerController getPlayerController() {
-        if (playerController == null) {
-            playerController = GameObject.Find(objName_player).GetComponent<PlayerController>();
+    public AudioPool getAudioPool() {
+        if (audioPool == null) {
+            audioPool = GameObject.Find(objName_audioManager).GetComponent<AudioPool>();
         }
 
-        return playerController;
+        return audioPool;
     }
 }
