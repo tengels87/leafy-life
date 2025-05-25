@@ -6,11 +6,14 @@ public class ToggleGameObject : MonoBehaviour
 {
     public GameObject targetGameObject;
     public GameObject toggleGameObject;
+    public bool disabledByDefault = true;
 
-    private bool isTargetEnabled= false;
+    private bool isTargetEnabled = false;
 
     void Awake() {
-        //targetGameObject.SetActive(isTargetEnabled);
+        if (disabledByDefault) {
+            targetGameObject.SetActive(isTargetEnabled);
+        }
     }
 
     void Start()

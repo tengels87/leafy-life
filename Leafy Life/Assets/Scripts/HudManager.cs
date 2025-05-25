@@ -12,13 +12,14 @@ public class HudManager : MonoBehaviour
     public List<GameObject> furnitureMenuItems = new List<GameObject>();
 
     private Dictionary<MapController.MapType, List<GameObject>> buildMenuItemsDict = new Dictionary<MapController.MapType, List<GameObject>>();
+    private Dictionary<MapController.MapType, List<GameObject>> furnitureMenuItemsDict = new Dictionary<MapController.MapType, List<GameObject>>();
 
     void OnEnable() {
-        SceneManager.MapChangedEvent += OnMapChangedEvent;
+        SceneManager.MapChangedEvent += OnMapChanged;
     }
 
     void OnDisable() {
-        SceneManager.MapChangedEvent -= OnMapChangedEvent;
+        SceneManager.MapChangedEvent -= OnMapChanged;
     }
 
     void Start()
@@ -70,6 +71,19 @@ public class HudManager : MonoBehaviour
                 buildMenuItemsDict[menuItemData.availableInMapType].Add(item);
             }
         }
+
+        foreach (GameObject item in furnitureMenuItems) {
+            item.transform.SetParent(furniturePanel.transform);
+
+            // some items actually build something, others are just toggles for sub menues
+            BuildMenuItem menuItemData = item.GetComponent<BuildMenuItem>();
+            if (menuItemData != null) {
+                if (!furnitureMenuItemsDict.ContainsKey(menuItemData.availableInMapType)) {
+                    furnitureMenuItemsDict[menuItemData.availableInMapType] = new List<GameObject>();
+                }
+                furnitureMenuItemsDict[menuItemData.availableInMapType].Add(item);
+            }
+        }
     }
 
     private void initFurniturePanelItems() {
@@ -95,6 +109,15 @@ public class HudManager : MonoBehaviour
             }
         }
 
+        foreach (List<GameObject> list in furnitureMenuItemsDict.Values) {
+            foreach (GameObject go in list) {
+                BuildMenuItem buildMenuScript = go.GetComponent<BuildMenuItem>();
+                if (buildMenuScript != null) {
+                    buildMenuScript.setVisible(true);
+                }
+            }
+        }
+
         // show all build icons which do belong to mapType
         if (buildMenuItemsDict.ContainsKey(mapType)) {
             for (int i = 0; i < buildMenuItemsDict[mapType].Count; i++) {
@@ -108,7 +131,7 @@ public class HudManager : MonoBehaviour
         }
     }
 
-    private void OnMapChangedEvent(MapController.MapType mapType) {
+    private void OnMapChanged(MapController.MapType mapType) {
         updateBuildPanelItemsVisibility(mapType);
     }
 }

@@ -20,17 +20,10 @@ public class BuildMenuItem : MonoBehaviour {
     private bool isVisible;
     private int amount = 0;
 
-    void OnEnable() {
+    void Awake() {
         Inventory.ItemAddedEvent += OnItemAdded;
         Inventory.ItemRemovedEvent += OnItemRemoved;
-    }
 
-    void OnDisable() {
-        Inventory.ItemAddedEvent -= OnItemAdded;
-        Inventory.ItemRemovedEvent -= OnItemRemoved;
-    }
-
-    void Start() {
         if (prefab != null) {
             buildableStructure = prefab.GetComponent<Structure>();
         }
@@ -41,7 +34,17 @@ public class BuildMenuItem : MonoBehaviour {
             setEnabled(false);
         }
 
+        setVisible(isVisible);
         updateLabel();
+    }
+
+    void OnDestroy() {
+        Inventory.ItemAddedEvent -= OnItemAdded;
+        Inventory.ItemRemovedEvent -= OnItemRemoved;
+    }
+
+    void Start() {
+        
     }
 
     void Update() {
