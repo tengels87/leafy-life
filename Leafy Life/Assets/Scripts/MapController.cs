@@ -167,10 +167,11 @@ public class MapController : MonoBehaviour {
                                 // wooden logs
                                 Instantiate(WorldConstants.Instance.getStructureManager().prefab_log, new Vector2(i + 0.5f, j + 0.5f), Quaternion.identity, this.transform);
                             }
-                            Instantiate(WorldConstants.Instance.getStructureManager().prefab_grass, new Vector2(i, j), Quaternion.identity, this.transform);
+                            buildTile(i, j, WorldConstants.Instance.getStructureManager().prefab_grass);
                         } else {
                             buildTile(i, j, WorldConstants.Instance.getStructureManager().prefab_grass);
                         }
+
                     }
                 }
             }
