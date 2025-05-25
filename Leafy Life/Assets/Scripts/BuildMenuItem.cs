@@ -73,7 +73,7 @@ public class BuildMenuItem : MonoBehaviour {
                         dragVisualizer = (GameObject)Object.Instantiate(prefab);
                         dragVisualizer.transform.position = new Vector3(0, 0, 0);
 
-                        // determine lofbuildtilcation where structure can be placed
+                        // get all locations where structure can be placed
                         currentBuildLocations = mapController.getBuildLocations(structure);
 
                         // clean and instantiate location visualizers
@@ -98,22 +98,36 @@ public class BuildMenuItem : MonoBehaviour {
             // position visual at mouse position
             dragVisualizer.transform.position = new Vector3(mouseWorldPos.x - 0.5f, mouseWorldPos.y - 0.5f, 0);
 
-            // snap visual to possible build location
+            // check if being dropped on player
+            bool draggedOntoPlayer = false;
             bool canBuild = false;
             Vector2Int currentBuildLocation = Vector2Int.zero;
-            foreach (Vector2Int loc in currentBuildLocations) {
-                if (mouseWorldPos.x > loc.x && mouseWorldPos.x < loc.x + 1 && mouseWorldPos.y > loc.y && mouseWorldPos.y < loc.y + 1) {
-                    dragVisualizer.transform.position = new Vector3(loc.x, loc.y, 0);
 
-                    currentBuildLocation = loc;
-                    canBuild = true;
+            PlayerController playerController = WorldConstants.Instance.getPlayerController();
+            if (Vector3.Distance(dragVisualizer.transform.position, playerController.transform.position) < 0.5f) {
+                draggedOntoPlayer = true;
+            }
 
-                    break;
+            if (draggedOntoPlayer) {
+
+            } else {
+
+                // snap visual to possible build location
+                foreach (Vector2Int loc in currentBuildLocations) {
+                    if (mouseWorldPos.x > loc.x && mouseWorldPos.x < loc.x + 1 && mouseWorldPos.y > loc.y && mouseWorldPos.y < loc.y + 1) {
+                        dragVisualizer.transform.position = new Vector3(loc.x, loc.y, 0);
+
+                        currentBuildLocation = loc;
+                        canBuild = true;
+
+                        break;
+                    }
                 }
             }
 
 
-            // drop structure to build it
+
+            // drop food to eat it or structure to build it
             if (Input.GetMouseButtonUp(0)) {
 
                 // destroy location visualizers
@@ -128,6 +142,26 @@ public class BuildMenuItem : MonoBehaviour {
                 }
 
 
+                if (draggedOntoPlayer) {
+                    canBuild = false;
+
+                    // feed player
+                    Inventory inventory = WorldConstants.Instance.getInventory();
+                    if (inventory != null) {
+                        if (infiniteUse == false) {
+                            if (prefab_comsumesItem != null) {
+                                Inventory.InventoryItem itemToConsume = prefab_comsumesItem.GetComponent<Collectable>()?.itemData;
+                                if (itemToConsume != null) {
+                                    if (itemToConsume.itemType == Inventory.InventoryItem.ItemType.FOOD) {
+                                        playerController.GetComponent<StatsController>().changeNutritionValue(30);
+                                        inventory.removeItem(itemToConsume);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
                 if (canBuild) {
                     MapController mapController = WorldConstants.Instance.getMapController();
 
@@ -137,8 +171,6 @@ public class BuildMenuItem : MonoBehaviour {
 
                         // add walk and build actions
                         Vector2 walktoPosition = new Vector2(walkableTile.gridX, walkableTile.gridY);
-
-                        PlayerController playerController = WorldConstants.Instance.getPlayerController();
 
                         GameAction gameAction = new GameAction(GameAction.ActionType.WALKTO, walktoPosition);
                         playerController.addAction(gameAction);
@@ -160,7 +192,7 @@ public class BuildMenuItem : MonoBehaviour {
                         gameAction.customData = prefab;
                         playerController.addAction(gameAction);
                     }
-                    
+
                     // collapse sub menues
                     ToggleGameObject[] subMenues = WorldConstants.Instance.getHudManager().GetComponentsInChildren<ToggleGameObject>();
                     foreach (ToggleGameObject menu in subMenues) {

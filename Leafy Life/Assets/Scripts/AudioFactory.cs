@@ -14,8 +14,17 @@ public class AudioFactory : MonoBehaviour
     private AudioSource currentPlaying;
     private AudioSource laterPlaying;
 
+    private AudioPool audioPool;
+
     void OnEnable() {
+        audioPool = this.GetComponent<AudioPool>();
+
         SceneManager.MapChangedEvent += OnMapChanged;
+
+        StatsController.NutritionIncreasedEvent += () => { audioPool.playImmediate(voiceDelicious); };
+
+        StatsController.NutritionLowEvent += () => { audioPool.playImmediate(voiceHungry); };
+        StatsController.SleepLowEvent += () => { audioPool.playImmediate(voiceTired); };
     }
 
     void OnDisable() {
