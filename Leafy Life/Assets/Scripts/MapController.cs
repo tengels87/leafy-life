@@ -165,7 +165,8 @@ public class MapController : MonoBehaviour {
                                 Instantiate(WorldConstants.Instance.getStructureManager().prefab_pinetree, new Vector2(i, j), Quaternion.identity, this.transform);
                             } else if (rand < 0.5f) {
                                 // wooden logs
-                                Instantiate(WorldConstants.Instance.getStructureManager().prefab_log, new Vector2(i + 0.5f, j + 0.5f), Quaternion.identity, this.transform);
+                                Instantiate(WorldConstants.Instance.getStructureManager().prefab_log, new Vector2(i + rand, j + rand), Quaternion.identity, this.transform);
+                                Instantiate(WorldConstants.Instance.getStructureManager().prefab_log, new Vector2(i + rand, j + rand), Quaternion.identity, this.transform);
                             }
                             buildTile(i, j, WorldConstants.Instance.getStructureManager().prefab_grass);
                         } else {
@@ -232,11 +233,6 @@ public class MapController : MonoBehaviour {
 
                 spawnTile(t);
             }
-        }
-
-        Crop crop = structure.GetComponentInChildren<Crop>();
-        if (crop != null) {
-            crop.init();
         }
     }
 

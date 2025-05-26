@@ -35,6 +35,27 @@ public class Structure : MonoBehaviour {
 
     void Update() {
 
+        // interact on tap
+        if (Input.GetMouseButtonDown(0)) {
+            Vector2 mouseWorldPos = MapController.pixelPos2WorldPos(Input.mousePosition);
+
+            RaycastHit2D[] hits = Physics2D.RaycastAll(mouseWorldPos, new Vector3(0, 0, 1));
+            bool hasHit = false;
+            foreach (RaycastHit2D hit in hits) {
+                if (hit.collider.gameObject.Equals(this.gameObject)) {
+                    hasHit = true;
+                    break;
+                }
+            }
+            if (hasHit) {
+                Crop crop = this.GetComponentInChildren<Crop>();
+                if (crop != null) {
+                    crop.harvestAll();
+
+                    UnityEngine.Object.Destroy(this.gameObject);
+                }
+            }
+        }
     }
 
     public Structure getInteractableStructure() {

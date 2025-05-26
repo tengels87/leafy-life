@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class BuildMenuItem : MonoBehaviour {
     public GameObject prefab;
+    public GameObject prefab_optionalDragVisuals;
     public MapController.MapType availableInMapType;
     public GameObject prefab_comsumesItem;
     public bool infiniteUse = false;
@@ -12,7 +13,7 @@ public class BuildMenuItem : MonoBehaviour {
 
     private Structure buildableStructure;
     private Structure currentDragged;
-    private GameObject dragVisualizer;
+    private GameObject dragVisualsInstance;
     private List<Vector2Int> currentBuildLocations;
     private List<GameObject> buildLocationVisualizers = new List<GameObject>();
 
@@ -70,8 +71,8 @@ public class BuildMenuItem : MonoBehaviour {
                         // instantiate drag visuals
                         MapController mapController = WorldConstants.Instance.getMapController();
 
-                        dragVisualizer = (GameObject)Object.Instantiate(prefab);
-                        dragVisualizer.transform.position = new Vector3(0, 0, 0);
+                        dragVisualsInstance = (GameObject)Object.Instantiate(prefab_optionalDragVisuals != null ? prefab_optionalDragVisuals : prefab);
+                        dragVisualsInstance.transform.position = new Vector3(0, 0, 0);
 
                         // get all locations where structure can be placed
                         currentBuildLocations = mapController.getBuildLocations(structure);
@@ -96,7 +97,7 @@ public class BuildMenuItem : MonoBehaviour {
         if (currentDragged != null) {
 
             // position visual at mouse position
-            dragVisualizer.transform.position = new Vector3(mouseWorldPos.x - 0.5f, mouseWorldPos.y - 0.5f, 0);
+            dragVisualsInstance.transform.position = new Vector3(mouseWorldPos.x - 0.5f, mouseWorldPos.y - 0.5f, 0);
 
             // check if being dropped on player
             bool draggedOntoPlayer = false;
@@ -104,7 +105,7 @@ public class BuildMenuItem : MonoBehaviour {
             Vector2Int currentBuildLocation = Vector2Int.zero;
 
             PlayerController playerController = WorldConstants.Instance.getPlayerController();
-            if (Vector3.Distance(dragVisualizer.transform.position, playerController.transform.position) < 0.5f) {
+            if (Vector3.Distance(dragVisualsInstance.transform.position, playerController.transform.position) < 0.5f) {
                 draggedOntoPlayer = true;
             }
 
@@ -115,7 +116,7 @@ public class BuildMenuItem : MonoBehaviour {
                 // snap visual to possible build location
                 foreach (Vector2Int loc in currentBuildLocations) {
                     if (mouseWorldPos.x > loc.x && mouseWorldPos.x < loc.x + 1 && mouseWorldPos.y > loc.y && mouseWorldPos.y < loc.y + 1) {
-                        dragVisualizer.transform.position = new Vector3(loc.x, loc.y, 0);
+                        dragVisualsInstance.transform.position = new Vector3(loc.x, loc.y, 0);
 
                         currentBuildLocation = loc;
                         canBuild = true;
@@ -127,7 +128,8 @@ public class BuildMenuItem : MonoBehaviour {
 
 
 
-            // drop food to eat it or structure to build it
+            // drop food on player to eat it
+            // or dropstructure on buildLocation to build it
             if (Input.GetMouseButtonUp(0)) {
 
                 // destroy location visualizers
@@ -137,13 +139,13 @@ public class BuildMenuItem : MonoBehaviour {
                 buildLocationVisualizers.Clear();
 
                 currentDragged = null;
-                if (dragVisualizer != null) {
-                    Destroy(dragVisualizer);
+                if (dragVisualsInstance != null) {
+                    Destroy(dragVisualsInstance);
                 }
 
 
                 if (draggedOntoPlayer) {
-                    canBuild = false;
+                    canBuild = false;   // ignore building the structure when dragged at player
 
                     // feed player
                     Inventory inventory = WorldConstants.Instance.getInventory();
