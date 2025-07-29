@@ -28,7 +28,7 @@ public class SceneManager : MonoBehaviour
 
     void Update()
     {
-        // start on garden map
+        // begin on garden map
         if (lastActiveMapController == null) {
             activateMap(MapController.MapType.GARDEN);
         }
@@ -38,7 +38,6 @@ public class SceneManager : MonoBehaviour
         if (mapsDict.TryGetValue(mapType, out MapController mapController)) {
             if (mapController != lastActiveMapController) {
                 mapController.gameObject.SetActive(true);
-                mapController.init();
 
                 if (lastActiveMapController != null) {
                     lastActiveMapController.gameObject.SetActive(false);

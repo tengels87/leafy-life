@@ -20,7 +20,7 @@ public class Collectable : MonoBehaviour
     void Update()
     {
         if (isCollected) {
-            //return;
+            return;
         }
 
         if (Input.GetMouseButtonDown(0)) {
@@ -46,22 +46,24 @@ public class Collectable : MonoBehaviour
     }
 
     public void collect() {
-        isCollected = true;
+        if (!isCollected) {
+            isCollected = true;
 
-        Vector3 playerPos = WorldConstants.Instance.getPlayer().transform.position;
-        playerPos = playerPos - (playerPos - this.transform.position).normalized * 0.8f;
-        Vector3 midTargetPos = this.gameObject.transform.position + (this.transform.position - playerPos).normalized * (0.2f + Random.value);
+            Vector3 playerPos = WorldConstants.Instance.getPlayer().transform.position;
+            playerPos = playerPos - (playerPos - this.transform.position).normalized * 0.8f;
+            Vector3 midTargetPos = this.gameObject.transform.position + (this.transform.position - playerPos).normalized * (0.2f + Random.value);
 
-        // unlink, because parent will be probably be deleted
-        this.transform.SetParent(null);
+            // unlink, because parent will be probably be deleted
+            this.transform.SetParent(null);
 
-        this.gameObject.Tween("flyToPlayer" + Random.value, this.gameObject.transform.position, midTargetPos, 0.5f, TweenScaleFunctions.CubicEaseInOut, (t) => {
-            this.gameObject.transform.position = t.CurrentValue;
-        }).ContinueWith(new Vector3Tween().Setup(midTargetPos, playerPos, 0.3f, TweenScaleFunctions.Linear, (t) => {
-            this.gameObject.transform.position = t.CurrentValue;
-        }, (t) => {
-            OnCollectedEvent?.Invoke(itemData);
-            Object.Destroy(this.gameObject);
-        }));
+            this.gameObject.Tween("flyToPlayer" + Random.value, this.gameObject.transform.position, midTargetPos, 0.5f, TweenScaleFunctions.CubicEaseInOut, (t) => {
+                this.gameObject.transform.position = t.CurrentValue;
+            }).ContinueWith(new Vector3Tween().Setup(midTargetPos, playerPos, 0.3f, TweenScaleFunctions.Linear, (t) => {
+                this.gameObject.transform.position = t.CurrentValue;
+            }, (t) => {
+                OnCollectedEvent?.Invoke(itemData);
+                Object.Destroy(this.gameObject);
+            }));
+        }
     }
 }

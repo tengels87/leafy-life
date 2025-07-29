@@ -223,7 +223,7 @@ public class PlayerController : MonoBehaviour {
 
                         startInteraction(interactionData[(int)(InteractionType.CRAFT) - 1], () => {
                             stopInteraction();
-                            mapController.buildTile(targetPositionInt.x, targetPositionInt.y, customDataObj);
+                            mapController.buildTile(targetPositionInt.x, targetPositionInt.y, customDataObj, true);
 
                             buildingDoneCalback?.Invoke();
                         });
@@ -278,7 +278,9 @@ public class PlayerController : MonoBehaviour {
 
             // affect stats after animation has been finished (i.e. start sleeping after laying dwn was finished)
             if (interaction.isFinished()) {
-                statsController.addQueueIncreaseSleep();
+                if (interaction.getStateName().Equals("isSleeping")) {
+                    statsController.addQueueIncreaseSleep();
+                }
 
                 if (!firedCallback) {
                     if (callback != null) {

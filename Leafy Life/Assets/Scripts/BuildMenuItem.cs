@@ -167,32 +167,39 @@ public class BuildMenuItem : MonoBehaviour {
                 if (canBuild) {
                     MapController mapController = WorldConstants.Instance.getMapController();
 
-                    // position to walk to before building
-                    MapController.Tile walkableTile = mapController.getNearestWalkableTile(currentBuildLocation);
+                    // get position to walk to before building
+                    Vector2Int playerPosInt = new Vector2Int((int)playerController.getPosition2D().x, (int)playerController.getPosition2D().y);
+                    MapController.Tile walkableTile = mapController.getNearestWalkableTile(currentBuildLocation, playerPosInt);
                     if (walkableTile != null) {
 
                         // add walk and build actions
                         Vector2 walktoPosition = new Vector2(walkableTile.gridX, walkableTile.gridY);
 
+                        // walk to action
                         GameAction gameAction = new GameAction(GameAction.ActionType.WALKTO, walktoPosition);
                         playerController.addAction(gameAction);
 
-                        gameAction = new GameAction(GameAction.ActionType.BUILD, currentBuildLocation, () => {
-                            Inventory inventory = WorldConstants.Instance.getInventory();
+                        // build action
+                        GameObject prefabToBuild = WorldConstants.Instance.getStructureManager().getPrefabByName(prefab.name);
+                        if (prefabToBuild != null) {
+                            gameAction = new GameAction(GameAction.ActionType.BUILD, currentBuildLocation, () => {
+                                Inventory inventory = WorldConstants.Instance.getInventory();
 
-                            if (inventory != null) {
-                                if (infiniteUse == false) {
-                                    if (prefab_comsumesItem != null) {
-                                        Inventory.InventoryItem itemToConsume = prefab_comsumesItem.GetComponent<Collectable>()?.itemData;
-                                        if (itemToConsume != null) {
-                                            inventory.removeItem(itemToConsume);
+                                if (inventory != null) {
+                                    if (infiniteUse == false) {
+                                        if (prefab_comsumesItem != null) {
+                                            Inventory.InventoryItem itemToConsume = prefab_comsumesItem.GetComponent<Collectable>()?.itemData;
+                                            if (itemToConsume != null) {
+                                                inventory.removeItem(itemToConsume);
+                                            }
                                         }
                                     }
                                 }
-                            }
-                        });
-                        gameAction.customData = prefab;
-                        playerController.addAction(gameAction);
+                            });
+
+                            gameAction.customData = prefabToBuild;
+                            playerController.addAction(gameAction);
+                        }
                     }
 
                     // collapse sub menues

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class StructureManager : MonoBehaviour
 {
+    public List<PrefabDatabaseItem> prefabs = new List<PrefabDatabaseItem>();
     // tiles
     public GameObject prefab_platform;
     public GameObject prefab_ladder;
@@ -44,5 +45,41 @@ public class StructureManager : MonoBehaviour
             }
         }
         */
+    }
+
+    public GameObject getPrefabByName(string prefabName) {
+        PrefabDatabaseItem item = prefabs.Find(item => item.prefab.name == prefabName);
+
+        if (item != null) {
+            return item.prefab;
+        } else {
+            return null;
+        }
+    }
+
+    public GameObject getPrefabByUID(int uid) {
+        PrefabDatabaseItem item = prefabs.Find(item => item.uid == uid);
+
+        if (item != null) {
+            return item.prefab;
+        } else {
+            return null;
+        }
+    }
+
+    public int getPrefabUID(string prefabName) {
+        PrefabDatabaseItem item = prefabs.Find(item => item.prefab.name == prefabName);
+
+        if (item != null) {
+            return item.uid;
+        }
+
+        return -1;
+    }
+
+    [System.Serializable]
+    public class PrefabDatabaseItem {
+        public GameObject prefab;
+        public int uid;
     }
 }

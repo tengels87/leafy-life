@@ -20,16 +20,24 @@ public class MapController : MonoBehaviour {
     private int nodeID = 1;
 
     private Transform spriteContainer;
+    private List<TileData> userBuiltTilesList = new List<TileData>();
 
     private System.Random rnd = new System.Random();
-
+    private int mapSeed = 0;
+    
     void Start() {
         spriteContainer = new GameObject("sprite_container_" + rnd.Next(10000)).transform;
         spriteContainer.SetParent(this.transform);
+
+        init();
     }
 
     void Update() {
+        
+    }
 
+    public int getSeed() {
+        return mapSeed;
     }
 
     public Tile getTile(Vector2Int pos) {
@@ -43,25 +51,36 @@ public class MapController : MonoBehaviour {
         }
     }
 
-    public Tile getNearestWalkableTile(Vector2Int rootLocation) {
-        List<Vector2Int> locations = new List<Vector2Int>();
+    public Tile getNearestWalkableTile(Vector2Int targetLocation, Vector2Int startLocation) {
+        List<Vector2Int> testLocations = new List<Vector2Int>();
+        
+        Tile resultTile = null;
+        int resultPathLength = int.MaxValue;
 
-        locations.Add(rootLocation + Vector2Int.up);
-        locations.Add(rootLocation + Vector2Int.down);
-        locations.Add(rootLocation + Vector2Int.left);
-        locations.Add(rootLocation + Vector2Int.right);
+        testLocations.Add(targetLocation + Vector2Int.up);
+        testLocations.Add(targetLocation + Vector2Int.down);
+        testLocations.Add(targetLocation + Vector2Int.left);
+        testLocations.Add(targetLocation + Vector2Int.right);
 
-        foreach (Vector2Int pos in locations) {
-            if (isInBounds(pos)) {
-                if (grid[pos.x, pos.y] != null) {
-                    if (grid[pos.x, pos.y].isWalkable) {
-                        return grid[pos.x, pos.y];
+        foreach (Vector2Int loc in testLocations) {
+            if (isInBounds(loc)) {
+                if (grid[loc.x, loc.y] != null) {
+                    if (grid[loc.x, loc.y].isWalkable) {
+
+                        // find path to loc
+                        MapController mapController = WorldConstants.Instance.getMapController();
+                        if (mapController.checkPath(loc, startLocation, out List<Vector2> resultPath)) {
+                            if (resultPath.Count < resultPathLength) {
+                                resultPathLength = resultPath.Count;
+                                resultTile = grid[loc.x, loc.y];
+                            }
+                        }
                     }
                 }
             }
         }
 
-        return null;
+        return resultTile;
     }
 
     public List<Vector2Int> getBuildLocations(Structure target) {
@@ -124,6 +143,15 @@ public class MapController : MonoBehaviour {
 
     public void init() {
         if (isInitiated) return;
+
+        SaveSystem.GameData saveData = WorldConstants.Instance.getSaveSystem().getLoadedData();
+        if (saveData != null) {
+            mapSeed = saveData.seed;
+            rnd = new System.Random(mapSeed);
+        } else {
+            rnd = new System.Random();
+            mapSeed = rnd.Next();
+        }
 
         int gridWidth = 40;
         int gridHeight = 40;
@@ -197,12 +225,24 @@ public class MapController : MonoBehaviour {
             }
         }
 
+
+        // load saved user-built tiles
+        if (saveData != null) {
+            foreach (TileData tileData in saveData.builtTilesList) {
+                if (tileData.mapType == this.mapType) {     // only build tiles registered for this map
+                    GameObject foundPrefab = WorldConstants.Instance.getStructureManager().getPrefabByUID(tileData.tilePrefabID);
+                    buildTile(tileData.x, tileData.y, foundPrefab, true);
+                }
+            }
+        }
+
+
         isInitiated = true;
     }
 
-    public void buildTile(int x, int y, GameObject prefab) {
+    public void buildTile(int x, int y, GameObject prefab, bool userCreated = false) {
         GameObject buildable = (GameObject)Object.Instantiate(prefab);
-        buildable.name = "" + rnd.Next();
+        buildable.name = buildable.name + "_" + rnd.Next();
         buildable.transform.position = new Vector3(x, y, 0);
         buildable.transform.SetParent(this.gameObject.transform);
 
@@ -211,7 +251,7 @@ public class MapController : MonoBehaviour {
         if (structure.attachesToPlatform || structure.attachesToSlot) {
 
             // attach to slot on existing tile, but do not override tile in grid[,]
-            // only block slot, if attachesToSlot
+            // only block slot when attachesToSlot==true
             if (structure.attachesToSlot == true) {
                 Tile t = getTile(new Vector2Int(x, y));
                 Structure structureOnTile = t.attachedGameObject.GetComponent<Structure>();
@@ -221,7 +261,7 @@ public class MapController : MonoBehaviour {
             }
         } else {
 
-            // place/override tile in grid            
+            // no attaching, so simply place/override tile in grid            
             foreach (Structure.GridFootprint footprint in structure.gridFootprint) {
 
                 Tile t = createTile(x + footprint.gridX, y + footprint.gridY);
@@ -234,6 +274,16 @@ public class MapController : MonoBehaviour {
                 spawnTile(t);
             }
         }
+
+        if (userCreated) {
+            int prefabUID = WorldConstants.Instance.getStructureManager().getPrefabUID(prefab.name);
+            TileData tileData = new TileData(prefabUID, mapType, x, y);
+            userBuiltTilesList.Add(tileData);
+        }
+    }
+
+    public List<TileData> getUserBuildTiles() {
+        return userBuiltTilesList;
     }
 
     public static Vector2 pixelPos2WorldPos(Vector3 pixelPos) {
@@ -395,5 +445,20 @@ public class MapController : MonoBehaviour {
         public Vector2Int getPositionAsVector() {
             return new Vector2Int(gridX, gridY);
         }
+    }
+
+    [System.Serializable]
+    public class TileData {
+        public TileData(int tilePrefabID, MapType mapType, int x, int y) {
+            this.tilePrefabID = tilePrefabID;
+            this.mapType = mapType;
+            this.x = x;
+            this.y = y;
+        }
+
+        public int tilePrefabID;
+        public MapType mapType;
+        public int x;
+        public int y;
     }
 }

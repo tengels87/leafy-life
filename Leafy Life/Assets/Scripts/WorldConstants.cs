@@ -11,6 +11,7 @@ public sealed class WorldConstants {
     public static string objName_player = "Player";
     public static string objName_inventory = "Inventory";
     public static string objName_audioManager = "AudioManager";
+    public static string objName_saveSystem = "SaveSystem";
 
     public GameManager gameManager;
     public SceneManager sceneManager;
@@ -21,6 +22,7 @@ public sealed class WorldConstants {
     public PlayerController playerController;
     public Inventory inventory;
     public AudioPool audioPool;
+    public SaveSystem saveSystem;
 
     private System.Random rnd = new System.Random();
 
@@ -109,5 +111,13 @@ public sealed class WorldConstants {
         }
 
         return audioPool;
+    }
+
+    public SaveSystem getSaveSystem() {
+        if (saveSystem == null) {
+            saveSystem = GameObject.Find(objName_saveSystem).GetComponent<SaveSystem>();
+        }
+
+        return saveSystem;
     }
 }
