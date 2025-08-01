@@ -19,8 +19,16 @@ public class SaveSystem : MonoBehaviour {
                 if (currentGameData == null) {
                     currentGameData = new GameData();
                 }
+
+                // seed
                 currentGameData.seed = WorldConstants.Instance.getMapController().getSeed();
+
+                // inentory
                 currentGameData.inventoryItemsList = WorldConstants.Instance.getInventory().getInventoryItemsAsList();
+
+                // character stats
+                currentGameData.nutritionValue = WorldConstants.Instance.getStatsController().nutrition;
+                currentGameData.sleepValue = WorldConstants.Instance.getStatsController().sleep;
 
                 // built tiles, save per mapController
                 currentGameData.builtTilesList.Clear();
@@ -77,7 +85,12 @@ public class SaveSystem : MonoBehaviour {
     [System.Serializable]
     public class GameData {
         public int seed = -1;
+
         public List<Inventory.InventoryItem> inventoryItemsList;
+
+        public float nutritionValue;
+        public float sleepValue;
+
         public List<MapController.TileData> builtTilesList = new List<MapController.TileData>();
     }
 }

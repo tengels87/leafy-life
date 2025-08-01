@@ -17,6 +17,7 @@ public sealed class WorldConstants {
     public SceneManager sceneManager;
     public MapController mapController;
     public HudManager hudManager;
+    public StatsController statsController;
     public StructureManager structureManager;
     public Transform player;
     public PlayerController playerController;
@@ -71,6 +72,17 @@ public sealed class WorldConstants {
         }
 
         return hudManager;
+    }
+
+    public StatsController getStatsController() {
+        if (statsController == null) {
+            Transform player = getPlayer();
+            if (player != null) {
+                statsController = player.GetComponent<StatsController>();
+            }
+        }
+
+        return statsController;
     }
 
     public StructureManager getStructureManager() {

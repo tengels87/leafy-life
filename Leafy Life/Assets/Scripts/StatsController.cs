@@ -27,7 +27,11 @@ public class StatsController : MonoBehaviour
 
     void Start()
     {
-        
+        SaveSystem.GameData saveData = WorldConstants.Instance.getSaveSystem().getLoadedData();
+        if (saveData != null) {
+            nutrition = saveData.nutritionValue;
+            sleep = saveData.sleepValue;
+        }
     }
 
     void Update()
@@ -36,12 +40,18 @@ public class StatsController : MonoBehaviour
     }
 
     public void changeNutritionValue(float chg) {
+        float lastValue = nutrition;
+
         nutrition = Mathf.Clamp(nutrition + chg, 0, 100);
 
         if (chg > 0) {
             NutritionIncreasedEvent?.Invoke();
         }
-        if (nutrition < 40) {
+        if ((nutrition < 40 && lastValue > 40)
+            || (nutrition < 30 && lastValue > 30)
+            || (nutrition < 20 && lastValue > 20)
+            || (nutrition < 10 && lastValue > 10)
+            || (nutrition < 5 && lastValue > 5)) {
             NutritionLowEvent?.Invoke();
         }
 
@@ -49,9 +59,15 @@ public class StatsController : MonoBehaviour
     }
 
     public void changeSleepValue(float chg) {
+        float lastValue = sleep;
+
         sleep = Mathf.Clamp(sleep + chg, 0, 100);
 
-        if (sleep < 40) {
+        if ((sleep < 40 && lastValue > 40)
+            || (sleep < 30 && lastValue > 30)
+            || (sleep < 20 && lastValue > 20)
+            || (sleep < 10 && lastValue > 10)
+            || (sleep < 5 && lastValue > 5)) {
             SleepLowEvent?.Invoke();
         }
 
@@ -66,10 +82,10 @@ public class StatsController : MonoBehaviour
         changeNutritionValue(-0.1f);
 
         if (doAddSleep) {
-            changeSleepValue(1);
+            changeSleepValue(0.5f);
             doAddSleep = false;
         } else {
-            changeSleepValue(-0.03f);
+            changeSleepValue(-0.06f);
         }
     }
 
