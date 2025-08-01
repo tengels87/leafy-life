@@ -6578,10 +6578,12 @@ MonoBehaviour:
     uid: 0
   - prefab: {fileID: 6328117217270616688, guid: df3f5fe28c35c374e94ce62f3065704b, type: 3}
     uid: 1
-  - prefab: {fileID: 6328117217270616688, guid: 366c5bdcfb5187d469d404618c4fe8a2, type: 3}
+  - prefab: {fileID: 6328117217270616688, guid: dcc636508c3b8db4bba6d27cbdce40c6, type: 3}
     uid: 2
-  - prefab: {fileID: 6328117217270616688, guid: 69f4736e361fafc4faf147a14b7709f5, type: 3}
+  - prefab: {fileID: 6328117217270616688, guid: 366c5bdcfb5187d469d404618c4fe8a2, type: 3}
     uid: 3
+  - prefab: {fileID: 6328117217270616688, guid: 69f4736e361fafc4faf147a14b7709f5, type: 3}
+    uid: 4
   - prefab: {fileID: 6328117217270616688, guid: efd566d8cd9df904386181817daf4cb7, type: 3}
     uid: 4
   prefab_platform: {fileID: 6328117217270616688, guid: 032eb33ebc01d154b804dde20ee3a2ff, type: 3}

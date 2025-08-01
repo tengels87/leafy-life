@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class Crop : MonoBehaviour
-{
+public class Crop : MonoBehaviour {
     enum GrowthState {
         SEED,
         MATURE
@@ -13,42 +12,37 @@ public class Crop : MonoBehaviour
     public GameObject seedGameobject;
     public GameObject matureGameobject;
     public GameObject prefab_itemToSpawn;
+    public int numberOfItems = 1;
     public bool initializeOnStart = false;
 
+    [Tooltip("units per ingame hour")]
     public float timeToGrow = 2;
 
     private bool isInitialized = false;
-    private float timeOfInit = 0;
     private float age = 0;
     private GrowthState growthState = GrowthState.SEED;
     private List<GameObject> harvestables = new List<GameObject>();
 
-    void Start()
-    {
+    void OnEnable() {
+        DaytimeManager.hourTickEvent += OnHourTick;
+    }
+
+    void OnDisable() {
+        DaytimeManager.hourTickEvent -= OnHourTick;
+    }
+
+    void Start() {
         if (initializeOnStart) {
             init();
         }
     }
 
-    void Update()
-    {
-        if (isInitialized) {
-            age = Time.time - timeOfInit;
-        }
+    void Update() {
 
-        if (age >= timeToGrow && growthState != GrowthState.MATURE) {
-            setMature();
-            
-            // spawn two items
-            spawnItem();
-            spawnItem();
-        }
     }
 
     public void init() {
         if (!isInitialized) {
-            timeOfInit = Time.time;
-
             seedGameobject.SetActive(true);
             matureGameobject.SetActive(false);
 
@@ -81,5 +75,23 @@ public class Crop : MonoBehaviour
         }
 
         Object.Destroy(this.gameObject);
+    }
+
+    private void OnHourTick(float timestamp) {
+
+        if (growthState == GrowthState.MATURE)
+            return;
+
+        /// grow 1 unit per hour
+        age = age + 1;
+
+        if (age >= timeToGrow && growthState != GrowthState.MATURE) {
+            setMature();
+
+            // spawn items
+            for (int i = 0; i < numberOfItems; i++) {
+                spawnItem();
+            }
+        }
     }
 }
