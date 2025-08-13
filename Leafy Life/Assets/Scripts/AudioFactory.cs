@@ -6,6 +6,7 @@ public class AudioFactory : MonoBehaviour
 {
     public AudioSource musicTreehouse;
     public AudioSource musicGarden;
+    public AudioSource musicNight;
     public AudioSource voiceHungry;
     public AudioSource voiceDelicious;
     public AudioSource voiceTired;
@@ -21,14 +22,25 @@ public class AudioFactory : MonoBehaviour
 
         SceneManager.MapChangedEvent += OnMapChanged;
 
+        DaytimeManager.NightStartedEvent += OnNighttimeStarted;
+        DaytimeManager.NightFinishedEvent += OnNighttimeFinished;
+
         StatsController.NutritionIncreasedEvent += () => { audioPool.playImmediate(voiceDelicious); };
 
-        StatsController.NutritionLowEvent += () => { audioPool.playImmediate(voiceHungry); };
+        StatsController.NutritionLowEvent += () => {  };
         StatsController.SleepLowEvent += () => { audioPool.playImmediate(voiceTired); };
     }
 
     void OnDisable() {
         SceneManager.MapChangedEvent -= OnMapChanged;
+
+        DaytimeManager.NightStartedEvent -= OnNighttimeStarted;
+        DaytimeManager.NightFinishedEvent -= OnNighttimeFinished;
+
+        StatsController.NutritionIncreasedEvent -= () => { audioPool.playImmediate(voiceDelicious); };
+
+        StatsController.NutritionLowEvent -= () => { audioPool.playImmediate(voiceHungry); };
+        StatsController.SleepLowEvent -= () => { audioPool.playImmediate(voiceTired); };
     }
 
     void Start()
@@ -64,7 +76,7 @@ public class AudioFactory : MonoBehaviour
         currentPlaying = laterPlaying;
     }
 
-    public void OnMapChanged(MapController.MapType mapType) {
+    private void OnMapChanged(MapController.MapType mapType) {
         switch (mapType) {
             case MapController.MapType.TREEHOUSE:
                 changeMusicTrack(musicTreehouse);
@@ -75,13 +87,21 @@ public class AudioFactory : MonoBehaviour
         }
     }
 
-    public void playMusicTreehouse() {
+    private void OnNighttimeStarted() {
+        changeMusicTrack(musicNight);
+    }
+
+    private void OnNighttimeFinished() {
+        changeMusicTrack(musicTreehouse);
+    }
+
+    private void playMusicTreehouse() {
         currentPlaying?.Stop();
         musicTreehouse.Play();
         currentPlaying = musicTreehouse;
     }
 
-    public void playMusicGarden() {
+    private void playMusicGarden() {
         currentPlaying?.Stop();
         musicGarden.Play();
         currentPlaying = musicGarden;

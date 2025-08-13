@@ -2,15 +2,27 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Rendering.Universal;
+using DG.Tweening;
 
 public class DaytimeManager : MonoBehaviour
 {
     public static UnityAction<float> minuteTickEvent;
     public static UnityAction<float> hourTickEvent;
+    public static UnityAction<float> dayTickEvent;
+
+    public static UnityAction NightStartedEvent;
+    public static UnityAction NightFinishedEvent;
 
     public float dayLengthInSeconds = 60 * 3;
 
-    private float currentTime;
+    public Light2D globalLight;
+    public Light2D playerLight;
+    public Color colorDaytime;
+    public Color colorNighttime;
+
+
+    public float currentTime;
     private float lastTime;
 
     void Start()
@@ -26,6 +38,8 @@ public class DaytimeManager : MonoBehaviour
         // reset when day is finished (24h)
         if (currentTime > 24) {
             currentTime = 0;
+
+            dayTickEvent?.Invoke(currentTime);
         }
 
         // fire tick events
@@ -35,7 +49,25 @@ public class DaytimeManager : MonoBehaviour
         
         if ((int)lastTime < (int)currentTime) {
             hourTickEvent?.Invoke(currentTime);
+
+            // day/night switch
+            if ((int)currentTime == 22) {
+                NightStartedEvent?.Invoke();
+
+
+                DOTween.To(() => globalLight.intensity, x => globalLight.intensity = x, 0f, 10);
+                DOTween.To(() => playerLight.intensity, x => playerLight.intensity = x, 1f, 10);
+            }
+
+            if ((int)currentTime == 6) {
+                NightFinishedEvent?.Invoke();
+
+                DOTween.To(() => globalLight.intensity, x => globalLight.intensity = x, 1f, 10);
+                DOTween.To(() => playerLight.intensity, x => playerLight.intensity = x, 0f, 10);
+            }
         }
+
+       
 
         lastTime = currentTime;
     }
