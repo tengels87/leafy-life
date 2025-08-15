@@ -19,16 +19,12 @@ public class MapController : MonoBehaviour {
     private List<Tile> tileList = new List<Tile>();
     private int nodeID = 1;
 
-    private Transform spriteContainer;
     private List<TileData> userBuiltTilesList = new List<TileData>();
 
     private System.Random rnd = new System.Random();
     private int mapSeed = 0;
     
     void Start() {
-        spriteContainer = new GameObject("sprite_container_" + rnd.Next(10000)).transform;
-        spriteContainer.SetParent(this.transform);
-
         init();
     }
 
@@ -153,15 +149,13 @@ public class MapController : MonoBehaviour {
             mapSeed = rnd.Next();
         }
 
-        int gridWidth = 40;
-        int gridHeight = 40;
+        int gridWidth = 60;
+        int gridHeight = 60;
 
         grid = new Tile[gridWidth, gridHeight];
         for (int i = 0; i < grid.GetLength(0); i++) {
             for (int j = 0; j < grid.GetLength(1); j++) {
                 grid[i, j] = null;
-                //GameObject vis = createSpriteInstance(gridBackground, i, j);
-                //vis.transform.position += new Vector3(0, 0, 1);    // set z position, so it is shifted to background
             }
         }
 
@@ -179,9 +173,19 @@ public class MapController : MonoBehaviour {
 
         } else if (mapType == MapType.GARDEN) {
 
-            spawnPosition = new Vector2Int(20, 19);
-            buildTile(spawnPosition.x, spawnPosition.y, WorldConstants.Instance.getStructureManager().prefab_maplink_treehouse);
+            Transform[] mapObjects = this.gameObject.GetComponentsInChildren<Transform>();
+            foreach (Transform t2 in mapObjects) {
+                if (t2 == this.transform || t2.parent != this.transform) continue;
+                
+                buildTile((int)t2.position.x, (int)t2.position.y, t2.gameObject);
+                
+                Object.Destroy(t2.gameObject);
+            }
 
+            //spawnPosition = new Vector2Int(20, 19);
+            spawnPosition = new Vector2Int(30, 25);
+            //buildTile(spawnPosition.x, spawnPosition.y, WorldConstants.Instance.getStructureManager().prefab_maplink_treehouse);
+            /*
             for (int i = 0; i < grid.GetLength(0); i++) {
                 for (int j = 0; j < grid.GetLength(1); j++) {
                     if (isEmpty(new Vector2Int(i, j))) {
@@ -222,7 +226,7 @@ public class MapController : MonoBehaviour {
                         }
                     }
                 }
-            }
+            }*/
         }
 
 
@@ -242,6 +246,7 @@ public class MapController : MonoBehaviour {
 
     public void buildTile(int x, int y, GameObject prefab, bool userCreated = false) {
         GameObject buildable = (GameObject)Object.Instantiate(prefab);
+
         buildable.name = buildable.name + "_" + rnd.Next();
         buildable.transform.position = new Vector3(x, y, 0);
         buildable.transform.SetParent(this.gameObject.transform);
@@ -363,7 +368,7 @@ public class MapController : MonoBehaviour {
         SpriteRenderer r = go.AddComponent<SpriteRenderer>();
         r.sprite = spr;
         go.transform.localPosition = new Vector2(posX, posY);
-        go.transform.SetParent(spriteContainer);
+        go.transform.SetParent(this.transform);
 
         return go;
     }
