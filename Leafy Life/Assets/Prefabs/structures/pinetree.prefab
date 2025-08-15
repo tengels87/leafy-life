@@ -316,8 +316,8 @@ MonoBehaviour:
     slot: {fileID: 0}
   - gridX: 0
     gridY: 1
-    canConnectAt: 0123
-    isWalkable: 1
+    canConnectAt: 
+    isWalkable: 0
     hasSlot: 0
     slot: {fileID: 0}
 --- !u!61 &6328117217270616691
