@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MapController : MonoBehaviour {
     public enum MapType {
-        TREEHOUSE,
-        GARDEN
+        GARDEN,
+        TREEHOUSE
     }
     public Sprite gridBackground;
 
@@ -34,6 +35,10 @@ public class MapController : MonoBehaviour {
 
     public int getSeed() {
         return mapSeed;
+    }
+
+    public MapType getMapType() {
+        return mapType;
     }
 
     public Tile getTile(Vector2Int pos) {
@@ -183,7 +188,7 @@ public class MapController : MonoBehaviour {
             }
 
             //spawnPosition = new Vector2Int(20, 19);
-            spawnPosition = new Vector2Int(30, 25);
+            spawnPosition = new Vector2Int(20, 8);
             //buildTile(spawnPosition.x, spawnPosition.y, WorldConstants.Instance.getStructureManager().prefab_maplink_treehouse);
             /*
             for (int i = 0; i < grid.GetLength(0); i++) {
@@ -359,8 +364,25 @@ public class MapController : MonoBehaviour {
         }
     }
 
-    public Vector2Int getSpawnPosition() {
+    public Vector2Int getSpawnPosition(MapType comingFromMapType) {
+
+        // find link tile to comingFromMap
+        Structure[] allStructures = FindObjectsOfType<Structure>();
+        foreach (Structure s in allStructures) {
+            if (s.structureType == Structure.StructureType.MAPLINK
+                && s.linkToMapType == comingFromMapType) {
+                Vector2 mapLinkPos = s.gameObject.transform.position;
+                Vector2Int mapLinkPosInt = new Vector2Int((int)mapLinkPos.x, (int)mapLinkPos.y);
+
+                return mapLinkPosInt;
+            }
+        }
+
         return spawnPosition;
+    }
+
+    public void setSpawnPosition(Vector2Int pos) {
+        spawnPosition = pos;
     }
 
     public GameObject createSpriteInstance(Sprite spr, float posX, float posY) {

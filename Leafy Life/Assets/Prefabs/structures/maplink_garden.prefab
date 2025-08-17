@@ -136,10 +136,11 @@ MonoBehaviour:
   attachesToSlot: 0
   isInteractable: 0
   interactionType: 0
-  linkToMapType: 1
+  linkToMapType: 0
   gridFootprint:
   - gridX: 0
     gridY: 0
+    canConnectAt: 0123
     isWalkable: 1
     hasSlot: 0
     slot: {fileID: 0}

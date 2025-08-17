@@ -904,7 +904,7 @@ MonoBehaviour:
   attachesToSlot: 0
   isInteractable: 0
   interactionType: 0
-  linkToMapType: 0
+  linkToMapType: 1
   gridFootprint:
   - gridX: 0
     gridY: 0

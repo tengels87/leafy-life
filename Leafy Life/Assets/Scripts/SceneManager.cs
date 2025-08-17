@@ -11,14 +11,18 @@ public class SceneManager : MonoBehaviour
     public MapController mapTreehouse;
     public MapController mapGarden;
 
-    private Dictionary<MapController.MapType, MapController> mapsDict = new Dictionary<MapController.MapType, MapController>();
-    private string currentScene = null;
-    private MapController lastActiveMapController = null;
+    private Dictionary<MapController.MapType, string> mapsDict = new Dictionary<MapController.MapType, string>();
+    private List<KeyValuePair<MapController.MapType, string>> mapsList;
+    private string lastLoadedScene = null;
+    private MapController.MapType lastLoadedMap;
+    private Coroutine loadSceneCoroutine = null;
 
     void Awake() {
         mapsDict.Clear();
-        mapsDict.Add(MapController.MapType.TREEHOUSE, mapTreehouse);
-        mapsDict.Add(MapController.MapType.GARDEN, mapGarden);
+        mapsDict.Add(MapController.MapType.GARDEN, "scene_garden");
+        mapsDict.Add(MapController.MapType.TREEHOUSE, "scene_treehouse");
+
+        mapsList = new List<KeyValuePair<MapController.MapType, string>>(mapsDict);
     }
 
     void Start()
@@ -29,56 +33,50 @@ public class SceneManager : MonoBehaviour
     void Update()
     {
         // begin on garden map
-        if (lastActiveMapController == null) {
-            activateMap(MapController.MapType.GARDEN);
+        if (lastLoadedScene == null && loadSceneCoroutine == null) {
+            MapController.MapType starterMap = MapController.MapType.GARDEN;
+            lastLoadedMap = starterMap;
+            activateMap(starterMap);
         }
     }
 
     public void activateMap(MapController.MapType mapType) {
-        if (mapsDict.TryGetValue(mapType, out MapController mapController)) {
-            if (mapController != lastActiveMapController) {
-                mapController.gameObject.SetActive(true);
-
-                if (lastActiveMapController != null) {
-                    lastActiveMapController.gameObject.SetActive(false);
+        if (mapsDict.TryGetValue(mapType, out string sceneName)) {
+            if (sceneName != lastLoadedScene) {
+                if (loadSceneCoroutine == null) {
+                    loadSceneCoroutine = StartCoroutine(switchSceneCoroutine(sceneName));
                 }
-
-                // spawn player
-                PlayerController player = WorldConstants.Instance.getPlayerController();
-                player.setPosition2D(mapController.getSpawnPosition());
-
-                lastActiveMapController = mapController;
-
-                MapChangedEvent?.Invoke(mapType);
             }
         }
     }
 
-    public void loadScene(string newSceneName) {
-        StartCoroutine(switchSceneCoroutine(newSceneName));
-    }
-
     private IEnumerator switchSceneCoroutine(string sceneName) {
-        print("42 start coroutine");
         AsyncOperation asyncLoad = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
 
         while (!asyncLoad.isDone) {
             yield return null;
-            print("42 loading " + sceneName + " ...");
         }
-        print("42 loading " + sceneName + " done.");
-        
-        if (currentScene != null) {
-            print("42 start unloading " + currentScene);
-            asyncLoad = UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(currentScene);
+
+        if (lastLoadedScene != null) {
+            asyncLoad = UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(lastLoadedScene);
         }
 
         while (!asyncLoad.isDone) {
             yield return null;
-            print("42 UN-loading " + currentScene + " ...");
         }
-        print("42 UN-loading " + currentScene + " done.");
 
-        currentScene = sceneName;
+        // spawn player
+        PlayerController player = WorldConstants.Instance.getPlayerController();
+        MapController mapController = WorldConstants.Instance.getMapController();
+
+        player.setPosition2D(mapController.getSpawnPosition(lastLoadedMap));
+
+        lastLoadedScene = sceneName;
+        lastLoadedMap = mapController.getMapType();
+        loadSceneCoroutine = null;
+
+        MapChangedEvent?.Invoke(mapController.getMapType());
+
+        lastLoadedScene = sceneName;
     }
 }
