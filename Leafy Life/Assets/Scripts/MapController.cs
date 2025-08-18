@@ -6,7 +6,8 @@ using UnityEngine.SceneManagement;
 public class MapController : MonoBehaviour {
     public enum MapType {
         GARDEN,
-        TREEHOUSE
+        TREEHOUSE,
+        FOREST_STARTER
     }
     public Sprite gridBackground;
 
@@ -164,7 +165,19 @@ public class MapController : MonoBehaviour {
             }
         }
 
-        if (mapType == MapType.TREEHOUSE) {
+        if (mapType == MapType.FOREST_STARTER) {
+
+            Transform[] mapObjects = this.gameObject.GetComponentsInChildren<Transform>();
+            foreach (Transform t2 in mapObjects) {
+                if (t2 == this.transform || t2.parent != this.transform) continue;
+
+                buildTile((int)t2.position.x, (int)t2.position.y, t2.gameObject);
+
+                Object.Destroy(t2.gameObject);
+            }
+
+            spawnPosition = new Vector2Int(10, 22);
+        } else if (mapType == MapType.TREEHOUSE) {
 
             // tilemap
             for (int i = 1; i < grid.GetLength(0); i++) {
