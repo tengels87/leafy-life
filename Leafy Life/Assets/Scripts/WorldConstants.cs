@@ -10,6 +10,7 @@ public sealed class WorldConstants {
     public static string objName_structureManager = "StructureManager";
     public static string objName_player = "Player";
     public static string objName_inventory = "Inventory";
+    public static string objName_daytimeManager = "DaytimeManager";
     public static string objName_audioManager = "AudioManager";
     public static string objName_saveSystem = "SaveSystem";
 
@@ -22,6 +23,7 @@ public sealed class WorldConstants {
     public Transform player;
     public PlayerController playerController;
     public Inventory inventory;
+    public DaytimeManager daytimeManager;
     public AudioPool audioPool;
     public SaveSystem saveSystem;
 
@@ -115,6 +117,14 @@ public sealed class WorldConstants {
         }
 
         return inventory;
+    }
+
+    public DaytimeManager getDaytimeManaer() {
+        if (daytimeManager == null) {
+            daytimeManager = GameObject.Find(objName_daytimeManager).GetComponent<DaytimeManager>();
+        }
+
+        return daytimeManager;
     }
 
     public AudioPool getAudioPool() {

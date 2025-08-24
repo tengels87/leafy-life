@@ -4,15 +4,32 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    // Start is called before the first frame update
+    private void OnEnable() {
+        SceneManager.MapChangedEvent += OnMapChanged;
+    }
+
+    private void OnDisable() {
+        SceneManager.MapChangedEvent -= OnMapChanged;
+    }
+
     void Start()
     {
         
     }
 
-    // Update is called once per frame
     void Update()
     {
         
+    }
+
+    private void OnMapChanged(MapController.MapType mapType) {
+
+        // start ingame clock when first entering tree house
+        if (mapType == MapController.MapType.TREEHOUSE) {
+            DaytimeManager daytimeMamager = WorldConstants.Instance.getDaytimeManaer();
+            if (daytimeMamager.isClockPaused()) {
+                daytimeMamager.resetClock(6);
+            }
+        }
     }
 }

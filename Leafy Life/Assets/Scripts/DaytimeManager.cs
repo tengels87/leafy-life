@@ -21,61 +21,80 @@ public class DaytimeManager : MonoBehaviour
     public Color colorDaytime;
     public Color colorNighttime;
 
-
-    public float currentTime;
+    [SerializeField]
+    private float currentTime;
     private float lastTime;
+
+    private static float nightStartTime = 22f;
+    private static float nightEndTime = 6f;
+
+    private bool isPaused = false;
 
     void Start()
     {
-        
+        resetClock();
+        pauseClock();
     }
 
     void Update()
     {
-        // progress
-        currentTime += (Time.deltaTime / dayLengthInSeconds) * 24f;
+        if (!isPaused) {
 
-        // reset when day is finished (24h)
-        if (currentTime > 24) {
-            currentTime = 0;
+            // progress
+            currentTime += (Time.deltaTime / dayLengthInSeconds) * 24f;
 
-            dayTickEvent?.Invoke(currentTime);
-        }
+            // reset when day is finished (24h)
+            if (currentTime > 24) {
+                currentTime = 0;
 
-        // fire tick events
-        if ((int)(lastTime*60f)  < (int)(currentTime*60f)) {
-            minuteTickEvent?.Invoke(currentTime);
-        }
-        
-        if ((int)lastTime < (int)currentTime) {
-            hourTickEvent?.Invoke(currentTime);
-
-            // day/night switch
-            if ((int)currentTime == 22) {
-                NightStartedEvent?.Invoke();
-
-
-                DOTween.To(() => globalLight.intensity, x => globalLight.intensity = x, 0f, 10);
-                DOTween.To(() => playerLight.intensity, x => playerLight.intensity = x, 1f, 10);
+                dayTickEvent?.Invoke(currentTime);
             }
 
-            if ((int)currentTime == 6) {
-                NightFinishedEvent?.Invoke();
-
-                DOTween.To(() => globalLight.intensity, x => globalLight.intensity = x, 1f, 10);
-                DOTween.To(() => playerLight.intensity, x => playerLight.intensity = x, 0f, 10);
+            // fire tick events
+            if ((int)(lastTime * 60f) < (int)(currentTime * 60f)) {
+                minuteTickEvent?.Invoke(currentTime);
             }
+
+            if ((int)lastTime < (int)currentTime) {
+                hourTickEvent?.Invoke(currentTime);
+
+                // day/night switch
+                if ((int)currentTime == (int)nightStartTime) {
+                    NightStartedEvent?.Invoke();
+
+                    DOTween.To(() => globalLight.intensity, x => globalLight.intensity = x, 0f, 10);
+                    DOTween.To(() => playerLight.intensity, x => playerLight.intensity = x, 1f, 10);
+                }
+
+                if ((int)currentTime == (int)nightEndTime) {
+                    NightFinishedEvent?.Invoke();
+
+                    DOTween.To(() => globalLight.intensity, x => globalLight.intensity = x, 1f, 10);
+                    DOTween.To(() => playerLight.intensity, x => playerLight.intensity = x, 0f, 10);
+                }
+            }
+
+
+            lastTime = currentTime;
         }
-
-       
-
-        lastTime = currentTime;
     }
 
-    public void startClock(float startTimeHour = 0) {
+    public void resumeClock() {
+        isPaused = false;
+    }
+
+    public void pauseClock() {
+        isPaused = true;
+    }
+
+    public void resetClock(float startTimeHour = 12) {
         currentTime = startTimeHour;
 
-        
+        resumeClock();
+    }
+
+    public bool isClockPaused() {
+        return isPaused;
     }
 
     public float getCurrentTime() {
@@ -87,6 +106,6 @@ public class DaytimeManager : MonoBehaviour
     }
 
     public bool isNightTime() {
-        return (currentTime < 6 || currentTime > 22);
+        return (currentTime < nightEndTime || currentTime > nightStartTime);
     }
 }

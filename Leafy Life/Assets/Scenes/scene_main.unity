@@ -606,7 +606,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: 6328117217270616688, guid: 366c5bdcfb5187d469d404618c4fe8a2, type: 3}
   prefab_optionalDragVisuals: {fileID: 0}
-  availableInMapType: 1
+  availableInMapType: 0
   prefab_comsumesItem: {fileID: 0}
   infiniteUse: 1
   canvasGameobject: {fileID: 1454225832}
@@ -1518,7 +1518,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: 6328117217270616688, guid: efd566d8cd9df904386181817daf4cb7, type: 3}
   prefab_optionalDragVisuals: {fileID: 0}
-  availableInMapType: 0
+  availableInMapType: 1
   prefab_comsumesItem: {fileID: 6328117217270616688, guid: 019ab7ff0243225478708efbd1ed9ffc, type: 3}
   infiniteUse: 0
   canvasGameobject: {fileID: 1316635203}
@@ -2316,7 +2316,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: 6328117217270616688, guid: 643d451bbc485f34ab1fd4023ab61f62, type: 3}
   prefab_optionalDragVisuals: {fileID: 0}
-  availableInMapType: 0
+  availableInMapType: 1
   prefab_comsumesItem: {fileID: 6328117217270616688, guid: 019ab7ff0243225478708efbd1ed9ffc, type: 3}
   infiniteUse: 0
   canvasGameobject: {fileID: 375975597}
@@ -2962,7 +2962,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: 6328117217270616688, guid: a0fbb8b2750f59a4d9e48a91951e9592, type: 3}
   prefab_optionalDragVisuals: {fileID: 0}
-  availableInMapType: 0
+  availableInMapType: 1
   prefab_comsumesItem: {fileID: 6328117217270616688, guid: 019ab7ff0243225478708efbd1ed9ffc, type: 3}
   infiniteUse: 0
   canvasGameobject: {fileID: 1514693601}
@@ -3663,7 +3663,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: 6328117217270616688, guid: c0be240368e627c46a35f32f4f4967bf, type: 3}
   prefab_optionalDragVisuals: {fileID: 0}
-  availableInMapType: 0
+  availableInMapType: 1
   prefab_comsumesItem: {fileID: 6328117217270616688, guid: 019ab7ff0243225478708efbd1ed9ffc, type: 3}
   infiniteUse: 0
   canvasGameobject: {fileID: 724026390}
@@ -3760,7 +3760,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: 6328117217270616688, guid: dcc636508c3b8db4bba6d27cbdce40c6, type: 3}
   prefab_optionalDragVisuals: {fileID: 0}
-  availableInMapType: 0
+  availableInMapType: 1
   prefab_comsumesItem: {fileID: 6328117217270616688, guid: 019ab7ff0243225478708efbd1ed9ffc, type: 3}
   infiniteUse: 0
   canvasGameobject: {fileID: 132638642}
@@ -6359,7 +6359,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: 6328117217270616688, guid: df3f5fe28c35c374e94ce62f3065704b, type: 3}
   prefab_optionalDragVisuals: {fileID: 0}
-  availableInMapType: 0
+  availableInMapType: 1
   prefab_comsumesItem: {fileID: 6328117217270616688, guid: 019ab7ff0243225478708efbd1ed9ffc, type: 3}
   infiniteUse: 0
   canvasGameobject: {fileID: 1050578843}
@@ -7162,7 +7162,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: 6328117217270616688, guid: 69f4736e361fafc4faf147a14b7709f5, type: 3}
   prefab_optionalDragVisuals: {fileID: 6328117217270616688, guid: 27685be29d0c2eb49ad94a8f23f326ab, type: 3}
-  availableInMapType: 1
+  availableInMapType: 0
   prefab_comsumesItem: {fileID: 6328117217270616688, guid: 27685be29d0c2eb49ad94a8f23f326ab, type: 3}
   infiniteUse: 0
   canvasGameobject: {fileID: 284889356}
@@ -7637,7 +7637,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: 0}
   prefab_optionalDragVisuals: {fileID: 0}
-  availableInMapType: 0
+  availableInMapType: 1
   prefab_comsumesItem: {fileID: 0}
   infiniteUse: 1
   canvasGameobject: {fileID: 1417067471}
@@ -7901,7 +7901,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: 6328117217270616688, guid: 032eb33ebc01d154b804dde20ee3a2ff, type: 3}
   prefab_optionalDragVisuals: {fileID: 0}
-  availableInMapType: 0
+  availableInMapType: 1
   prefab_comsumesItem: {fileID: 6328117217270616688, guid: 019ab7ff0243225478708efbd1ed9ffc, type: 3}
   infiniteUse: 0
   canvasGameobject: {fileID: 858196188}
