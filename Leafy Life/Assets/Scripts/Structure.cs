@@ -14,7 +14,8 @@ public class Structure : MonoBehaviour {
         CROP,
         SLEEPABLE,
         BLOCK,
-        MAPLINK
+        MAPLINK,
+        TREEHOUSE_BUILDBLOCK
     }
 
     public SpriteRenderer spriteRenderer;

@@ -125,16 +125,14 @@ public class MapController : MonoBehaviour {
                     }
 
                     if (targetType == Structure.StructureType.PLATFORM) {
+                        if (s.structureType == Structure.StructureType.TREEHOUSE_BUILDBLOCK) {
+                            locations.Add(currentPos);
+                        }
+                    } else if (targetType == Structure.StructureType.LADDER) {
                         if (s.structureType == Structure.StructureType.PLATFORM) {
-                            if (isEmpty(left)) locations.Add(left);
-                            if (isEmpty(right)) locations.Add(right);
-                        } else if (s.structureType == Structure.StructureType.LADDER) {
                             if (isEmpty(up)) locations.Add(up);
                             if (isEmpty(down)) locations.Add(down);
                         }
-                    } else if (targetType == Structure.StructureType.LADDER) {
-                        if (isEmpty(up)) locations.Add(up);
-                        if (isEmpty(down)) locations.Add(down);
                     }
                 }
             }
@@ -177,17 +175,19 @@ public class MapController : MonoBehaviour {
             }
 
             spawnPosition = new Vector2Int(10, 22);
+
         } else if (mapType == MapType.TREEHOUSE) {
 
-            // tilemap
-            for (int i = 1; i < grid.GetLength(0); i++) {
-                buildTile(i, 0, WorldConstants.Instance.getStructureManager().prefab_ground_invisible);
+            Transform[] mapObjects = this.gameObject.GetComponentsInChildren<Transform>();
+            foreach (Transform t2 in mapObjects) {
+                if (t2 == this.transform || t2.parent != this.transform) continue;
+                print("4211 " + t2.name);
+                buildTile((int)t2.position.x, (int)t2.position.y, t2.gameObject);
+
+                Object.Destroy(t2.gameObject);
             }
-            buildTile(8, 1, WorldConstants.Instance.getStructureManager().prefab_ladder);
-            buildTile(8, 2, WorldConstants.Instance.getStructureManager().prefab_platform);
 
             spawnPosition = new Vector2Int(8, 0);
-            buildTile(spawnPosition.x, spawnPosition.y, WorldConstants.Instance.getStructureManager().prefab_maplink_garden);
 
         } else if (mapType == MapType.GARDEN) {
 
@@ -200,8 +200,7 @@ public class MapController : MonoBehaviour {
                 Object.Destroy(t2.gameObject);
             }
 
-            //spawnPosition = new Vector2Int(20, 19);
-            spawnPosition = new Vector2Int(20, 8);
+            spawnPosition = new Vector2Int(20, 10);
             //buildTile(spawnPosition.x, spawnPosition.y, WorldConstants.Instance.getStructureManager().prefab_maplink_treehouse);
             /*
             for (int i = 0; i < grid.GetLength(0); i++) {
@@ -294,7 +293,7 @@ public class MapController : MonoBehaviour {
                     t.isWalkable = footprint.isWalkable;
                 }
 
-                spawnTile(t);
+                placeTile(t);
             }
         }
 
@@ -449,13 +448,16 @@ public class MapController : MonoBehaviour {
         }
     }
 
-    public void spawnTile(Tile t) {
+    public void placeTile(Tile t) {
+
+        // overwrite old tile
+        grid[t.gridX, t.gridY] = t;
+
+        // update links
         if (t.isWalkable) {
             t.node = createNode(t.gridX, t.gridY);
             linkTile(t);
         }
-
-        grid[t.gridX, t.gridY] = t;
 
         tileList.Add(t);
     }
