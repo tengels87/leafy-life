@@ -77,14 +77,7 @@ public class AudioFactory : MonoBehaviour
     }
 
     private void OnMapChanged(MapController.MapType mapType) {
-        switch (mapType) {
-            case MapController.MapType.TREEHOUSE:
-                changeMusicTrack(musicTreehouse);
-                break;
-            case MapController.MapType.GARDEN:
-                changeMusicTrack(musicGarden);
-                break;
-        }
+        chooseAndplayIngameMusic(mapType);
     }
 
     private void OnNighttimeStarted() {
@@ -92,18 +85,24 @@ public class AudioFactory : MonoBehaviour
     }
 
     private void OnNighttimeFinished() {
-        changeMusicTrack(musicTreehouse);
+        chooseAndplayIngameMusic(MapController.MapType.GARDEN);
     }
 
-    private void playMusicTreehouse() {
-        currentPlaying?.Stop();
-        musicTreehouse.Play();
-        currentPlaying = musicTreehouse;
-    }
+    private void chooseAndplayIngameMusic(MapController.MapType mapType) {
+        DaytimeManager daytimeManaer = WorldConstants.Instance.getDaytimeManaer();
 
-    private void playMusicGarden() {
-        currentPlaying?.Stop();
-        musicGarden.Play();
-        currentPlaying = musicGarden;
+        if (daytimeManaer.isNightTime()) {
+            changeMusicTrack(musicNight);
+        } else {
+
+            switch (mapType) {
+                case MapController.MapType.TREEHOUSE:
+                    changeMusicTrack(musicTreehouse);
+                    break;
+                default:
+                    changeMusicTrack(musicGarden);
+                    break;
+            }
+        }
     }
 }
