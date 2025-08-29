@@ -53,7 +53,9 @@ public class AudioFactory : MonoBehaviour
             currentPlaying = newTrack;
             currentPlaying.Play();
         } else {
-            StartCoroutine(crossFade(newTrack));
+            if (newTrack != currentPlaying) {
+                StartCoroutine(crossFade(newTrack));
+            }
         }
     }
 
