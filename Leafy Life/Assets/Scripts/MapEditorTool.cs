@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
+#if UNITY_EDITOR
+
 public class MapEditorTool : MonoBehaviour {
     [Header("Tile Prefabs")]
     public GameObject[] tilePrefabs;
@@ -45,3 +47,5 @@ public class MapEditorTool : MonoBehaviour {
         }
     }
 }
+
+#endif
