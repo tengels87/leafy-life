@@ -131,7 +131,15 @@ public class HudManager : MonoBehaviour
         }
     }
 
+    public void collapseSubMenu() {
+        ToggleGameObject[] subMenues = this.GetComponentsInChildren<ToggleGameObject>();
+        foreach (ToggleGameObject menu in subMenues) {
+            menu.hide();
+        }
+    }
+
     private void OnMapChanged(MapController.MapType mapType) {
+        collapseSubMenu();
         updateBuildPanelItemsVisibility(mapType);
     }
 }

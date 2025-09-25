@@ -203,10 +203,8 @@ public class BuildMenuItem : MonoBehaviour {
                     }
 
                     // collapse sub menues
-                    ToggleGameObject[] subMenues = WorldConstants.Instance.getHudManager().GetComponentsInChildren<ToggleGameObject>();
-                    foreach (ToggleGameObject menu in subMenues) {
-                        menu.hide();
-                    }
+                    HudManager hudManager = WorldConstants.Instance.getHudManager();
+                    hudManager.collapseSubMenu();
                 }
             }
         }
