@@ -96,29 +96,38 @@ public class MapController : MonoBehaviour {
 
                     Structure s = t.attachedGameObject.GetComponent<Structure>();
 
-                    // ignore, if we need a slot but it is already occupied
-                    if ((target.attachesToSlot) && s.gridFootprint[0].slot != null) {
-                        continue;
-                    }
-
-
                     Vector2Int currentPos = t.getPositionAsVector();
                     Vector2Int up = t.getPositionAsVector() + Vector2Int.up;
                     Vector2Int down = t.getPositionAsVector() + Vector2Int.down;
                     Vector2Int left = t.getPositionAsVector() + Vector2Int.left;
                     Vector2Int right = t.getPositionAsVector() + Vector2Int.right;
 
-                    // look for empty location around tile 
+                    if (target.attachesToSlot) {
+                        if (t.hasAvailableSlot()) {
+                            locations.Add(currentPos);
+                            continue;
+                        } else {
+                            continue;
+                        }
+                    }
+
+
+                    
+
+                    // look for empty location around tile
+
+                    // dig GRASS into SOI
                     if (targetType == Structure.StructureType.SOIL) {
                         if (s.structureType == Structure.StructureType.GRASS) {
                             locations.Add(currentPos);
                         }
-                        // plants, crops
+                    // plants, crops
                     } else if (targetType == Structure.StructureType.CROP) {
                         if (s.structureType == Structure.StructureType.SOIL) {
                             locations.Add(currentPos);
                         }
                     } else {
+                        // place on PLATFORM
                         if (s.structureType == Structure.StructureType.PLATFORM && target.attachesToPlatform) {
                             locations.Add(currentPos);
                         }
@@ -274,16 +283,16 @@ public class MapController : MonoBehaviour {
 
             // attach to slot on existing tile, but do not override tile in grid[,]
             // only block slot when attachesToSlot==true
-            if (structure.attachesToSlot == true) {
-                Tile t = getTile(new Vector2Int(x, y));
-                Structure structureOnTile = t.attachedGameObject.GetComponent<Structure>();
-                if (t != null) {
-                    structureOnTile.gridFootprint[0].slot = structure;
+            if (structure.attachesToSlot) {
+                Vector2Int buildPosInt = new Vector2Int(x, y);
+                Tile t = getTile(buildPosInt);
+                if (t != null && t.hasAvailableSlot()) {
+                    t.fillSlot(structure);
                 }
             }
         } else {
 
-            // no attaching, so simply place/override tile in grid            
+            // no attaching, so simply place/override tiles in grid   , sing footprints         
             foreach (Structure.GridFootprint footprint in structure.gridFootprint) {
 
                 Tile t = createTile(x + footprint.gridX, y + footprint.gridY);
@@ -291,6 +300,9 @@ public class MapController : MonoBehaviour {
                 t.canConnectAt = footprint.canConnectAt;
                 if (footprint.isWalkable) {
                     t.isWalkable = footprint.isWalkable;
+                }
+                if (footprint.hasSlot) {
+                    t.initSlot();
                 }
 
                 placeTile(t);
@@ -477,6 +489,8 @@ public class MapController : MonoBehaviour {
         public int gridY;
         public bool isWalkable;
 
+        private Structure[] slots = null;  // array elements are filld when i.e. GridFootPrint fills this when placin a Structure
+
         public Tile(int gridX, int gridY, GameObject attachedGameObject) {
             this.gridX = gridX;
             this.gridY = gridY;
@@ -486,6 +500,28 @@ public class MapController : MonoBehaviour {
 
         public Vector2Int getPositionAsVector() {
             return new Vector2Int(gridX, gridY);
+        }
+
+        public bool hasAvailableSlot() {
+            if (slots != null && slots[slots.Length - 1] == null) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        public void initSlot() {
+            slots = new Structure[1] { null };
+        }
+
+        public void fillSlot(Structure s) {
+            if (hasAvailableSlot()) {
+                slots[slots.Length - 1] = s;
+            } else {
+                if (slots == null) {
+                    initSlot();
+                }
+            }
         }
     }
 

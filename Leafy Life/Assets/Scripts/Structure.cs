@@ -15,7 +15,8 @@ public class Structure : MonoBehaviour {
         SLEEPABLE,
         BLOCK,
         MAPLINK,
-        TREEHOUSE_BUILDBLOCK
+        TREEHOUSE_BUILDBLOCK,
+        DECORATION
     }
 
     public SpriteRenderer spriteRenderer;
@@ -60,20 +61,6 @@ public class Structure : MonoBehaviour {
         }
     }
 
-    public Structure getInteractableStructure() {
-        if (this.isInteractable) {
-            return this;
-        }
-
-        foreach (GridFootprint fp in gridFootprint) {
-            if (fp.slot != null && fp.slot.isInteractable) {
-                return fp.slot;
-            }
-        }
-
-        return null;
-    }
-
     [Serializable]
     public class GridFootprint {
         public int gridX;
@@ -81,10 +68,6 @@ public class Structure : MonoBehaviour {
         public string canConnectAt = "0123";
         public bool isWalkable;
         public bool hasSlot;
-        
-
-        //[HideInInspector]
-        public Structure slot;
 
         public GridFootprint() { }
     }
