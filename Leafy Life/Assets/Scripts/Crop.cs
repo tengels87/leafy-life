@@ -12,11 +12,13 @@ public class Crop : MonoBehaviour {
     public GameObject seedGameobject;
     public GameObject matureGameobject;
     public GameObject prefab_itemToSpawn;
+    public GameObject itemToSpawnContainer;
     public int numberOfItems = 1;
     public bool initializeOnStart = false;
 
     [Tooltip("units per ingame hour")]
     public float timeToGrow = 2;
+    public bool destroyOnHarvest = false;
 
     private bool isInitialized = false;
     private float age = 0;
@@ -43,14 +45,20 @@ public class Crop : MonoBehaviour {
 
     public void init() {
         if (!isInitialized) {
-            seedGameobject.SetActive(true);
-            matureGameobject.SetActive(false);
+            setSeedState();
 
             isInitialized = true;
         }
     }
 
-    public void setMature() {
+    public void setSeedState() {
+        growthState = GrowthState.SEED;
+
+        seedGameobject.SetActive(true);
+        matureGameobject.SetActive(false);
+    }
+
+    public void setMatureState() {
         growthState = GrowthState.MATURE;
 
         seedGameobject.SetActive(false);
@@ -58,23 +66,34 @@ public class Crop : MonoBehaviour {
     }
 
     private void spawnItem() {
-        GameObject instance = Instantiate(prefab_itemToSpawn);
+        if (prefab_itemToSpawn != null) {
+            GameObject instance = Instantiate(prefab_itemToSpawn);
 
-        instance.transform.SetParent(this.transform);
-        instance.transform.localPosition = Vector3.zero;
+            if (itemToSpawnContainer != null) {
+                instance.transform.SetParent(itemToSpawnContainer.transform);
+            } else {
+                instance.transform.SetParent(this.transform);
+            }
+            instance.transform.localPosition = Vector3.zero;
 
-        harvestables.Add(instance);
+            harvestables.Add(instance);
+        }
     }
 
     public void harvestAll() {
-        foreach (GameObject harvest in harvestables) {
-            Collectable collectable = harvest.GetComponent<Collectable>();
-            if (collectable != null) {
-                collectable.collect();
+        if (harvestables.Count > 0) {
+            foreach (GameObject harvest in harvestables) {
+                Collectable collectable = harvest.GetComponent<Collectable>();
+                if (collectable != null) {
+                    collectable.collect();
+                }
             }
-        }
 
-        Object.Destroy(this.gameObject);
+            // reset crop
+            age = 0;
+            harvestables.Clear();
+            setSeedState();
+        }
     }
 
     private void OnHourTick(float timestamp) {
@@ -86,7 +105,7 @@ public class Crop : MonoBehaviour {
         age = age + 1;
 
         if (age >= timeToGrow && growthState != GrowthState.MATURE) {
-            setMature();
+            setMatureState();
 
             // spawn items
             for (int i = 0; i < numberOfItems; i++) {
