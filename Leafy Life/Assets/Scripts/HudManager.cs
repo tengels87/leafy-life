@@ -2,17 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HudManager : MonoBehaviour
-{
-    public GameObject statsPanel;
+public class HudManager : MonoBehaviour {
     public GameObject buildPanel;
-    public GameObject furniturePanel;
-
     public List<GameObject> buildMenuItems = new List<GameObject>();
-    public List<GameObject> furnitureMenuItems = new List<GameObject>();
 
     private Dictionary<MapController.MapType, List<GameObject>> buildMenuItemsDict = new Dictionary<MapController.MapType, List<GameObject>>();
-    private Dictionary<MapController.MapType, List<GameObject>> furnitureMenuItemsDict = new Dictionary<MapController.MapType, List<GameObject>>();
 
     void OnEnable() {
         SceneManager.MapChangedEvent += OnMapChanged;
@@ -22,25 +16,20 @@ public class HudManager : MonoBehaviour
         SceneManager.MapChangedEvent -= OnMapChanged;
     }
 
-    void Start()
-    {
+    void Start() {
         Camera cam = Camera.main;
 
         updateCameraFOV(8, 8);
 
         float visibleWorldWidth = 2 * cam.orthographicSize * cam.aspect;
 
-        statsPanel.transform.localPosition = new Vector3(-0.5f * visibleWorldWidth, cam.orthographicSize, 2);
         buildPanel.transform.localPosition = new Vector3(-0.5f * visibleWorldWidth, cam.orthographicSize, 2);
-        furniturePanel.transform.localPosition = new Vector3(-0.5f * visibleWorldWidth, cam.orthographicSize, 2);
 
         initBuildPanelItems();
-        initFurniturePanelItems();
     }
 
-    void Update()
-    {
-        
+    void Update() {
+
     }
 
     private void updateCameraFOV(int gridWidth, int gridHeight) {
@@ -71,33 +60,8 @@ public class HudManager : MonoBehaviour
                 buildMenuItemsDict[menuItemData.availableInMapType].Add(item);
             }
         }
-
-        foreach (GameObject item in furnitureMenuItems) {
-            item.transform.SetParent(furniturePanel.transform);
-
-            // some items actually build something, others are just toggles for sub menues
-            BuildMenuItem menuItemData = item.GetComponent<BuildMenuItem>();
-            if (menuItemData != null) {
-                if (!furnitureMenuItemsDict.ContainsKey(menuItemData.availableInMapType)) {
-                    furnitureMenuItemsDict[menuItemData.availableInMapType] = new List<GameObject>();
-                }
-                furnitureMenuItemsDict[menuItemData.availableInMapType].Add(item);
-            }
-        }
     }
 
-    private void initFurniturePanelItems() {
-        for (int i = 0; i < furnitureMenuItems.Count; i++) {
-            furnitureMenuItems[i].transform.SetParent(furniturePanel.transform);
-
-            BuildMenuItem menuItemData = furnitureMenuItems[i].GetComponent<BuildMenuItem>();
-
-            if (menuItemData != null) {
-                furnitureMenuItems[i].transform.localPosition = new Vector3(2.25f, -2.5f - i * 1.2f);
-                furnitureMenuItems[i].SetActive(true);
-            }
-        }
-    }
 
     private void updateBuildPanelItemsVisibility(MapController.MapType mapType) {
         foreach (List<GameObject> list in buildMenuItemsDict.Values) {
@@ -105,15 +69,6 @@ public class HudManager : MonoBehaviour
                 BuildMenuItem buildMenuScript = go.GetComponent<BuildMenuItem>();
                 if (buildMenuScript != null) {
                     buildMenuScript.setVisible(false);
-                }
-            }
-        }
-
-        foreach (List<GameObject> list in furnitureMenuItemsDict.Values) {
-            foreach (GameObject go in list) {
-                BuildMenuItem buildMenuScript = go.GetComponent<BuildMenuItem>();
-                if (buildMenuScript != null) {
-                    buildMenuScript.setVisible(true);
                 }
             }
         }
@@ -131,15 +86,7 @@ public class HudManager : MonoBehaviour
         }
     }
 
-    public void collapseSubMenu() {
-        ToggleGameObject[] subMenues = this.GetComponentsInChildren<ToggleGameObject>();
-        foreach (ToggleGameObject menu in subMenues) {
-            menu.hide();
-        }
-    }
-
     private void OnMapChanged(MapController.MapType mapType) {
-        collapseSubMenu();
         updateBuildPanelItemsVisibility(mapType);
     }
 }

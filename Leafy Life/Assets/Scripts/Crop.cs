@@ -12,7 +12,7 @@ public class Crop : MonoBehaviour {
     public GameObject seedGameobject;
     public GameObject matureGameobject;
     public GameObject prefab_itemToSpawn;
-    public GameObject itemToSpawnContainer;
+    public Transform itemToSpawnContainer;
     public int numberOfItems = 1;
     public bool initializeOnStart = false;
 
@@ -67,23 +67,31 @@ public class Crop : MonoBehaviour {
 
     private void spawnItem() {
         if (prefab_itemToSpawn != null) {
-            GameObject instance = Instantiate(prefab_itemToSpawn);
+            List<Transform> itemSlots = new List<Transform>();
 
             if (itemToSpawnContainer != null) {
-                instance.transform.SetParent(itemToSpawnContainer.transform);
+                foreach (Transform t in itemToSpawnContainer.gameObject.GetComponentsInChildren<Transform>()) {
+                    if (t != itemToSpawnContainer) {
+                        itemSlots.Add(t);
+                    }
+                }
             } else {
-                instance.transform.SetParent(this.transform);
+                itemSlots.Add(this.transform);
             }
-            instance.transform.localPosition = Vector3.zero;
 
-            harvestables.Add(instance);
+            foreach (Transform itemSlot in itemSlots) {
+                GameObject instance = Instantiate(prefab_itemToSpawn);
+                instance.transform.SetParent(itemSlot);
+                instance.transform.localPosition = Vector3.zero;
+                harvestables.Add(instance);
+            }
         }
     }
 
     public void harvestAll() {
         if (harvestables.Count > 0) {
             foreach (GameObject harvest in harvestables) {
-                Collectable collectable = harvest.GetComponent<Collectable>();
+                ItemController collectable = harvest.GetComponent<ItemController>();
                 if (collectable != null) {
                     collectable.collect();
                 }
@@ -107,10 +115,8 @@ public class Crop : MonoBehaviour {
         if (age >= timeToGrow && growthState != GrowthState.MATURE) {
             setMatureState();
 
-            // spawn items
-            for (int i = 0; i < numberOfItems; i++) {
-                spawnItem();
-            }
+            // spawn item
+            spawnItem();
         }
     }
 }

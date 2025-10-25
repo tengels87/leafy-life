@@ -152,11 +152,11 @@ public class BuildMenuItem : MonoBehaviour {
                     if (inventory != null) {
                         if (infiniteUse == false) {
                             if (prefab_comsumesItem != null) {
-                                Inventory.InventoryItem itemToConsume = prefab_comsumesItem.GetComponent<Collectable>()?.itemData;
+                                ItemController itemToConsume = prefab_comsumesItem.GetComponent<ItemController>();
                                 if (itemToConsume != null) {
-                                    if (itemToConsume.itemType == Inventory.InventoryItem.ItemType.FOOD) {
+                                    if (itemToConsume.itemData.itemType == Inventory.InventoryItem.ItemType.FOOD) {
                                         playerController.GetComponent<StatsController>().changeNutritionValue(30);
-                                        inventory.removeItem(itemToConsume);
+                                        inventory.removeItem(itemToConsume.itemData);
                                     }
                                 }
                             }
@@ -168,7 +168,8 @@ public class BuildMenuItem : MonoBehaviour {
                     MapController mapController = WorldConstants.Instance.getMapController();
 
                     // get position to walk to before building
-                    Vector2Int playerPosInt = new Vector2Int((int)playerController.getPosition2D().x, (int)playerController.getPosition2D().y);
+                    Vector2 playerPos2d = playerController.getPosition2D();
+                    Vector2Int playerPosInt = new Vector2Int(Mathf.RoundToInt(playerPos2d.x), Mathf.RoundToInt(playerPos2d.y));
                     MapController.Tile walkableTile = mapController.getNearestWalkableTile(currentBuildLocation, playerPosInt);
                     if (walkableTile != null) {
 
@@ -188,9 +189,9 @@ public class BuildMenuItem : MonoBehaviour {
                                 if (inventory != null) {
                                     if (infiniteUse == false) {
                                         if (prefab_comsumesItem != null) {
-                                            Inventory.InventoryItem itemToConsume = prefab_comsumesItem.GetComponent<Collectable>()?.itemData;
+                                            ItemController itemToConsume = prefab_comsumesItem.GetComponent<ItemController>();
                                             if (itemToConsume != null) {
-                                                inventory.removeItem(itemToConsume);
+                                                inventory.removeItem(itemToConsume.itemData);
                                             }
                                         }
                                     }
@@ -201,10 +202,6 @@ public class BuildMenuItem : MonoBehaviour {
                             playerController.addAction(gameAction);
                         }
                     }
-
-                    // collapse sub menues
-                    HudManager hudManager = WorldConstants.Instance.getHudManager();
-                    hudManager.collapseSubMenu();
                 }
             }
         }
@@ -250,7 +247,7 @@ public class BuildMenuItem : MonoBehaviour {
 
     private void OnItemAdded(Inventory.InventoryItem item, bool isFirstOfThisKind) {
         if (buildableStructure != null && prefab_comsumesItem != null) {
-            if (item.itemType == prefab_comsumesItem.GetComponent<Collectable>().itemData.itemType) {
+            if (item.itemType == prefab_comsumesItem.GetComponent<ItemController>().itemData.itemType) {
                 amount++;
 
                 updateLabel();
@@ -264,7 +261,7 @@ public class BuildMenuItem : MonoBehaviour {
 
     private void OnItemRemoved(Inventory.InventoryItem item, bool isLastOfThisKind) {
         if (buildableStructure != null && prefab_comsumesItem != null) {
-            if (item.itemType == prefab_comsumesItem.GetComponent<Collectable>().itemData.itemType) {
+            if (item.itemType == prefab_comsumesItem.GetComponent<ItemController    >().itemData.itemType) {
                 if (amount > 0) {
                     amount--;
 

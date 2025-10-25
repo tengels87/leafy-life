@@ -14,11 +14,11 @@ public class Inventory : MonoBehaviour
     private bool isInitialized = false;
 
     void OnEnable() {
-        Collectable.OnCollectedEvent += addItem;
+        ItemController.OnCollectedEvent += addItem;
     }
 
     void OnDisable() {
-        Collectable.OnCollectedEvent -= addItem;
+        ItemController.OnCollectedEvent -= addItem;
     }
 
     void Start()
@@ -57,6 +57,14 @@ public class Inventory : MonoBehaviour
         return itemsList;
     }
 
+    public bool containsItems(InventoryItem item, int count) {
+        if (items.ContainsKey(item)) {
+            return (items[item] >= count);
+        } else {
+            return false;
+        }
+    }
+
     public void addItem(InventoryItem item) {
         if (items.ContainsKey(item)) {
             items[item]++;
@@ -87,11 +95,17 @@ public class Inventory : MonoBehaviour
     public class InventoryItem {
         public enum ItemType {
             WOOD,
-            FOOD
+            FOOD,
+            DECORATION,
+            COIN
         }
 
         public string name;
         public ItemType itemType;
+        public Sprite iconSprite;
+        public GameObject structurePrefab;
+
+        public InventoryItem() {}
 
         public InventoryItem(string name, ItemType itemType) {
             this.name = name;
@@ -100,13 +114,12 @@ public class Inventory : MonoBehaviour
 
         public override bool Equals(object obj) {
             return obj is InventoryItem item &&
-                   //name == item.name &&
+                   name == item.name &&
                    itemType == item.itemType;
         }
 
         public override int GetHashCode() {
-            //return HashCode.Combine(name, itemType);
-            return HashCode.Combine("", itemType);
+            return HashCode.Combine(name, itemType);
         }
     }
 }

@@ -12,8 +12,8 @@ public class StatsController : MonoBehaviour
     public float nutrition = 50;
     public float sleep = 50;
 
-    public GameObject nutritionVisual;
-    public GameObject sleepVisual;
+    public GameObject nutritionStatsBar;
+    public GameObject sleepStatsBar;
 
     private bool doAddSleep = false;
 
@@ -90,7 +90,7 @@ public class StatsController : MonoBehaviour
     }
 
     private void updateVisuals() {
-        nutritionVisual.transform.localScale = new Vector3(nutrition * 0.01f, 1, 1);
-        sleepVisual.transform.localScale = new Vector3(sleep * 0.01f, 1, 1);
+        nutritionStatsBar.transform.localScale = new Vector3(nutrition * 0.01f, 1, 1);
+        sleepStatsBar.transform.localScale = new Vector3(sleep * 0.01f, 1, 1);
     }
 }
