@@ -53,19 +53,38 @@ public class ResourceCollector : MonoBehaviour {
         Image img = obj.GetComponent<Image>();
         img.sprite = sprite;
 
-        obj.transform.localPosition = localStartPos + Random.insideUnitCircle * spawnRandomOffset;
+        obj.transform.localPosition = localStartPos;
         obj.transform.localScale = Vector3.one;
 
         Vector2 destScreenPos = RectTransformUtility.WorldToScreenPoint(null, targetUI.position);
 
-        obj.transform.DOMove(destScreenPos, flyDuration)
-            .SetEase(Ease.InQuad)
+        float attractionDuration = 1f;
+
+        Vector3 randomDirection = Random.onUnitSphere * spawnRandomOffset;
+        randomDirection.z = 0;
+
+        // apply random direction initially, creating a random "swirl" effect
+        Vector3 randomSwirltargetPos = obj.transform.position + randomDirection;
+        obj.transform.DOMove(randomSwirltargetPos, 0.5f).OnComplete(() => {
+            obj.transform.DOMove(destScreenPos, attractionDuration)
+            .SetEase(Ease.OutQuad)
             .OnComplete(() => {
                 obj.SetActive(false);
                 pool.Enqueue(obj);
 
                 PopWallet(targetUI);
             });
+        });
+
+        /*
+        obj.transform.DOMove(destScreenPos, flyDuration)
+            .SetEase(Ease.InQuad)
+            .OnComplete(() => {
+                obj.SetActive(false);
+                pool.Enqueue(obj);
+
+        PopWallet(targetUI);
+            });*/
     }
 
     private bool walletAnimating = false;

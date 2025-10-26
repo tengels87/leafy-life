@@ -2267,11 +2267,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buildPrefab: {fileID: 6328117217270616688, guid: 366c5bdcfb5187d469d404618c4fe8a2, type: 3}
-  buildIngredients:
-    name: 
-    itemType: 0
-    iconSprite: {fileID: 0}
-    structurePrefab: {fileID: 0}
+  buildIngredients: {fileID: 0}
   ignoreIngredients: 1
 --- !u!114 &551475277
 MonoBehaviour:
@@ -4679,9 +4675,9 @@ MonoBehaviour:
   canvas: {fileID: 1579483603}
   itemIconTemplate: {fileID: 4444947582201712630, guid: a9d128c09a487714998593f9185b5ba7, type: 3}
   targetUI: {fileID: 826747693}
-  flyDuration: 3
-  spawnDelay: 0.1
-  spawnRandomOffset: 100
+  flyDuration: 1
+  spawnDelay: 0.2
+  spawnRandomOffset: 40
 --- !u!4 &1394157867
 Transform:
   m_ObjectHideFlags: 0
@@ -5201,7 +5197,7 @@ GameObject:
   - component: {fileID: 1482675859}
   - component: {fileID: 1482675858}
   m_Layer: 0
-  m_Name: frame_stats
+  m_Name: frame_buildables
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5279,7 +5275,7 @@ GameObject:
   - component: {fileID: 1490832420}
   - component: {fileID: 1490832419}
   m_Layer: 0
-  m_Name: frame_stats_bg
+  m_Name: frame_buildables_bg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5530,11 +5526,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buildPrefab: {fileID: 6328117217270616688, guid: 25e3c1750ae68bf4d99acca32fcca2e3, type: 3}
-  buildIngredients:
-    name: log
-    itemType: 0
-    iconSprite: {fileID: 0}
-    structurePrefab: {fileID: 0}
+  buildIngredients: {fileID: 11400000, guid: d02221bb8bd54ba4886c61d095098ffb, type: 2}
   ignoreIngredients: 0
 --- !u!114 &1546984729
 MonoBehaviour:
