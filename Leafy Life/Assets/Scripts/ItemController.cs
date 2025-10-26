@@ -5,9 +5,9 @@ using UnityEngine.Events;
 
 public class ItemController : DragInteractController
 {
-    public static UnityAction<Inventory.InventoryItem> OnCollectedEvent;
+    public static UnityAction<ItemData> OnCollectedEvent;
 
-    public Inventory.InventoryItem itemData = new Inventory.InventoryItem();
+    public ItemData itemData;
     public int itemCount;
 
     private bool isCollected = false;
@@ -28,7 +28,7 @@ public class ItemController : DragInteractController
     }
 
     protected override void handleTappedInUI(Object prefabToSpawn) {
-        Object dragVisual = itemData.iconSprite != null ? itemData.iconSprite : itemData.structurePrefab;
+        Object dragVisual = itemData.structurePrefab != null ? itemData.structurePrefab : itemData.iconSprite;
         //Object dragBuildPrefab = itemData.structurePrefab != null ? itemData.structurePrefab : null;
 
         base.handleTappedInUI(dragVisual);
@@ -46,9 +46,9 @@ public class ItemController : DragInteractController
         Inventory inventory = WorldConstants.Instance.getInventory();
         if (inventory != null) {
 
-            Inventory.InventoryItem itemToConsume = itemData;
+            ItemData itemToConsume = itemData;
             if (itemToConsume != null) {
-                if (itemToConsume.itemType == Inventory.InventoryItem.ItemType.FOOD) {
+                if (itemToConsume.itemType == ItemData.ItemType.FOOD) {
                     playerController.GetComponent<StatsController>().changeNutritionValue(30);
                     inventory.removeItem(itemToConsume);
                 }

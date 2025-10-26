@@ -31,13 +31,15 @@ public class SaveSystem : MonoBehaviour {
                 currentGameData.sleepValue = WorldConstants.Instance.getStatsController().sleep;
 
                 // built tiles, save per mapController
-                currentGameData.builtTilesList.Clear();
+                //currentGameData.builtTilesList.Clear();
 
                 MapController[] mapControllersAll = Resources.FindObjectsOfTypeAll<MapController>();    // find even on inactive GameObjects
                 foreach (MapController mapController in mapControllersAll) {
                     List<MapController.TileData> buildTiles = mapController.getUserBuildTiles();
                     foreach (MapController.TileData data in buildTiles) {
-                        currentGameData.builtTilesList.Add(data);
+                        if (!currentGameData.builtTilesList.Contains(data)) {
+                            currentGameData.builtTilesList.Add(data);
+                        }
                     }
                 }
 
@@ -86,7 +88,7 @@ public class SaveSystem : MonoBehaviour {
     public class GameData {
         public int seed = -1;
 
-        public List<Inventory.InventoryItem> inventoryItemsList;
+        public List<ItemData> inventoryItemsList;
 
         public float nutritionValue;
         public float sleepValue;

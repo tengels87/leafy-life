@@ -154,7 +154,7 @@ public class BuildMenuItem : MonoBehaviour {
                             if (prefab_comsumesItem != null) {
                                 ItemController itemToConsume = prefab_comsumesItem.GetComponent<ItemController>();
                                 if (itemToConsume != null) {
-                                    if (itemToConsume.itemData.itemType == Inventory.InventoryItem.ItemType.FOOD) {
+                                    if (itemToConsume.itemData.itemType == ItemData.ItemType.FOOD) {
                                         playerController.GetComponent<StatsController>().changeNutritionValue(30);
                                         inventory.removeItem(itemToConsume.itemData);
                                     }
@@ -245,7 +245,7 @@ public class BuildMenuItem : MonoBehaviour {
         }
     }
 
-    private void OnItemAdded(Inventory.InventoryItem item, bool isFirstOfThisKind) {
+    private void OnItemAdded(ItemData item, bool isFirstOfThisKind) {
         if (buildableStructure != null && prefab_comsumesItem != null) {
             if (item.itemType == prefab_comsumesItem.GetComponent<ItemController>().itemData.itemType) {
                 amount++;
@@ -259,7 +259,7 @@ public class BuildMenuItem : MonoBehaviour {
         }
     }
 
-    private void OnItemRemoved(Inventory.InventoryItem item, bool isLastOfThisKind) {
+    private void OnItemRemoved(ItemData item, bool isLastOfThisKind) {
         if (buildableStructure != null && prefab_comsumesItem != null) {
             if (item.itemType == prefab_comsumesItem.GetComponent<ItemController    >().itemData.itemType) {
                 if (amount > 0) {

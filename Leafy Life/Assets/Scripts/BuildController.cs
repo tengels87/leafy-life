@@ -6,10 +6,10 @@ using UnityEngine.UI;
 
 public class BuildController : DragInteractController
 {
-    public static UnityAction<Inventory.InventoryItem> OnCollectedEvent;
+    public static UnityAction<ItemData> OnCollectedEvent;
 
     public Object buildPrefab;
-    public Inventory.InventoryItem buildIngredients;
+    public ItemData buildIngredients;
     public bool ignoreIngredients;
 
     private bool isEnabled = false;
@@ -62,11 +62,11 @@ public class BuildController : DragInteractController
         }
     }
 
-    private void OnItemAdded(Inventory.InventoryItem item, bool isFirstOfThisKind) {
+    private void OnItemAdded(ItemData item, bool isFirstOfThisKind) {
         setEnabled(canBuild());
     }
 
-    private void OnItemRemoved(Inventory.InventoryItem item, bool isFirstOfThisKind) {
+    private void OnItemRemoved(ItemData item, bool isFirstOfThisKind) {
         setEnabled(canBuild());
     }
 

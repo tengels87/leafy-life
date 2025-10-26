@@ -28,7 +28,7 @@ public class InventoryController : MonoBehaviour {
 
     }
 
-    private void updateSlots(Inventory.InventoryItem arg0, bool arg1) {
+    private void updateSlots(ItemData arg0, bool arg1) {
 
         // destroy all slots
         Transform[] slotTransforms = slotsContainer.GetComponentsInChildren<Transform>();
@@ -41,14 +41,15 @@ public class InventoryController : MonoBehaviour {
         // recreate all items in slots
         Inventory inventory = WorldConstants.Instance.getInventory();
         if (inventory != null) {
-            Dictionary<Inventory.InventoryItem, int> itemsDict = inventory.getInventoryItems();
-            foreach (Inventory.InventoryItem item in itemsDict.Keys) {
+            Dictionary<ItemData, int> itemsDict = inventory.getInventoryItems();
+            foreach (ItemData item in itemsDict.Keys) {
                 GameObject go = Instantiate(itemIconTemplate);
                 go.transform.SetParent(slotsContainer.transform);
                 go.transform.localScale = Vector3.one;
 
                 // add a copy of ItemController
                 ItemController blankItemController = go.AddComponent<ItemController>();
+                blankItemController.itemData = ItemData.Create(item.itemName, item.itemType);
                 var json = JsonUtility.ToJson(item);
                 JsonUtility.FromJsonOverwrite(json, blankItemController.itemData);
 

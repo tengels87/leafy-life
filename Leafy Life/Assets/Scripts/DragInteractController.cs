@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using DG.Tweening;
@@ -13,9 +12,9 @@ public class DragInteractController : MonoBehaviour
     private List<Vector2Int> currentBuildLocations = new List<Vector2Int>();
     private List<GameObject> buildLocationVisualizers = new List<GameObject>();
 
-    GraphicRaycaster m_Raycaster;
-    PointerEventData m_PointerEventData;
-    EventSystem m_EventSystem;
+    private GraphicRaycaster graphicRaycaster;
+    private PointerEventData pointerEventData;
+    private EventSystem eventSystem;
 
     protected virtual void Start()
     {
@@ -64,18 +63,18 @@ public class DragInteractController : MonoBehaviour
     }
 
     private bool isTappedInUI() {
-        m_Raycaster = this.gameObject.GetComponent<GraphicRaycaster>();
-        m_EventSystem = FindObjectOfType<EventSystem>();
+        graphicRaycaster = this.gameObject.GetComponent<GraphicRaycaster>();
+        eventSystem = FindObjectOfType<EventSystem>();
 
-        if (m_Raycaster == null || m_EventSystem == null)
+        if (graphicRaycaster == null || eventSystem == null)
             return false;
 
-        m_PointerEventData = new PointerEventData(m_EventSystem);
-        m_PointerEventData.position = Input.mousePosition;
+        pointerEventData = new PointerEventData(eventSystem);
+        pointerEventData.position = Input.mousePosition;
 
         List<RaycastResult> results = new List<RaycastResult>();
 
-        m_Raycaster.Raycast(m_PointerEventData, results);
+        graphicRaycaster.Raycast(pointerEventData, results);
 
         foreach (RaycastResult result in results) {
             if (result.gameObject.Equals(this.gameObject)) {

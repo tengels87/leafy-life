@@ -481,7 +481,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   seedGameobject: {fileID: 6328117217153012980}
   matureGameobject: {fileID: 4561774496797424244}
-  prefab_itemToSpawn: {fileID: 6328117217270616688, guid: 4be92f9f58fcd67409526811546e94d2, type: 3}
+  prefab_itemToSpawn: {fileID: 6328117217270616688, guid: a0d9f24374f016d40b192050058a3341, type: 3}
   itemToSpawnContainer: {fileID: 5549386822744447444}
   numberOfItems: 4
   initializeOnStart: 1

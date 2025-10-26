@@ -130,11 +130,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e74b86048bdc84347a480c18be11ebfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemData:
-    name: bed
-    itemType: 2
-    iconSprite: {fileID: 0}
-    structurePrefab: {fileID: 6328117217270616688, guid: dcc636508c3b8db4bba6d27cbdce40c6, type: 3}
+  itemData: {fileID: 11400000, guid: 4c6486f9f39124c4a9ae1b3693180d64, type: 2}
   itemCount: 1
 --- !u!58 &8536642195625439839
 CircleCollider2D:
