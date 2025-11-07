@@ -260,8 +260,8 @@ public class MapController : MonoBehaviour {
         if (saveData != null) {
             foreach (TileData tileData in saveData.builtTilesList) {
                 if (tileData.mapType == this.mapType) {     // only build tiles registered for this map
-                    GameObject foundPrefab = WorldConstants.Instance.getStructureManager().getPrefabByUID(tileData.tilePrefabID);
-                    buildTile(tileData.x, tileData.y, foundPrefab, true);
+                    if (PrefabDefs.TryGet(tileData.tilePrefabID, out PrefabDef prefabDef))
+                    buildTile(tileData.x, tileData.y, prefabDef.Prefab);
                 }
             }
         }
@@ -270,7 +270,7 @@ public class MapController : MonoBehaviour {
         isInitiated = true;
     }
 
-    public void buildTile(int x, int y, GameObject prefab, bool userCreated = false) {
+    public void buildTile(int x, int y, GameObject prefab) {
         GameObject buildable = (GameObject)Object.Instantiate(prefab);
 
         buildable.name = buildable.name + "_" + rnd.Next();
@@ -278,7 +278,7 @@ public class MapController : MonoBehaviour {
         buildable.transform.SetParent(this.gameObject.transform);
 
         Structure structure = buildable.GetComponent<Structure>();
-        
+
         if (structure.attachesToPlatform || structure.attachesToSlot) {
 
             // attach to slot on existing tile, but do not override tile in grid[,]
@@ -308,16 +308,25 @@ public class MapController : MonoBehaviour {
                 placeTile(t);
             }
         }
+    }
 
-        if (userCreated) {
-            int prefabUID = WorldConstants.Instance.getStructureManager().getPrefabUID(prefab.name);
-            TileData tileData = new TileData(prefabUID, mapType, x, y);
-            userBuiltTilesList.Add(tileData);
+    public void buildTileFromPrefabId(int x, int y, string id) {
+        if (PrefabDefs.TryGet(id, out PrefabDef prefabDef)) {
+            buildTile(x, y, prefabDef.Prefab);
         }
+    }
+
+    public void registerTile(int x, int y, string prefabDefId) {
+        TileData tileData = new TileData(prefabDefId, mapType, x, y);
+        AddUserBuildTile(tileData);
     }
 
     public List<TileData> getUserBuildTiles() {
         return userBuiltTilesList;
+    }
+
+    public void AddUserBuildTile(TileData tileData) {
+        userBuiltTilesList.Add(tileData);
     }
 
     public static Vector2 pixelPos2WorldPos(Vector3 pixelPos) {
@@ -527,16 +536,16 @@ public class MapController : MonoBehaviour {
 
     [System.Serializable]
     public class TileData {
-        public TileData(int tilePrefabID, MapType mapType, int x, int y) {
+        public string tilePrefabID;
+        public MapType mapType;
+        public int x;
+        public int y;
+
+        public TileData(string tilePrefabID, MapType mapType, int x, int y) {
             this.tilePrefabID = tilePrefabID;
             this.mapType = mapType;
             this.x = x;
             this.y = y;
         }
-
-        public int tilePrefabID;
-        public MapType mapType;
-        public int x;
-        public int y;
     }
 }

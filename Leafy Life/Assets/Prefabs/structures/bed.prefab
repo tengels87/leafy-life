@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 5517438266597545125}
-  structureType: 6
+  structureType: 2
   attachesToPlatform: 0
   attachesToSlot: 1
   isInteractable: 0

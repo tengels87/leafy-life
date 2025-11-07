@@ -56,7 +56,13 @@ public class PlayerController : MonoBehaviour {
     }
 
     void Update() {
-
+        /*
+        if (Input.GetKeyDown(KeyCode.Space)) {
+            Vector2 targetPos42 = MapController.pixelPos2WorldPos(Input.mousePosition);
+            FindObjectOfType<ResourceCollector>()
+                .Collect(Inventory.InventoryItem.ItemType.COIN, 3, targetPos42);
+        }
+        */
         // camera follow player
         Camera cam = Camera.main;
         if (cam != null) {
@@ -91,12 +97,14 @@ public class PlayerController : MonoBehaviour {
                 if (t.attachedGameObject != null) {
                     Structure structureOnTile = t.attachedGameObject.GetComponent<Structure>();
                     if (structureOnTile != null) {
+                        /*
                         Structure interactablePart = structureOnTile.getInteractableStructure();
                         if (interactablePart != null) {
                             gameAction = new GameAction(GameAction.ActionType.INTERACT, targetPosInt);
                             gameAction.customData = interactablePart.gameObject;
                             addAction(gameAction);
                         }
+                        */
                     }
                 }
             }
@@ -193,8 +201,18 @@ public class PlayerController : MonoBehaviour {
         if (allActions.Count > 0) {
             Vector2Int targetPositionInt = new Vector2Int((int)allActions[0].targetPosition.x, (int)allActions[0].targetPosition.y);
             MapController mapController = WorldConstants.Instance.getMapController();
-            GameObject customDataObj = (GameObject)allActions[0].customData;
-            Structure structure = customDataObj?.GetComponent<Structure>();
+
+            GameObject dataGameObject = (allActions[0].customData != null && allActions[0].customData.GetType() == typeof(GameObject))
+                ? (GameObject)allActions[0].customData
+                : null;
+
+            PrefabDef dataPrefabDef = (allActions[0].customData != null && allActions[0].customData.GetType() == typeof(PrefabDef))
+                ? (PrefabDef)allActions[0].customData
+                : null;
+
+            Structure structure = dataGameObject != null
+                ? dataGameObject.GetComponent<Structure>()
+                : null;
 
             switch (allActions[0].actionType) {
                 case GameAction.ActionType.WALKTO:
@@ -223,9 +241,13 @@ public class PlayerController : MonoBehaviour {
 
                         startInteraction(interactionData[(int)(InteractionType.CRAFT) - 1], () => {
                             stopInteraction();
-                            mapController.buildTile(targetPositionInt.x, targetPositionInt.y, customDataObj, true);
 
-                            buildingDoneCalback?.Invoke();
+                            if (dataPrefabDef != null) {
+                                mapController.buildTileFromPrefabId(targetPositionInt.x, targetPositionInt.y, dataPrefabDef.Id);
+                                mapController.registerTile(targetPositionInt.x, targetPositionInt.y, dataPrefabDef.Id);
+
+                                buildingDoneCalback?.Invoke();
+                            }
                         });
                     }
 
@@ -234,7 +256,9 @@ public class PlayerController : MonoBehaviour {
                 case GameAction.ActionType.INTERACT:
                     removeAction(allActions[0]);
 
-                    startInteraction(interactionData[(int)(structure.interactionType) - 1]);
+                    if (structure != null) {
+                        startInteraction(interactionData[(int)(structure.interactionType) - 1]);
+                    }
 
                     break;
 

@@ -27,9 +27,10 @@ public class ItemController : DragInteractController
         collect();
     }
 
-    protected override void handleTappedInUI(Object prefabToSpawn) {
-        Object dragVisual = itemData.structurePrefab != null ? itemData.structurePrefab : itemData.iconSprite;
-        //Object dragBuildPrefab = itemData.structurePrefab != null ? itemData.structurePrefab : null;
+    protected override void handleTappedInUI(Object obj) {
+        Object dragVisual = itemData.spawnPrefabDef != null ? itemData.spawnPrefabDef.Prefab : itemData.iconSprite;
+
+        currentPrefabDef = itemData.spawnPrefabDef;
 
         base.handleTappedInUI(dragVisual);
     }
@@ -56,7 +57,7 @@ public class ItemController : DragInteractController
         }
     }
 
-    protected override void handleBuildAction(Object customData) {
+    protected override void handleBuildAction(PrefabDef prefabDef) {
         Inventory inventory = WorldConstants.Instance.getInventory();
 
         if (inventory != null) {

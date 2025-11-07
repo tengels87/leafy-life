@@ -142,8 +142,7 @@ MonoBehaviour:
     gridY: 0
     canConnectAt: 013
     isWalkable: 1
-    hasSlot: 1
-    slot: {fileID: 0}
+    hasSlot: 0
 --- !u!61 &6328117217270616691
 BoxCollider2D:
   m_ObjectHideFlags: 0

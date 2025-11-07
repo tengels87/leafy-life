@@ -52,9 +52,11 @@ public class Structure : MonoBehaviour {
             if (hasHit) {
                 Crop crop = this.GetComponentInChildren<Crop>();
                 if (crop != null) {
-                    crop.harvestAll();
-                    if (crop.destroyOnHarvest) {
-                        UnityEngine.Object.Destroy(this.gameObject);
+                    bool harvested = crop.harvestAll();
+                    if (harvested) {
+                        if (crop.destroyOnHarvest) {
+                            UnityEngine.Object.Destroy(this.gameObject);
+                        }
                     }
                 }
             }

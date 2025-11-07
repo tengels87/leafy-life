@@ -8,7 +8,7 @@ public class BuildController : DragInteractController
 {
     public static UnityAction<ItemData> OnCollectedEvent;
 
-    public Object buildPrefab;
+    public PrefabDef buildPrefabDef;
     public ItemData buildIngredients;
     public bool ignoreIngredients;
 
@@ -42,15 +42,17 @@ public class BuildController : DragInteractController
         base.handleTappedInWorld();
     }
 
-    protected override void handleTappedInUI(Object prefabToSpawn) {
+    protected override void handleTappedInUI(Object obj) {
         if (canBuild()) {
-            Object dragVisual = buildPrefab;
+            Object dragVisual = buildPrefabDef.Prefab;
+
+            currentPrefabDef = buildPrefabDef;
 
             base.handleTappedInUI(dragVisual);
         }
     }
 
-    protected override void handleBuildAction(Object customData) {
+    protected override void handleBuildAction(PrefabDef prefabDef) {
         Inventory inventory = WorldConstants.Instance.getInventory();
         
         if (inventory != null) {

@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class MapEditorTool : MonoBehaviour {
     [Header("Tile Prefabs")]
-    public GameObject[] tilePrefabs;
+    public PrefabDef[] tilePrefabs;
 
     [Header("Placement Settings")]
     public Transform parentContainer;
@@ -25,7 +25,7 @@ public class MapEditorTool : MonoBehaviour {
             }
         }
 
-        GameObject prefab = tilePrefabs[activePrefabIndex];
+        GameObject prefab = tilePrefabs[activePrefabIndex].Prefab;
 
         MapController mapController = WorldConstants.Instance.getMapController();
         if (mapController != null) {

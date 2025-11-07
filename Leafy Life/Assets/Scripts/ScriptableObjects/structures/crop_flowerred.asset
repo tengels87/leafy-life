@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e34a71cb529389a41b34607b68bc43b0, type: 3}
+  m_Name: crop_flowerred
+  m_EditorClassIdentifier: 
+  id: 6ec26dbf523045c1bc37561947590202
+  prefab: {fileID: 6328117217270616688, guid: 8e850357ab85b6e48a9cd1ab1c44a6e0, type: 3}
+  version: 1

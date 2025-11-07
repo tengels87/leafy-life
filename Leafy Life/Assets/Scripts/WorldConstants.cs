@@ -7,7 +7,7 @@ public sealed class WorldConstants {
     public static string objName_loadingManager = "LoadingManager";
     public static string objName_mapController = "MapController";
     public static string objName_hudManager = "HUDmanager";
-    public static string objName_structureManager = "StructureManager";
+    public static string objName_prefabDefRegistryManager = "PrefabDefRegistryManager";
     public static string objName_player = "Player";
     public static string objName_inventory = "Inventory";
     public static string objName_daytimeManager = "DaytimeManager";
@@ -19,7 +19,7 @@ public sealed class WorldConstants {
     public MapController mapController;
     public HudManager hudManager;
     public StatsController statsController;
-    public StructureManager structureManager;
+    public PrefabDefRegistryManager prefabDefRegistryManager;
     public Transform player;
     public PlayerController playerController;
     public Inventory inventory;
@@ -87,12 +87,12 @@ public sealed class WorldConstants {
         return statsController;
     }
 
-    public StructureManager getStructureManager() {
-        if (structureManager == null) {
-            structureManager = GameObject.Find(objName_structureManager).GetComponent<StructureManager>();
+    public PrefabDefRegistryManager getPrefabDefRegistryManager() {
+        if (prefabDefRegistryManager == null) {
+            prefabDefRegistryManager = GameObject.Find(objName_prefabDefRegistryManager).GetComponent<PrefabDefRegistryManager>();
         }
 
-        return structureManager;
+        return prefabDefRegistryManager;
     }
 
     public Transform getPlayer() {

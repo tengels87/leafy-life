@@ -8,13 +8,14 @@ public class ItemData : ScriptableObject
         WOOD,
         FOOD,
         DECORATION,
-        COIN
+        COIN,
+        SEED
     }
 
     public string itemName;
     public ItemType itemType;
     public Sprite iconSprite;
-    public GameObject structurePrefab;
+    public PrefabDef spawnPrefabDef;
 
     public static ItemData Create(string itemName, ItemType itemType) {
         ItemData item = CreateInstance<ItemData>();

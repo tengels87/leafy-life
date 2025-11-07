@@ -3,10 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class HudManager : MonoBehaviour {
-    public GameObject buildPanel;
-    public List<GameObject> buildMenuItems = new List<GameObject>();
-
-    private Dictionary<MapController.MapType, List<GameObject>> buildMenuItemsDict = new Dictionary<MapController.MapType, List<GameObject>>();
 
     void OnEnable() {
         SceneManager.MapChangedEvent += OnMapChanged;
@@ -22,10 +18,6 @@ public class HudManager : MonoBehaviour {
         updateCameraFOV(8, 8);
 
         float visibleWorldWidth = 2 * cam.orthographicSize * cam.aspect;
-
-        buildPanel.transform.localPosition = new Vector3(-0.5f * visibleWorldWidth, cam.orthographicSize, 2);
-
-        initBuildPanelItems();
     }
 
     void Update() {
@@ -47,46 +39,7 @@ public class HudManager : MonoBehaviour {
         }
     }
 
-    private void initBuildPanelItems() {
-        foreach (GameObject item in buildMenuItems) {
-            item.transform.SetParent(buildPanel.transform);
-
-            // some items actually build something, others are just toggles for sub menues
-            BuildMenuItem menuItemData = item.GetComponent<BuildMenuItem>();
-            if (menuItemData != null) {
-                if (!buildMenuItemsDict.ContainsKey(menuItemData.availableInMapType)) {
-                    buildMenuItemsDict[menuItemData.availableInMapType] = new List<GameObject>();
-                }
-                buildMenuItemsDict[menuItemData.availableInMapType].Add(item);
-            }
-        }
-    }
-
-
-    private void updateBuildPanelItemsVisibility(MapController.MapType mapType) {
-        foreach (List<GameObject> list in buildMenuItemsDict.Values) {
-            foreach (GameObject go in list) {
-                BuildMenuItem buildMenuScript = go.GetComponent<BuildMenuItem>();
-                if (buildMenuScript != null) {
-                    buildMenuScript.setVisible(false);
-                }
-            }
-        }
-
-        // show all build icons which do belong to mapType
-        if (buildMenuItemsDict.ContainsKey(mapType)) {
-            for (int i = 0; i < buildMenuItemsDict[mapType].Count; i++) {
-                buildMenuItemsDict[mapType][i].transform.localPosition = new Vector3(0.75f, -2.5f - i * 1.2f);
-
-                BuildMenuItem buildMenuScript = buildMenuItemsDict[mapType][i].GetComponent<BuildMenuItem>();
-                if (buildMenuScript != null) {
-                    buildMenuScript.setVisible(true);
-                }
-            }
-        }
-    }
-
     private void OnMapChanged(MapController.MapType mapType) {
-        updateBuildPanelItemsVisibility(mapType);
+        
     }
 }

@@ -8,7 +8,8 @@ using DG.Tweening;
 public class DragInteractController : MonoBehaviour
 {
     private GameObject currentDragged;
-    private GameObject dragVisualsInstance;
+    protected GameObject dragVisualsInstance;
+    protected PrefabDef currentPrefabDef;
     private List<Vector2Int> currentBuildLocations = new List<Vector2Int>();
     private List<GameObject> buildLocationVisualizers = new List<GameObject>();
 
@@ -89,21 +90,18 @@ public class DragInteractController : MonoBehaviour
 
     }
 
-    protected virtual void handleTappedInUI(Object prefabToSpawn) {
-        if (prefabToSpawn == null) return;
-
+    protected virtual void handleTappedInUI(Object dragVisual) {
         currentDragged = this.gameObject;
 
         // instantiate drag visuals
-        dragVisualsInstance = prefabToSpawn.GetType() == typeof(Sprite)
-            ? instantiateSpriteInWorld((Sprite)prefabToSpawn)
-            : Instantiate((GameObject)prefabToSpawn);
+        this.dragVisualsInstance = dragVisual.GetType() == typeof(Sprite)
+            ? instantiateSpriteInWorld((Sprite)dragVisual)
+            : Instantiate((GameObject)dragVisual);
 
-        dragVisualsInstance.name = prefabToSpawn.name;
         dragVisualsInstance.transform.position = new Vector3(0, 0, 0);
 
-        if (prefabToSpawn != null) {
-            Structure structure = dragVisualsInstance.GetComponent<Structure>();
+        if (currentPrefabDef != null) {
+            Structure structure = currentPrefabDef.Prefab.GetComponent<Structure>();
 
             if (structure != null) {
 
@@ -168,8 +166,6 @@ public class DragInteractController : MonoBehaviour
         // drop food on player to eat it
         // or dropstructure on buildLocation to build it
         if (Input.GetMouseButtonUp(0)) {
-            clearDragState();
-
             if (draggedOntoPlayer) {
                 canBuild = false;   // ignore building the structure when dragged at player
 
@@ -193,17 +189,18 @@ public class DragInteractController : MonoBehaviour
                     playerController.addAction(gameAction);
 
                     // build action
-                    GameObject prefabToBuild = WorldConstants.Instance.getStructureManager().getPrefabByName(dragVisualsInstance.name);
-                    if (prefabToBuild != null) {
+                    if (currentPrefabDef != null) {
                         gameAction = new GameAction(GameAction.ActionType.BUILD, currentBuildLocation, () => {
-                            handleBuildAction(prefabToBuild);
+                            handleBuildAction(currentPrefabDef);
                         });
 
-                        gameAction.customData = prefabToBuild;
+                        gameAction.customData = currentPrefabDef;
                         playerController.addAction(gameAction);
                     }
                 }
             }
+
+            clearDragState();
         }
     }
 
@@ -221,6 +218,7 @@ public class DragInteractController : MonoBehaviour
         }
 
         currentDragged = null;
+        currentPrefabDef = null;
 
         foreach (var locationVis in buildLocationVisualizers) {
             Destroy(locationVis);
@@ -228,11 +226,11 @@ public class DragInteractController : MonoBehaviour
         buildLocationVisualizers.Clear();
     }
 
-    protected virtual void handleBuildAction(Object customData) {
+    protected virtual void handleBuildAction(PrefabDef prefabDef) {
 
     }
 
-    private GameObject instantiateSpriteInWorld(Sprite sprite) {
+    protected GameObject instantiateSpriteInWorld(Sprite sprite) {
         GameObject go = new GameObject();
         SpriteRenderer spriteRenderer = go.AddComponent<SpriteRenderer>();
         spriteRenderer.sprite = sprite;

@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e34a71cb529389a41b34607b68bc43b0, type: 3}
+  m_Name: furniture_bookshelf
+  m_EditorClassIdentifier: 
+  id: 83f1876e81e1495d85e22595338fc7ce
+  prefab: {fileID: 6328117217270616688, guid: d55968a0e26dd3642992e3c67582b1b8, type: 3}
+  version: 1
