@@ -10,6 +10,8 @@ public class InventoryController : MonoBehaviour {
     [SerializeField]
     private GameObject slotsContainer;
     [SerializeField]
+    private TextMeshProUGUI textGold;
+    [SerializeField]
     private GameObject itemIconTemplate;
 
     private bool isOpen;
@@ -17,11 +19,13 @@ public class InventoryController : MonoBehaviour {
     void OnEnable() {
         Inventory.ItemAddedEvent += updateSlots;
         Inventory.ItemRemovedEvent += updateSlots;
+        Inventory.GoldChangedEvent += updateGoldValue;
     }
 
     void OnDisable() {
         Inventory.ItemAddedEvent -= updateSlots;
         Inventory.ItemRemovedEvent -= updateSlots;
+        Inventory.GoldChangedEvent -= updateGoldValue;
     }
 
     void Start() {
@@ -78,5 +82,9 @@ public class InventoryController : MonoBehaviour {
 
     public void toggleOpen() {
         setOpen(!isOpen);
+    }
+
+    private void updateGoldValue(int goldAmount) {
+        textGold.text = "" + goldAmount;
     }
 }

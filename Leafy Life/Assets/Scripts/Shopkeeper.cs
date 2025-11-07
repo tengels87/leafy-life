@@ -34,7 +34,7 @@ public class Shopkeeper : MonoBehaviour {
         }
     }
 
-    public void showConfirmDialog(ItemData item, float itemPrice) {
+    public void showConfirmDialog(ItemData item, int itemPrice) {
         confirmDialogUI.SetActive(true);
 
         lastOffer = new ShopItem();
@@ -53,7 +53,15 @@ public class Shopkeeper : MonoBehaviour {
         confirmDialogUI.SetActive(false);
     }
 
-    public void purchaseLastOffer() {
-        ItemController.OnCollectedEvent?.Invoke(lastOffer.data);
+    public void tryPurchaseLastOffer() {
+
+        // check for sufficient gold and buy, add item to inventory
+        Inventory inventory_player = WorldConstants.Instance.getInventory();
+        if (inventory_player != null) {
+            if (inventory_player.getGoldAmount() >= lastOffer.itemPrice) {
+                inventory_player.withdrawGold(lastOffer.itemPrice);
+                ItemController.OnCollectedEvent?.Invoke(lastOffer.data);
+            }
+        }
     }
 }

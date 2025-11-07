@@ -1071,7 +1071,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 8725881736914970400}
         m_TargetAssemblyTypeName: Shopkeeper, Assembly-CSharp
-        m_MethodName: purchaseLastOffer
+        m_MethodName: tryPurchaseLastOffer
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

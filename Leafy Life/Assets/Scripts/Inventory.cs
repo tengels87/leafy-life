@@ -8,8 +8,10 @@ public class Inventory : MonoBehaviour
 {
     public static UnityAction<ItemData, bool> ItemAddedEvent;
     public static UnityAction<ItemData, bool> ItemRemovedEvent;
+    public static UnityAction<int> GoldChangedEvent;
 
     private Dictionary<ItemData, int> items = new Dictionary<ItemData, int>();
+    private int goldCount = 1;
 
     private bool isInitialized = false;
 
@@ -89,5 +91,23 @@ public class Inventory : MonoBehaviour
         } else {
             return false;
         }
+    }
+
+    public void depositGold(int amount) {
+        goldCount = goldCount + amount;
+
+        GoldChangedEvent?.Invoke(goldCount);
+    }
+
+    public void withdrawGold(int amount) {
+        goldCount = goldCount - amount;
+
+        goldCount = Math.Clamp(goldCount, 0, 999);
+
+        GoldChangedEvent?.Invoke(goldCount);
+    }
+
+    public int getGoldAmount() {
+        return goldCount;
     }
 }

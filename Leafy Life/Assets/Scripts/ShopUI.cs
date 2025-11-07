@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class ShopUI : MonoBehaviour {
     public GameObject shopItemPrefab;
@@ -8,17 +10,30 @@ public class ShopUI : MonoBehaviour {
     public List<ShopItem> shopItems = new List<ShopItem>();
     public Shopkeeper shopkeeperScript;
 
+    private List<ShopItemController> shopItemControllerList = new List<ShopItemController>();
+
+    private void OnEnable() {
+        Inventory.GoldChangedEvent += OnGoldChanged;
+    }
+
+    private void OnDisable() {
+        Inventory.GoldChangedEvent -= OnGoldChanged;
+    }
+
     private void Start() {
         PopulateShopItems();
     }
 
     public void PopulateShopItems() {
-        // Clear existing items in the shop
+
+        // clear existing items in the shop
         foreach (Transform child in itemListParent) {
             Destroy(child.gameObject);
         }
 
-        // Create item buttons dynamically
+        shopItemControllerList.Clear();
+
+        // create item buttons dynamically
         foreach (var item in shopItems) {
             GameObject itemButton = Instantiate(shopItemPrefab, itemListParent);
             ShopItemController shopItemController = itemButton.GetComponent<ShopItemController>();
@@ -26,8 +41,23 @@ public class ShopUI : MonoBehaviour {
             shopItemController.textItemName.text = item.data.itemName;
             shopItemController.textItemCosts.text = "" + item.itemPrice;
 
-            // Add listener to the button to show confirm dialog
-            shopItemController.setOnSelectedListener(() => shopkeeperScript.showConfirmDialog(item.data, item.itemPrice));
+            // add listener to the button to show confirm dialog
+            shopItemController.setOnClickedListener(() => shopkeeperScript.showConfirmDialog(item.data, item.itemPrice));
+
+            shopItemControllerList.Add(shopItemController);
+        }
+    }
+
+    private void OnGoldChanged(int goldAmount) {
+        print("gold: " + goldAmount);
+        foreach (ShopItemController controller in shopItemControllerList) {
+            if (int.TryParse(controller.textItemCosts.text, out int result)) {
+                if (result <= goldAmount) {
+                    controller.setEnabled(true);
+                } else {
+                    controller.setEnabled(false);
+                }
+            }
         }
     }
 }
@@ -35,5 +65,5 @@ public class ShopUI : MonoBehaviour {
 [System.Serializable]
 public class ShopItem {
     public ItemData data;
-    public float itemPrice;
+    public int itemPrice;
 }
