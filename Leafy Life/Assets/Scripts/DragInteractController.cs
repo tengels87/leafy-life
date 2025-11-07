@@ -13,10 +13,6 @@ public class DragInteractController : MonoBehaviour
     private List<Vector2Int> currentBuildLocations = new List<Vector2Int>();
     private List<GameObject> buildLocationVisualizers = new List<GameObject>();
 
-    private GraphicRaycaster graphicRaycaster;
-    private PointerEventData pointerEventData;
-    private EventSystem eventSystem;
-
     protected virtual void Start()
     {
         
@@ -27,13 +23,13 @@ public class DragInteractController : MonoBehaviour
         Vector2 mouseWorldPos = MapController.pixelPos2WorldPos(Input.mousePosition);
         
         if (Input.GetMouseButtonDown(0)) {
-            if (isTappedInWorld()) {
+            if (GlobalRaycast.IsTappedInWorld(this.gameObject)) {
                 handleTappedInWorld();
             }
         }
 
         if (Input.GetMouseButtonDown(0)) {
-            if (isTappedInUI()) {
+            if (GlobalRaycast.IsTappedInUI(this.gameObject)) {
                 handleTappedInUI(null);
             }
         }
@@ -46,44 +42,6 @@ public class DragInteractController : MonoBehaviour
 
             handleDragging();
         }
-    }
-
-    private bool isTappedInWorld() {
-
-        Vector2 mouseWorldPos = MapController.pixelPos2WorldPos(Input.mousePosition);
-
-        RaycastHit2D[] hits = Physics2D.RaycastAll(mouseWorldPos, new Vector3(0, 0, 1));
-
-        foreach (RaycastHit2D hit in hits) {
-            if (hit.collider.gameObject.Equals(this.gameObject)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private bool isTappedInUI() {
-        graphicRaycaster = this.gameObject.GetComponent<GraphicRaycaster>();
-        eventSystem = FindObjectOfType<EventSystem>();
-
-        if (graphicRaycaster == null || eventSystem == null)
-            return false;
-
-        pointerEventData = new PointerEventData(eventSystem);
-        pointerEventData.position = Input.mousePosition;
-
-        List<RaycastResult> results = new List<RaycastResult>();
-
-        graphicRaycaster.Raycast(pointerEventData, results);
-
-        foreach (RaycastResult result in results) {
-            if (result.gameObject.Equals(this.gameObject)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     protected virtual void handleTappedInWorld() {
