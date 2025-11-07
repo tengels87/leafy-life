@@ -25,6 +25,13 @@ public class Shopkeeper : MonoBehaviour {
 
     public void setUIenabled(bool val) {
         shopCanvasUI.SetActive(val);
+
+        // open player inventory when opening shop
+        // close inventory when leaving shop
+        InventoryController inventoryController = WorldConstants.Instance.getInventory()?.GetComponent<InventoryController>();
+        if (inventoryController != null) {
+            inventoryController.setOpen(val);
+        }
     }
 
     public void showConfirmDialog(ItemData item, float itemPrice) {
@@ -47,8 +54,6 @@ public class Shopkeeper : MonoBehaviour {
     }
 
     public void purchaseLastOffer() {
-        print(lastOffer.data.itemName + " : " + lastOffer.itemPrice);
-
         ItemController.OnCollectedEvent?.Invoke(lastOffer.data);
     }
 }

@@ -41,7 +41,6 @@ public class ItemController : DragInteractController
 
     protected override void handleDragFinishedOnPlayer(PlayerController playerController) {
         base.handleDragFinishedOnPlayer(playerController);
-        print("42 drag finished on player");
 
         // feed player
         Inventory inventory = WorldConstants.Instance.getInventory();

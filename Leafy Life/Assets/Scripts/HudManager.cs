@@ -4,14 +4,6 @@ using UnityEngine;
 
 public class HudManager : MonoBehaviour {
 
-    void OnEnable() {
-        SceneManager.MapChangedEvent += OnMapChanged;
-    }
-
-    void OnDisable() {
-        SceneManager.MapChangedEvent -= OnMapChanged;
-    }
-
     void Start() {
         Camera cam = Camera.main;
 
@@ -37,9 +29,5 @@ public class HudManager : MonoBehaviour {
 
             cam.transform.position = new Vector3((float)(maxGridHeight) * aspect / zoom - 0.5f, (float)(maxGridHeight) / zoom - 0.5f, cam.transform.position.z);
         }
-    }
-
-    private void OnMapChanged(MapController.MapType mapType) {
-        
     }
 }

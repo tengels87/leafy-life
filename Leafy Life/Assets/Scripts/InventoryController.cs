@@ -6,9 +6,13 @@ using TMPro;
 
 public class InventoryController : MonoBehaviour {
     [SerializeField]
+    private GameObject containerUI;
+    [SerializeField]
     private GameObject slotsContainer;
     [SerializeField]
     private GameObject itemIconTemplate;
+
+    private bool isOpen;
 
     void OnEnable() {
         Inventory.ItemAddedEvent += updateSlots;
@@ -21,7 +25,7 @@ public class InventoryController : MonoBehaviour {
     }
 
     void Start() {
-
+        setOpen(false);
     }
 
     void Update() {
@@ -65,5 +69,14 @@ public class InventoryController : MonoBehaviour {
                 }
             }
         }
+    }
+
+    public void setOpen(bool val) {
+        isOpen = val;
+        containerUI.SetActive(val);
+    }
+
+    public void toggleOpen() {
+        setOpen(!isOpen);
     }
 }

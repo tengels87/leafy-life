@@ -6,12 +6,12 @@ public class ToggleGameObject : MonoBehaviour
 {
     public GameObject targetGameObject;
     public GameObject toggleGameObject;
-    public bool disabledByDefault = true;
+    public bool hideOnInit = true;
 
     private bool isTargetEnabled = false;
 
     void Awake() {
-        if (disabledByDefault) {
+        if (hideOnInit) {
             targetGameObject.SetActive(isTargetEnabled);
         }
     }
@@ -22,9 +22,10 @@ public class ToggleGameObject : MonoBehaviour
     }
 
     void Update() {
+
         // tap to toggle
         if (Input.GetMouseButtonDown(0)) {
-            if (GlobalRaycast.IsTappedInWorld(this.gameObject)) {
+            if (GlobalRaycast.IsTappedInUI(toggleGameObject)) {
                 toggle();
             }
         }
