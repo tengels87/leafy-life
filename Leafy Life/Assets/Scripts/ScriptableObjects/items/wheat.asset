@@ -12,7 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 640fc392037319d4d886e0c8b272b840, type: 3}
   m_Name: wheat
   m_EditorClassIdentifier: 
+  id: 73ed3279c8bf40389a262fbb43af1c2b
+  version: 1
   itemName: Weizen
   itemType: 1
+  sellValue: 2
   iconSprite: {fileID: 21300000, guid: 44c51ca54d90a3b47b856042403c89f1, type: 3}
-  structurePrefab: {fileID: 0}
+  spawnPrefabDef: {fileID: 0}

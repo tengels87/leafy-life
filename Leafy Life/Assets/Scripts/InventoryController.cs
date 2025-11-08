@@ -57,7 +57,7 @@ public class InventoryController : MonoBehaviour {
 
                 // add a copy of ItemController
                 ItemController blankItemController = go.AddComponent<ItemController>();
-                blankItemController.itemData = ItemData.Create(item.itemName, item.itemType);
+                blankItemController.itemData = item;
                 var json = JsonUtility.ToJson(item);
                 JsonUtility.FromJsonOverwrite(json, blankItemController.itemData);
 

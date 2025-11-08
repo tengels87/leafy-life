@@ -198,6 +198,7 @@ public class PlayerController : MonoBehaviour {
         List<GameAction> allActions = getActionList();
         if (allActions.Count > 0) {
             Vector2Int targetPositionInt = new Vector2Int((int)allActions[0].targetPosition.x, (int)allActions[0].targetPosition.y);
+            LoadingManager loadingManager = WorldConstants.Instance.getLoadingManager();
             MapController mapController = WorldConstants.Instance.getMapController();
 
             GameObject dataGameObject = (allActions[0].customData != null && allActions[0].customData.GetType() == typeof(GameObject))
@@ -241,8 +242,8 @@ public class PlayerController : MonoBehaviour {
                             stopInteraction();
 
                             if (dataPrefabDef != null) {
-                                mapController.buildTileFromPrefabId(targetPositionInt.x, targetPositionInt.y, dataPrefabDef.Id);
-                                mapController.registerTile(targetPositionInt.x, targetPositionInt.y, dataPrefabDef.Id);
+                                mapController.buildTileFromPrefabId(dataPrefabDef.Id, targetPositionInt.x, targetPositionInt.y);
+                                loadingManager.addUserBuildTile(dataPrefabDef.Id, mapController.getMapType(), targetPositionInt.x, targetPositionInt.y);
 
                                 buildingDoneCalback?.Invoke();
                             }

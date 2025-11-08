@@ -38,7 +38,7 @@ public class Shopkeeper : MonoBehaviour {
         confirmDialogUI.SetActive(true);
 
         lastOffer = new ShopItem();
-        lastOffer.data = ItemData.Create(item.itemName, item.itemType);
+        lastOffer.data = item;
         lastOffer.data = item;
         lastOffer.itemPrice = itemPrice;
 

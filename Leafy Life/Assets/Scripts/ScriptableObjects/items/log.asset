@@ -12,7 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 640fc392037319d4d886e0c8b272b840, type: 3}
   m_Name: log
   m_EditorClassIdentifier: 
+  id: 9c029554644f48918c95caf0b42c6475
+  version: 1
   itemName: Holz
   itemType: 0
+  sellValue: 3
   iconSprite: {fileID: 21300000, guid: d39efa7bb1ef2a24a8bb34d2d8ec1508, type: 3}
-  structurePrefab: {fileID: 0}
+  spawnPrefabDef: {fileID: 0}

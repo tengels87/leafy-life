@@ -12,7 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 640fc392037319d4d886e0c8b272b840, type: 3}
   m_Name: lamp01
   m_EditorClassIdentifier: 
+  id: f150dab093824ab392d85a4ca1c05b1e
+  version: 1
   itemName: Lampe
   itemType: 2
+  sellValue: 5
   iconSprite: {fileID: 21300000, guid: cbe59627b6164ed4d8715d26c2a2a5ea, type: 3}
   spawnPrefabDef: {fileID: 11400000, guid: 8c62aafc9dc7ef542b6843b3fcb16a60, type: 2}

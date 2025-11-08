@@ -14,6 +14,7 @@ public sealed class WorldConstants {
     public static string objName_audioManager = "AudioManager";
     public static string objName_saveSystem = "SaveSystem";
 
+    public LoadingManager loadingManager;
     public GameManager gameManager;
     public SceneManager sceneManager;
     public MapController mapController;
@@ -42,6 +43,14 @@ public sealed class WorldConstants {
 
     public int RND(int max) {
         return rnd.Next(max);
+    }
+
+    public LoadingManager getLoadingManager() {
+        if (loadingManager == null) {
+            loadingManager = GameObject.Find(objName_loadingManager).GetComponent<LoadingManager>();
+        }
+
+        return loadingManager;
     }
 
     public GameManager getGameManager() {

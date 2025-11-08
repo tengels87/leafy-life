@@ -12,7 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 640fc392037319d4d886e0c8b272b840, type: 3}
   m_Name: flower_blue_seedbag
   m_EditorClassIdentifier: 
+  id: 01e568f44d8a4dbaa1948ef481447d73
+  version: 1
   itemName: Saaten Blaue Blumen
   itemType: 4
+  sellValue: 1
   iconSprite: {fileID: 21300000, guid: cdb21734563b4d84099e23c1845a5901, type: 3}
   spawnPrefabDef: {fileID: 11400000, guid: d04bb36512158d24e83dbb19a71c70c7, type: 2}

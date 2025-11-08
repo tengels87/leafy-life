@@ -12,7 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 640fc392037319d4d886e0c8b272b840, type: 3}
   m_Name: flower_red
   m_EditorClassIdentifier: 
+  id: 80c5f24ca7ae411790899ac8011b0cdb
+  version: 1
   itemName: Rote Blume
   itemType: 2
-  iconSprite: {fileID: 21300000, guid: f30566ecea572014a9b76e7d535c7d97, type: 3}
-  structurePrefab: {fileID: 0}
+  sellValue: 2
+  iconSprite: {fileID: 21300000, guid: 490ceedb24126494db4019dc47604a50, type: 3}
+  spawnPrefabDef: {fileID: 0}

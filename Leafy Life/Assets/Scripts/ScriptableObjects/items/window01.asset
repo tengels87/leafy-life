@@ -12,7 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 640fc392037319d4d886e0c8b272b840, type: 3}
   m_Name: window01
   m_EditorClassIdentifier: 
+  id: 57358d248322412592b043c2dd626559
+  version: 1
   itemName: Fenster
   itemType: 2
+  sellValue: 10
   iconSprite: {fileID: 21300000, guid: c2a6928ff1398fb4180949b028035820, type: 3}
   spawnPrefabDef: {fileID: 11400000, guid: 5dac7c7cfc739d24c9ae274617f0056f, type: 2}

@@ -12,7 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 640fc392037319d4d886e0c8b272b840, type: 3}
   m_Name: carrot_seedbag
   m_EditorClassIdentifier: 
+  id: 6bc45d502eec48ffa6dd6367426fc9a0
+  version: 1
   itemName: Saaten Karotten
   itemType: 4
+  sellValue: 1
   iconSprite: {fileID: 21300000, guid: 9b556474fd9831d4e9fe13f47f5c55a3, type: 3}
   spawnPrefabDef: {fileID: 11400000, guid: bde611e6c4f7b4f45b419f38e5a308a4, type: 2}

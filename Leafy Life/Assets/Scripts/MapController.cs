@@ -21,8 +21,6 @@ public class MapController : MonoBehaviour {
     private List<Tile> tileList = new List<Tile>();
     private int nodeID = 1;
 
-    private List<TileData> userBuiltTilesList = new List<TileData>();
-
     private System.Random rnd = new System.Random();
     private int mapSeed = 0;
     
@@ -178,7 +176,7 @@ public class MapController : MonoBehaviour {
             foreach (Transform t2 in mapObjects) {
                 if (t2 == this.transform || t2.parent != this.transform) continue;
 
-                buildTile((int)t2.position.x, (int)t2.position.y, t2.gameObject);
+                buildTile(t2.gameObject, (int)t2.position.x, (int)t2.position.y);
 
                 Object.Destroy(t2.gameObject);
             }
@@ -190,8 +188,8 @@ public class MapController : MonoBehaviour {
             Transform[] mapObjects = this.gameObject.GetComponentsInChildren<Transform>();
             foreach (Transform t2 in mapObjects) {
                 if (t2 == this.transform || t2.parent != this.transform) continue;
-                print("4211 " + t2.name);
-                buildTile((int)t2.position.x, (int)t2.position.y, t2.gameObject);
+
+                buildTile(t2.gameObject, (int)t2.position.x, (int)t2.position.y);
 
                 Object.Destroy(t2.gameObject);
             }
@@ -203,74 +201,32 @@ public class MapController : MonoBehaviour {
             Transform[] mapObjects = this.gameObject.GetComponentsInChildren<Transform>();
             foreach (Transform t2 in mapObjects) {
                 if (t2 == this.transform || t2.parent != this.transform) continue;
-                
-                buildTile((int)t2.position.x, (int)t2.position.y, t2.gameObject);
-                
+
+                buildTile(t2.gameObject, (int)t2.position.x, (int)t2.position.y);
+
                 Object.Destroy(t2.gameObject);
             }
 
             spawnPosition = new Vector2Int(20, 10);
-            //buildTile(spawnPosition.x, spawnPosition.y, WorldConstants.Instance.getStructureManager().prefab_maplink_treehouse);
-            /*
-            for (int i = 0; i < grid.GetLength(0); i++) {
-                for (int j = 0; j < grid.GetLength(1); j++) {
-                    if (isEmpty(new Vector2Int(i, j))) {
-                        float rand = (float)rnd.NextDouble();
-                        if (i == 10 || i == 29 || j == 10 || j == 29) {
-                            Instantiate(WorldConstants.Instance.getStructureManager().prefab_pinetree, new Vector2(i, j), Quaternion.identity, this.transform);
-                        } else if ((i < 15 || i > 25) || (j < 15 || j > 25)) {
-                            if (rand < 0.1f) {
-                                Instantiate(WorldConstants.Instance.getStructureManager().prefab_pinetree, new Vector2(i, j), Quaternion.identity, this.transform);
-                            } else if (rand < 0.5f) {
-                                // wooden logs
-                                Instantiate(WorldConstants.Instance.getStructureManager().prefab_log, new Vector2(i + rand, j + rand), Quaternion.identity, this.transform);
-                                Instantiate(WorldConstants.Instance.getStructureManager().prefab_log, new Vector2(i + rand, j + rand), Quaternion.identity, this.transform);
-                            }
-                            buildTile(i, j, WorldConstants.Instance.getStructureManager().prefab_grass);
-                        } else {
-                            buildTile(i, j, WorldConstants.Instance.getStructureManager().prefab_grass);
-                        }
-
-                    }
-                }
-            }
-
-            // collectable items
-            Instantiate(WorldConstants.Instance.getStructureManager().prefab_carrot, new Vector2(22, 17), Quaternion.identity, this.transform);
-            Instantiate(WorldConstants.Instance.getStructureManager().prefab_carrot, new Vector2(20, 16), Quaternion.identity, this.transform);
-
-            // decals
-            for (int i = 0; i < grid.GetLength(0); i++) {
-                for (int j = 0; j < grid.GetLength(1); j++) {
-                    Tile tile = getTile(new Vector2Int(i, j));
-                    if (tile != null && tile.isWalkable) {
-                        float rand = (float)rnd.NextDouble();
-                        if (rand < 0.2f) {
-                            Instantiate(WorldConstants.Instance.getStructureManager().prefab_decal_grass1, new Vector2(i + rand*3, j + rand*3), Quaternion.identity, this.transform);
-                        } else if (rand < 0.4f) {
-                            Instantiate(WorldConstants.Instance.getStructureManager().prefab_decal_grass2, new Vector2(i + rand*3, j + rand*3), Quaternion.identity, this.transform);
-                        }
-                    }
-                }
-            }*/
         }
 
 
         // load saved user-built tiles
-        if (saveData != null) {
-            foreach (TileData tileData in saveData.builtTilesList) {
+        LoadingManager loadingManager = WorldConstants.Instance.getLoadingManager();
+        if (loadingManager != null) {
+            foreach (TileData tileData in loadingManager.getUserBuildTiles()) {
                 if (tileData.mapType == this.mapType) {     // only build tiles registered for this map
                     if (PrefabDefs.TryGet(tileData.tilePrefabID, out PrefabDef prefabDef))
-                    buildTile(tileData.x, tileData.y, prefabDef.Prefab);
+                    buildTile(prefabDef.Prefab, tileData.x, tileData.y);
                 }
             }
         }
-
+        
 
         isInitiated = true;
     }
 
-    public void buildTile(int x, int y, GameObject prefab) {
+    public void buildTile(GameObject prefab, int x, int y) {
         GameObject buildable = (GameObject)Object.Instantiate(prefab);
 
         buildable.name = buildable.name + "_" + rnd.Next();
@@ -310,23 +266,10 @@ public class MapController : MonoBehaviour {
         }
     }
 
-    public void buildTileFromPrefabId(int x, int y, string id) {
+    public void buildTileFromPrefabId(string id, int x, int y) {
         if (PrefabDefs.TryGet(id, out PrefabDef prefabDef)) {
-            buildTile(x, y, prefabDef.Prefab);
+            buildTile(prefabDef.Prefab, x, y);
         }
-    }
-
-    public void registerTile(int x, int y, string prefabDefId) {
-        TileData tileData = new TileData(prefabDefId, mapType, x, y);
-        AddUserBuildTile(tileData);
-    }
-
-    public List<TileData> getUserBuildTiles() {
-        return userBuiltTilesList;
-    }
-
-    public void AddUserBuildTile(TileData tileData) {
-        userBuiltTilesList.Add(tileData);
     }
 
     public static Vector2 pixelPos2WorldPos(Vector3 pixelPos) {
@@ -546,6 +489,18 @@ public class MapController : MonoBehaviour {
             this.mapType = mapType;
             this.x = x;
             this.y = y;
+        }
+
+        public override bool Equals(object obj) {
+            return obj is TileData data &&
+               tilePrefabID == data.tilePrefabID &&
+               mapType == data.mapType &&
+               x == data.x &&
+               y == data.y;
+        }
+
+        public override int GetHashCode() {
+            return System.HashCode.Combine(tilePrefabID, mapType, x.ToString(), y.ToString());
         }
     }
 }

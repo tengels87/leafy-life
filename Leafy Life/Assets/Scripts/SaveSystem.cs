@@ -12,7 +12,7 @@ public class SaveSystem : MonoBehaviour {
 
 
     void Update() {
-        if (Input.GetMouseButtonDown(0)) {
+        if (Input.GetMouseButtonDown(1)) {
 
             // populate save data object
             if (isInitialized) {
@@ -24,26 +24,24 @@ public class SaveSystem : MonoBehaviour {
                 currentGameData.seed = WorldConstants.Instance.getMapController().getSeed();
 
                 // inentory
-                currentGameData.inventoryItemsList = WorldConstants.Instance.getInventory().getInventoryItemsAsList();
+                currentGameData.goldAmount = WorldConstants.Instance.getInventory().getGoldAmount();
+                
+                List<ItemData> inventoryItemsList = WorldConstants.Instance.getInventory().getInventoryItemsAsList();
+                currentGameData.inventoryItemsUidList.Clear();
+                foreach (ItemData itemData in inventoryItemsList) {
+                    currentGameData.inventoryItemsUidList.Add(itemData.Id);
+                }
 
                 // character stats
                 currentGameData.nutritionValue = WorldConstants.Instance.getStatsController().nutrition;
                 currentGameData.sleepValue = WorldConstants.Instance.getStatsController().sleep;
 
-                // built tiles, save per mapController
-                //currentGameData.builtTilesList.Clear();
+                // World
+                WorldConstants.Instance.getDaytimeManaer().getCurrentTime();
 
-                MapController[] mapControllersAll = Resources.FindObjectsOfTypeAll<MapController>();    // find even on inactive GameObjects
-                foreach (MapController mapController in mapControllersAll) {
-                    List<MapController.TileData> buildTiles = mapController.getUserBuildTiles();
-                    foreach (MapController.TileData data in buildTiles) {
-                        if (!currentGameData.builtTilesList.Contains(data)) {
-                            currentGameData.builtTilesList.Add(data);
-                        }
-                    }
-                }
+                currentGameData.builtTilesList = WorldConstants.Instance.getLoadingManager().getUserBuildTiles();
 
-                //saveGame();
+                saveGame();
             }
         }
     }
@@ -55,7 +53,7 @@ public class SaveSystem : MonoBehaviour {
             Debug.Log("Game saved to " + SaveFilePath);
         }
     }
-
+    
     public GameData getLoadedData() {
         if (isInitialized && isLoaded) {
             return currentGameData;
@@ -86,9 +84,11 @@ public class SaveSystem : MonoBehaviour {
 
     [System.Serializable]
     public class GameData {
+        public int version = 1;
         public int seed = -1;
 
-        public List<ItemData> inventoryItemsList;
+        public int goldAmount = 0;
+        public List<string> inventoryItemsUidList = new List<string>();
 
         public float nutritionValue;
         public float sleepValue;

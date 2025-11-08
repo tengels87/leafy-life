@@ -12,7 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 640fc392037319d4d886e0c8b272b840, type: 3}
   m_Name: bed
   m_EditorClassIdentifier: 
+  id: ccb8d608193a4671bb30b4bf526cb025
+  version: 1
   itemName: Bett
   itemType: 2
+  sellValue: 10
   iconSprite: {fileID: 21300000, guid: bd10d31c9f76b5b48873b7ecef43ad43, type: 3}
   spawnPrefabDef: {fileID: 11400000, guid: 56bdae277266dec49b6153f8f87764e1, type: 2}

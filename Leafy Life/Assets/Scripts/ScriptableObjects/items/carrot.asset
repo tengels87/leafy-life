@@ -12,7 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 640fc392037319d4d886e0c8b272b840, type: 3}
   m_Name: carrot
   m_EditorClassIdentifier: 
+  id: d8f36dcce70844a08f261cb3eb6f64a8
+  version: 1
   itemName: Karotte
   itemType: 1
+  sellValue: 2
   iconSprite: {fileID: 21300000, guid: ea68d26566061f742af125485aaadde8, type: 3}
   spawnPrefabDef: {fileID: 0}

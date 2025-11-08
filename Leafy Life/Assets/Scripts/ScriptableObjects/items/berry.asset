@@ -12,7 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 640fc392037319d4d886e0c8b272b840, type: 3}
   m_Name: berry
   m_EditorClassIdentifier: 
+  id: d662e09538b04493a0ec3dc5a364c9b7
+  version: 1
   itemName: Beere
   itemType: 1
+  sellValue: 2
   iconSprite: {fileID: 21300000, guid: c20fe514b53f8644cadc8a66f251f274, type: 3}
   spawnPrefabDef: {fileID: 0}

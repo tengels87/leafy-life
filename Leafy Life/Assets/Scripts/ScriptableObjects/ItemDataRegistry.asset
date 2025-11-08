@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8dc83c914b05d8f4c9253304f4bb4dd5, type: 3}
+  m_Name: ItemDataRegistry
+  m_EditorClassIdentifier: 
+  entries:
+  - id: ccb8d608193a4671bb30b4bf526cb025
+    data: {fileID: 11400000, guid: 4c6486f9f39124c4a9ae1b3693180d64, type: 2}
+  - id: d662e09538b04493a0ec3dc5a364c9b7
+    data: {fileID: 11400000, guid: aeca22674b85e734f9e2e8606f087134, type: 2}
+  - id: f1c023815c934d29b62410cdcf978c9f
+    data: {fileID: 11400000, guid: 00a1c71defa128946ab06cb8d87dd176, type: 2}
+  - id: d8f36dcce70844a08f261cb3eb6f64a8
+    data: {fileID: 11400000, guid: 48f7df0c98e9a0344b2569f5afaed8fc, type: 2}
+  - id: 6bc45d502eec48ffa6dd6367426fc9a0
+    data: {fileID: 11400000, guid: 272ade4af53d1ec4bbf4919924f0c8e5, type: 2}
+  - id: 6355332ad4e646a1bf2837ec0179b40c
+    data: {fileID: 11400000, guid: cb7ccef65bf3655449fb98894ec42c02, type: 2}
+  - id: d255cf93c481430295f214c01580a961
+    data: {fileID: 11400000, guid: 4db35a90e9221b940b300771ef0f4fce, type: 2}
+  - id: 10d232ead0024d32a560e4c0e5d1e24e
+    data: {fileID: 11400000, guid: 4b339b223e639f44c915ba95b6c0d2c1, type: 2}
+  - id: 01e568f44d8a4dbaa1948ef481447d73
+    data: {fileID: 11400000, guid: e0700b803f528cd46bb264efaf3fdbe6, type: 2}
+  - id: 80c5f24ca7ae411790899ac8011b0cdb
+    data: {fileID: 11400000, guid: 78af7a9b4857a8b4b86c48c1a70ce64b, type: 2}
+  - id: 456a7f9abe3e497397f3e8a966a968c1
+    data: {fileID: 11400000, guid: f2fd53a680f3b41468d174a997dbffdd, type: 2}
+  - id: f150dab093824ab392d85a4ca1c05b1e
+    data: {fileID: 11400000, guid: e545e490f3376354da4e4d1be5644f79, type: 2}
+  - id: 97133278527945778f068d111ef600b0
+    data: {fileID: 11400000, guid: 713d775a90cdb104d9c4ee8da9c249ff, type: 2}
+  - id: 9c029554644f48918c95caf0b42c6475
+    data: {fileID: 11400000, guid: d02221bb8bd54ba4886c61d095098ffb, type: 2}
+  - id: 73ed3279c8bf40389a262fbb43af1c2b
+    data: {fileID: 11400000, guid: b163f56bd3593944e90bec5b1e970235, type: 2}
+  - id: 24252ae6ba8344928270508f21aa774b
+    data: {fileID: 11400000, guid: 30feb072b057bae479f0d8eb9d6eb729, type: 2}
+  - id: 57358d248322412592b043c2dd626559
+    data: {fileID: 11400000, guid: b8cc1804eb31c9849bda3d6fbe024024, type: 2}

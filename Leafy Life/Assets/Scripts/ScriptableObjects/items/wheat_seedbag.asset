@@ -12,7 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 640fc392037319d4d886e0c8b272b840, type: 3}
   m_Name: wheat_seedbag
   m_EditorClassIdentifier: 
+  id: 24252ae6ba8344928270508f21aa774b
+  version: 1
   itemName: Saaten Weizen
   itemType: 4
+  sellValue: 1
   iconSprite: {fileID: 21300000, guid: d9f6dae1fa24c7f40ade70048ae6f0cb, type: 3}
   spawnPrefabDef: {fileID: 11400000, guid: 8b759397b73c5c347a444b135d5abbc0, type: 2}

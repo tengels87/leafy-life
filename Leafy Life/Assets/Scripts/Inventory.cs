@@ -11,7 +11,7 @@ public class Inventory : MonoBehaviour
     public static UnityAction<int> GoldChangedEvent;
 
     private Dictionary<ItemData, int> items = new Dictionary<ItemData, int>();
-    private int goldCount = 1;
+    private int goldCount = 0;
 
     private bool isInitialized = false;
 
@@ -29,8 +29,10 @@ public class Inventory : MonoBehaviour
         if (!isInitialized) {
             SaveSystem.GameData saveData = WorldConstants.Instance.getSaveSystem().getLoadedData();
             if (saveData != null) {
-                foreach (ItemData item in saveData.inventoryItemsList) {
-                    addItem(item);
+                foreach (string itemId in saveData.inventoryItemsUidList) {
+                    if (ItemDefs.TryGet(itemId, out ItemData _itemData)) {
+                        addItem(_itemData);
+                    }
                 }
             }
 
@@ -52,7 +54,7 @@ public class Inventory : MonoBehaviour
 
         foreach (ItemData key in items.Keys) {
             for (int i = 0; i < items[key]; i++) {
-                itemsList.Add(ItemData.Create(key.name, key.itemType));
+                itemsList.Add(key);
             }
         }
 

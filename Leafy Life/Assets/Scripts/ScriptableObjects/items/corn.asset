@@ -12,7 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 640fc392037319d4d886e0c8b272b840, type: 3}
   m_Name: corn
   m_EditorClassIdentifier: 
+  id: 6355332ad4e646a1bf2837ec0179b40c
+  version: 1
   itemName: Mais
   itemType: 1
+  sellValue: 2
   iconSprite: {fileID: 21300000, guid: f30566ecea572014a9b76e7d535c7d97, type: 3}
-  structurePrefab: {fileID: 0}
+  spawnPrefabDef: {fileID: 0}

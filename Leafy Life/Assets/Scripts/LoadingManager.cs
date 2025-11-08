@@ -4,15 +4,40 @@ using UnityEngine;
 
 public class LoadingManager : MonoBehaviour
 {
-    // Start is called before the first frame update
+    private List<MapController.TileData> userBuiltTilesList = new List<MapController.TileData>();
+
+    private bool isInitiated = false;
+
     void Start()
     {
         
     }
 
-    // Update is called once per frame
     void Update()
     {
         
+    }
+
+    public void init() {
+        if (isInitiated) return;
+
+        SaveSystem.GameData saveData = WorldConstants.Instance.getSaveSystem().getLoadedData();
+        if (saveData != null) {
+            userBuiltTilesList = new List<MapController.TileData>(saveData.builtTilesList);
+        }
+
+        isInitiated = true;
+    }
+
+    public List<MapController.TileData> getUserBuildTiles() {
+        init();
+
+        return userBuiltTilesList;
+    }
+
+    public void addUserBuildTile(string prefabDefId, MapController.MapType mapType, int x, int y) {
+        MapController.TileData tileData = new MapController.TileData(prefabDefId, mapType, x, y);
+        
+        userBuiltTilesList.Add(tileData);
     }
 }

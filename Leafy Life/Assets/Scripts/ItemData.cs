@@ -12,18 +12,28 @@ public class ItemData : ScriptableObject
         SEED
     }
 
+    [SerializeField] private string id; // stable baked GUID
+    public string Id => id;
+
+    [SerializeField] private int version = 1;
+    public int Version => version;
+
     public string itemName;
     public ItemType itemType;
+    public int sellValue;
     public Sprite iconSprite;
     public PrefabDef spawnPrefabDef;
 
-    public static ItemData Create(string itemName, ItemType itemType) {
-        ItemData item = CreateInstance<ItemData>();
-        item.itemName = itemName;
-        item.itemType = itemType;
+#if UNITY_EDITOR
 
-        return item;
+    private void OnValidate() {
+        if (string.IsNullOrEmpty(id)) {
+            id = System.Guid.NewGuid().ToString("N");
+            UnityEditor.EditorUtility.SetDirty(this);
+        }
     }
+
+#endif
 
     public override bool Equals(object obj) {
         return obj is ItemData item &&

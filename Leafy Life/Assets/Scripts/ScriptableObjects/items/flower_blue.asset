@@ -12,7 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 640fc392037319d4d886e0c8b272b840, type: 3}
   m_Name: flower_blue
   m_EditorClassIdentifier: 
+  id: 10d232ead0024d32a560e4c0e5d1e24e
+  version: 1
   itemName: Blaue Blume
   itemType: 2
+  sellValue: 2
   iconSprite: {fileID: 21300000, guid: 587692b0bf827e24f804cca0e8f86e4e, type: 3}
   spawnPrefabDef: {fileID: 0}
