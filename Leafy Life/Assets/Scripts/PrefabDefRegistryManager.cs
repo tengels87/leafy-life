@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+#if UNITY_EDITOR
 using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
+#endif
 
 public class PrefabDefRegistryManager : MonoBehaviour {
     [SerializeField] private PrefabDefRegistry registry;
