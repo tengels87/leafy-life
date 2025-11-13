@@ -9,7 +9,7 @@ public class GlobalRaycast {
     private EventSystem eventSystem;
 
     public static bool IsTappedInWorld(GameObject target) {
-        if (EventSystem.current.IsPointerOverGameObject()) {
+        if (IsPointerOverUI()) {
             return false;
         }
 
@@ -50,5 +50,17 @@ public class GlobalRaycast {
         }
 
         return false;
+    }
+
+    public static bool IsPointerOverUI() {
+#if UNITY_EDITOR || UNITY_STANDALONE
+        return EventSystem.current.IsPointerOverGameObject();
+#elif UNITY_ANDROID || UNITY_IOS
+    if (Input.touchCount > 0)
+        return EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId);
+    return false;
+#else
+    return false;
+#endif
     }
 }
