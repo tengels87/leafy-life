@@ -56,7 +56,7 @@ public class DragInteractController : MonoBehaviour
             ? instantiateSpriteInWorld((Sprite)dragVisual)
             : Instantiate((GameObject)dragVisual);
 
-        dragVisualsInstance.transform.position = new Vector3(0, 0, 0);
+        dragVisualsInstance.transform.position = new Vector3(0, 0, -100);
 
         if (currentPrefabDef != null) {
             Structure structure = currentPrefabDef.Prefab.GetComponent<Structure>();
@@ -86,9 +86,11 @@ public class DragInteractController : MonoBehaviour
         Vector2 mouseWorldPos = MapController.pixelPos2WorldPos(Input.mousePosition);
 
         PlayerController playerController = WorldConstants.Instance.getPlayerController();
+        Shopkeeper[] shopKeepers = GameObject.FindObjectsOfType<Shopkeeper>();
 
-        // check if being dropped on player
+        // check if being dropped on player or shop etc.
         bool draggedOntoPlayer = false;
+        bool draggedOntoShop = false;
         bool canBuild = false;
         Vector2Int currentBuildLocation = Vector2Int.zero;
         
@@ -124,13 +126,17 @@ public class DragInteractController : MonoBehaviour
         // drop food on player to eat it
         // or dropstructure on buildLocation to build it
         if (Input.GetMouseButtonUp(0)) {
-            if (draggedOntoPlayer) {
-                canBuild = false;   // ignore building the structure when dragged at player
-
-                handleDragFinishedOnPlayer(playerController);
+            foreach (Shopkeeper shopKeeper in shopKeepers) {
+                if (GlobalRaycast.IsTappedInUI(shopKeeper.sellArea)) {
+                    draggedOntoShop = true;
+                }
             }
 
-            if (canBuild) {
+            if (draggedOntoShop) {
+                handleDragFinishedOnShop();
+            } else if (draggedOntoPlayer) {
+                handleDragFinishedOnPlayer(playerController);
+            } else if (canBuild) {
                 MapController mapController = WorldConstants.Instance.getMapController();
 
                 // get position to walk to before building
@@ -167,6 +173,10 @@ public class DragInteractController : MonoBehaviour
     }
 
     protected virtual void handleDragFinishedOnPlayer(PlayerController playerController) {
+
+    }
+
+    protected virtual void handleDragFinishedOnShop() {
 
     }
 

@@ -49,7 +49,6 @@ public class ShopUI : MonoBehaviour {
     }
 
     private void OnGoldChanged(int goldAmount) {
-        print("gold: " + goldAmount);
         foreach (ShopItemController controller in shopItemControllerList) {
             if (int.TryParse(controller.textItemCosts.text, out int result)) {
                 if (result <= goldAmount) {

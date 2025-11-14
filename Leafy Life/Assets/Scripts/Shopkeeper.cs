@@ -7,6 +7,7 @@ using TMPro;
 public class Shopkeeper : MonoBehaviour {
     public GameObject shopCanvasUI;
     public GameObject confirmDialogUI;
+    public GameObject sellArea;
 
     private ShopItem lastOffer;
 

@@ -56,6 +56,19 @@ public class ItemController : DragInteractController
         }
     }
 
+    protected override void handleDragFinishedOnShop() {
+        Inventory inventory = WorldConstants.Instance.getInventory();
+
+        if (inventory != null) {
+            inventory.removeItem(itemData);
+            inventory.depositGold(itemData.sellValue);
+
+            Vector3 effectSpawnPos = MapController.pixelPos2WorldPos(Input.mousePosition);
+            FindObjectOfType<ResourceCollector>()
+                .Collect(ResourceCollector.Preset.COIN, null, itemData.sellValue, effectSpawnPos);
+        }
+    }
+
     protected override void handleBuildAction(PrefabDef prefabDef) {
         Inventory inventory = WorldConstants.Instance.getInventory();
 
@@ -73,7 +86,7 @@ public class ItemController : DragInteractController
 
             // tween
             FindObjectOfType<ResourceCollector>()
-                .Collect(itemData.iconSprite, itemCount, this.transform.position);
+                .Collect(ResourceCollector.Preset.CUSTOM, itemData.iconSprite, itemCount, this.transform.position);
 
             OnCollectedEvent?.Invoke(this.itemData);
             Object.Destroy(this.gameObject);
