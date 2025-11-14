@@ -390,8 +390,8 @@ MonoBehaviour:
   itemToSpawnContainer: {fileID: 2323627323055792172}
   numberOfItems: 1
   initializeOnStart: 1
-  timeToGrow: 1
-  timeToFinish: 2
+  timeToGrow: 2
+  timeToFinish: 4
   destroyOnHarvest: 1
 --- !u!65 &4232895236239538166
 BoxCollider:
