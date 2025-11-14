@@ -302,9 +302,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 6328117217153012982}
-  structureType: 8
+  structureType: 67108864
   attachesToPlatform: 0
-  attachesToSlot: 0
+  buildOnStructure: 0
+  buildType: 0
   isInteractable: 0
   interactionType: 0
   linkToMapType: 0
@@ -314,13 +315,11 @@ MonoBehaviour:
     canConnectAt: 0123
     isWalkable: 1
     hasSlot: 0
-    slot: {fileID: 0}
   - gridX: 1
     gridY: 0
     canConnectAt: 0123
     isWalkable: 1
     hasSlot: 0
-    slot: {fileID: 0}
 --- !u!61 &6328117217270616691
 BoxCollider2D:
   m_ObjectHideFlags: 0

@@ -131,9 +131,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 6328117217153012982}
-  structureType: 3
+  structureType: 33554432
   attachesToPlatform: 0
-  attachesToSlot: 0
+  buildOnStructure: 0
+  buildType: 0
   isInteractable: 0
   interactionType: 0
   linkToMapType: 0

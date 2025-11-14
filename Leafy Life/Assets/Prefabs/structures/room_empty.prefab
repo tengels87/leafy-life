@@ -131,9 +131,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 6005354985129188009}
-  structureType: 0
+  structureType: 4
   attachesToPlatform: 0
-  attachesToSlot: 0
+  buildOnStructure: 1073741824
+  buildType: 0
   isInteractable: 0
   interactionType: 0
   linkToMapType: 0
@@ -143,37 +144,31 @@ MonoBehaviour:
     canConnectAt: 13
     isWalkable: 1
     hasSlot: 1
-    slot: {fileID: 0}
   - gridX: 1
     gridY: 0
     canConnectAt: 13
     isWalkable: 1
     hasSlot: 1
-    slot: {fileID: 0}
   - gridX: 2
     gridY: 0
     canConnectAt: 13
     isWalkable: 1
     hasSlot: 1
-    slot: {fileID: 0}
   - gridX: 0
     gridY: 1
     canConnectAt: 
     isWalkable: 0
     hasSlot: 1
-    slot: {fileID: 0}
   - gridX: 1
     gridY: 1
     canConnectAt: 
     isWalkable: 0
     hasSlot: 1
-    slot: {fileID: 0}
   - gridX: 2
     gridY: 1
     canConnectAt: 
     isWalkable: 0
     hasSlot: 1
-    slot: {fileID: 0}
 --- !u!61 &6328117217270616691
 BoxCollider2D:
   m_ObjectHideFlags: 0

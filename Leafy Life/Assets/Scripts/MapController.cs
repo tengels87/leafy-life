@@ -100,8 +100,14 @@ public class MapController : MonoBehaviour {
                     Vector2Int left = t.getPositionAsVector() + Vector2Int.left;
                     Vector2Int right = t.getPositionAsVector() + Vector2Int.right;
 
-                    if (target.attachesToSlot) {
-                        if (t.hasAvailableSlot()) {
+                    // check, if target attaches to s, (ifstructureType is included in target's attach ist)
+                    if ((target.buildOnStructure & s.structureType) == s.structureType) {
+                        if (target.buildType == Structure.BuildType.ATTACH_TO_SLOT) {
+                            if (t.hasAvailableSlot()) {
+                                locations.Add(currentPos);
+                                continue;
+                            }
+                        } else if (target.buildType == Structure.BuildType.REPLACE_TILE) {
                             locations.Add(currentPos);
                             continue;
                         } else {
@@ -110,35 +116,20 @@ public class MapController : MonoBehaviour {
                     }
 
 
-                    
+
 
                     // look for empty location around tile
 
-                    // dig GRASS into SOI
-                    if (targetType == Structure.StructureType.SOIL) {
-                        if (s.structureType == Structure.StructureType.GRASS) {
-                            locations.Add(currentPos);
-                        }
-                    // plants, crops
-                    } else if (targetType == Structure.StructureType.CROP) {
-                        if (s.structureType == Structure.StructureType.SOIL) {
-                            locations.Add(currentPos);
-                        }
-                    } else {
-                        // place on PLATFORM
+                    if (target.buildType == Structure.BuildType.REPLACE_TILE) {
                         if (s.structureType == Structure.StructureType.PLATFORM && target.attachesToPlatform) {
                             locations.Add(currentPos);
                         }
-                    }
 
-                    if (targetType == Structure.StructureType.PLATFORM) {
-                        if (s.structureType == Structure.StructureType.TREEHOUSE_BUILDBLOCK) {
-                            locations.Add(currentPos);
-                        }
-                    } else if (targetType == Structure.StructureType.LADDER) {
-                        if (s.structureType == Structure.StructureType.PLATFORM) {
-                            if (isEmpty(up)) locations.Add(up);
-                            if (isEmpty(down)) locations.Add(down);
+                        if (targetType == Structure.StructureType.LADDER) {
+                            if (s.structureType == Structure.StructureType.PLATFORM) {
+                                if (isEmpty(up)) locations.Add(up);
+                                if (isEmpty(down)) locations.Add(down);
+                            }
                         }
                     }
                 }
@@ -210,7 +201,7 @@ public class MapController : MonoBehaviour {
             spawnPosition = new Vector2Int(20, 10);
         }
 
-
+        
         // load saved user-built tiles
         LoadingManager loadingManager = WorldConstants.Instance.getLoadingManager();
         if (loadingManager != null) {
@@ -235,20 +226,20 @@ public class MapController : MonoBehaviour {
 
         Structure structure = buildable.GetComponent<Structure>();
 
-        if (structure.attachesToPlatform || structure.attachesToSlot) {
+        if (structure.attachesToPlatform || structure.buildType == Structure.BuildType.ATTACH_TO_SLOT) {
 
             // attach to slot on existing tile, but do not override tile in grid[,]
-            // only block slot when attachesToSlot==true
-            if (structure.attachesToSlot) {
+            // only block slot when attachesToSlot != 0
+            if (structure.buildOnStructure != 0) {
                 Vector2Int buildPosInt = new Vector2Int(x, y);
                 Tile t = getTile(buildPosInt);
                 if (t != null && t.hasAvailableSlot()) {
                     t.fillSlot(structure);
                 }
             }
-        } else {
+        } else if (structure.buildType == Structure.BuildType.REPLACE_TILE) {
 
-            // no attaching, so simply place/override tiles in grid   , sing footprints         
+            // no attaching, so simply place/override tiles in grid, using footprints         
             foreach (Structure.GridFootprint footprint in structure.gridFootprint) {
 
                 Tile t = createTile(x + footprint.gridX, y + footprint.gridY);

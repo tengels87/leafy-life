@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 3492774449095666610}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.15, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 1}
   m_LocalScale: {x: 0.5, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -131,9 +131,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 6005354985129188009}
-  structureType: 0
+  structureType: 1
   attachesToPlatform: 0
-  attachesToSlot: 0
+  buildOnStructure: 1073741824
+  buildType: 0
   isInteractable: 0
   interactionType: 0
   linkToMapType: 0
@@ -143,7 +144,6 @@ MonoBehaviour:
     canConnectAt: 0123
     isWalkable: 1
     hasSlot: 0
-    slot: {fileID: 0}
 --- !u!61 &6328117217270616691
 BoxCollider2D:
   m_ObjectHideFlags: 0

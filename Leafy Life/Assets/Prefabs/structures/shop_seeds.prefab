@@ -262,7 +262,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6328117217270616690}
   - component: {fileID: 6328117217270616693}
-  - component: {fileID: 6328117217270616691}
   m_Layer: 0
   m_Name: shop_seeds
   m_TagString: Untagged
@@ -302,9 +301,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 572498319941443823}
-  structureType: 7
+  structureType: 33554432
   attachesToPlatform: 0
-  attachesToSlot: 0
+  buildOnStructure: 0
+  buildType: 0
   isInteractable: 0
   interactionType: 0
   linkToMapType: 0
@@ -319,51 +319,6 @@ MonoBehaviour:
     canConnectAt: 
     isWalkable: 0
     hasSlot: 0
---- !u!61 &6328117217270616691
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6328117217270616688}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 1, y: 0.5}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
 --- !u!1001 &7879872185803041975
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -550,23 +505,23 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: e0700b803f528cd46bb264efaf3fdbe6, type: 2}
     - target: {fileID: 8162307931837050329, guid: 2276f88d17f43ac4c8a7c1e13ca81491, type: 3}
       propertyPath: shopItems.Array.data[0].itemPrice
-      value: 5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8162307931837050329, guid: 2276f88d17f43ac4c8a7c1e13ca81491, type: 3}
       propertyPath: shopItems.Array.data[1].itemPrice
-      value: 5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8162307931837050329, guid: 2276f88d17f43ac4c8a7c1e13ca81491, type: 3}
       propertyPath: shopItems.Array.data[2].itemPrice
-      value: 5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8162307931837050329, guid: 2276f88d17f43ac4c8a7c1e13ca81491, type: 3}
       propertyPath: shopItems.Array.data[3].itemPrice
-      value: 5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8162307931837050329, guid: 2276f88d17f43ac4c8a7c1e13ca81491, type: 3}
       propertyPath: shopItems.Array.data[4].itemPrice
-      value: 5
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

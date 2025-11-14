@@ -5,24 +5,40 @@ using UnityEngine;
 
 public class Structure : MonoBehaviour {
 
+    [System.Flags]
     public enum StructureType {
-        PLATFORM,
-        LADDER,
-        FURNITURE,
-        GRASS,
-        SOIL,
-        CROP,
-        SLEEPABLE,
-        BLOCK,
-        MAPLINK,
-        TREEHOUSE_BUILDBLOCK,
-        DECORATION
+        PLATFORM = 1 << 0,
+        LADDER = 1 << 1,
+        ROOM = 1 << 2,
+
+        GRASS = 1 << 5,
+        SOIL = 1 << 6,
+        WATER = 1 << 7,
+
+        CROP = 1 << 10,
+
+        WORKBENCH = 1 << 15,
+        TRUNK = 1 << 16,
+        SLEEPABLE = 1 << 17,
+        FURNITURE = 1 << 18,
+        DECORATION = 1 << 19,
+
+        BLOCK = 1 << 25,
+        MAPLINK = 1 << 26,
+
+        TREEHOUSE_BUILDBLOCK = 1 << 30,
+    }
+
+    public enum BuildType {
+        REPLACE_TILE,
+        ATTACH_TO_SLOT
     }
 
     public SpriteRenderer spriteRenderer;
     public StructureType structureType;
     public bool attachesToPlatform;
-    public bool attachesToSlot;
+    public StructureType buildOnStructure;
+    public BuildType buildType;
 
     public bool isInteractable;
     public PlayerController.InteractionType interactionType;

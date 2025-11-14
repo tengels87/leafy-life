@@ -16,7 +16,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6328117217153012983
 Transform:
   m_ObjectHideFlags: 0
@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 6328117217270616693}
   - component: {fileID: 6328117217270616691}
   m_Layer: 0
-  m_Name: treehouse_buildspot
+  m_Name: buildspot_treehouse
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -131,9 +131,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 6328117217153012982}
-  structureType: 9
+  structureType: 1073741824
   attachesToPlatform: 0
-  attachesToSlot: 0
+  buildOnStructure: 0
+  buildType: 0
   isInteractable: 0
   interactionType: 0
   linkToMapType: 0
@@ -143,7 +144,6 @@ MonoBehaviour:
     canConnectAt: 
     isWalkable: 0
     hasSlot: 0
-    slot: {fileID: 0}
 --- !u!61 &6328117217270616691
 BoxCollider2D:
   m_ObjectHideFlags: 0

@@ -130,9 +130,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 0}
-  structureType: 3
+  structureType: 0
   attachesToPlatform: 0
-  attachesToSlot: 0
+  buildOnStructure: 0
+  buildType: 0
   isInteractable: 0
   interactionType: 0
   linkToMapType: 0
@@ -142,4 +143,3 @@ MonoBehaviour:
     canConnectAt: 0123
     isWalkable: 1
     hasSlot: 0
-    slot: {fileID: 0}
