@@ -5,12 +5,19 @@ using UnityEngine.UI;
 using DG.Tweening;
 
 public class ResourceCollector : MonoBehaviour {
+    public enum Preset {
+        CUSTOM,
+        COIN
+    }
+
     public Canvas canvas;
     public GameObject itemIconTemplate;
     public RectTransform targetUI;
     public float flyDuration = 0.6f;
     public float spawnDelay = 0.1f;
     public float spawnRandomOffset = 0.1f;
+    [SerializeField]
+    public List<PresetConfig> presets = new List<PresetConfig>();
 
     // One simple pool
     private Queue<GameObject> pool = new Queue<GameObject>();
@@ -27,8 +34,16 @@ public class ResourceCollector : MonoBehaviour {
     }
 
     /// Call this for a resource fly animation
-    public void Collect(Sprite sprite, int amount, Vector3 worldPosition) {
-        StartCoroutine(AnimateResources(sprite, amount, worldPosition, targetUI));
+    public void Collect(Preset preset, Sprite sprite, int amount, Vector3 worldPosition) {
+
+        PresetConfig presetConfig = presets.Find(p => p.id == preset);
+        if (!presetConfig.Equals(default(PresetConfig))) {
+            if (preset == Preset.CUSTOM) {
+                StartCoroutine(AnimateResources(sprite, amount, worldPosition, presetConfig.targetUI));
+            } else {
+                StartCoroutine(AnimateResources(presetConfig.sprite, amount, worldPosition, presetConfig.targetUI));
+            }
+        }
     }
 
     private IEnumerator AnimateResources(Sprite sprite, int amount, Vector3 worldPosition, RectTransform targetUI) {
@@ -72,7 +87,7 @@ public class ResourceCollector : MonoBehaviour {
                 obj.SetActive(false);
                 pool.Enqueue(obj);
 
-                PopWallet(targetUI);
+                PopAnimateTarget(targetUI);
             });
         });
 
@@ -83,21 +98,29 @@ public class ResourceCollector : MonoBehaviour {
                 obj.SetActive(false);
                 pool.Enqueue(obj);
 
-        PopWallet(targetUI);
+        PopAnimateTarget(targetUI);
             });*/
     }
 
-    private bool walletAnimating = false;
+    private bool targetAnimating = false;
 
-    private void PopWallet(RectTransform targetUI) {
-        if (walletAnimating) return;
-        walletAnimating = true;
+    private void PopAnimateTarget(RectTransform targetUI) {
+        if (targetAnimating) return;
+        targetAnimating = true;
 
         targetUI.DOKill();
         targetUI.DOScale(1.2f, 0.15f).SetEase(Ease.OutQuad)
             .OnComplete(() => {
                 targetUI.DOScale(1f, 0.15f).SetEase(Ease.InQuad)
-                    .OnComplete(() => walletAnimating = false);
+                    .OnComplete(() => targetAnimating = false);
             });
+    }
+
+    [System.Serializable]
+    public struct PresetConfig {
+        public Preset id;
+        public Sprite sprite;
+        public RectTransform targetUI;
+        public float scaleFactor;
     }
 }
