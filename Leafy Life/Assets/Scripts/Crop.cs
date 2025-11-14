@@ -6,7 +6,8 @@ using UnityEngine.Events;
 public class Crop : MonoBehaviour {
     enum GrowthState {
         SEED,
-        MATURE
+        MATURE,
+        DONE
     }
 
     public GameObject seedGameobject;
@@ -18,6 +19,7 @@ public class Crop : MonoBehaviour {
 
     [Tooltip("units per ingame hour")]
     public float timeToGrow = 2;
+    public float timeToFinish = 4;
     public bool destroyOnHarvest = false;
 
     private bool isInitialized = false;
@@ -65,6 +67,15 @@ public class Crop : MonoBehaviour {
         matureGameobject.SetActive(true);
     }
 
+    public void setDoneState() {
+        growthState = GrowthState.DONE;
+
+        seedGameobject.SetActive(false);
+        matureGameobject.SetActive(false);
+
+        spawnItem();
+    }
+
     private void spawnItem() {
         if (prefab_itemToSpawn != null) {
             List<Transform> itemSlots = new List<Transform>();
@@ -81,15 +92,16 @@ public class Crop : MonoBehaviour {
 
             foreach (Transform itemSlot in itemSlots) {
                 GameObject instance = Instantiate(prefab_itemToSpawn);
-                instance.transform.SetParent(itemSlot);
-                instance.transform.localPosition = Vector3.zero;
+                instance.transform.position = itemSlot.position;
+                instance.transform.SetParent(null);
                 harvestables.Add(instance);
             }
         }
     }
 
-    public void harvestAll() {
-        if (harvestables.Count > 0) {
+    public bool harvestAll() {
+        bool canHarvest = (harvestables.Count > 0);
+        if (canHarvest) {
             foreach (GameObject harvest in harvestables) {
                 ItemController collectable = harvest.GetComponent<ItemController>();
                 if (collectable != null) {
@@ -102,21 +114,24 @@ public class Crop : MonoBehaviour {
             harvestables.Clear();
             setSeedState();
         }
+
+        return canHarvest;
     }
 
     private void OnHourTick(float timestamp) {
 
-        if (growthState == GrowthState.MATURE)
+        if (growthState == GrowthState.DONE)
             return;
 
         /// grow 1 unit per hour
         age = age + 1;
 
-        if (age >= timeToGrow && growthState != GrowthState.MATURE) {
+        if (age >= timeToGrow && growthState == GrowthState.SEED) {
             setMatureState();
+        }
 
-            // spawn item
-            spawnItem();
+        if (age >= timeToFinish && growthState == GrowthState.MATURE) {
+            setDoneState();
         }
     }
 }
