@@ -57,13 +57,7 @@ public class PlayerController : MonoBehaviour {
     }
 
     void Update() {
-        /*
-        if (Input.GetKeyDown(KeyCode.Space)) {
-            Vector2 targetPos42 = MapController.pixelPos2WorldPos(Input.mousePosition);
-            FindObjectOfType<ResourceCollector>()
-                .Collect(Inventory.InventoryItem.ItemType.COIN, 3, targetPos42);
-        }
-        */
+
         // camera follow player
         Camera cam = Camera.main;
         if (cam != null) {
@@ -71,38 +65,40 @@ public class PlayerController : MonoBehaviour {
         }
 
         // move on tap
-        if (Input.GetMouseButtonDown(0)) {
-            if (EventSystem.current.IsPointerOverGameObject()) {
+        if (GlobalRaycast.IsPointerDown()) {
+            if (GlobalRaycast.IsPointerOverUI()) {
                 return;
             }
 
-            Vector2 targetPos = MapController.pixelPos2WorldPos(Input.mousePosition);
+            if (GlobalRaycast.GetPointerPosition(out Vector2 pointerPos)) {
+                Vector2 targetPos = MapController.pixelPos2WorldPos(pointerPos);
 
-            MapController mapController = WorldConstants.Instance.getMapController();
+                MapController mapController = WorldConstants.Instance.getMapController();
 
-            Vector2Int targetPosInt = new Vector2Int((int)targetPos.x, (int)targetPos.y);
+                Vector2Int targetPosInt = new Vector2Int((int)targetPos.x, (int)targetPos.y);
 
-            MapController.Tile t = mapController.getTile(targetPosInt);
+                MapController.Tile t = mapController.getTile(targetPosInt);
 
-            if (t != null) {
+                if (t != null) {
 
-                // set walk target there
-                GameAction gameAction = new GameAction(GameAction.ActionType.WALKTO, targetPosInt);
-                gameAction.customData = t.attachedGameObject;
-                addAction(gameAction);
+                    // set walk target there
+                    GameAction gameAction = new GameAction(GameAction.ActionType.WALKTO, targetPosInt);
+                    gameAction.customData = t.attachedGameObject;
+                    addAction(gameAction);
 
-                // if there is a structure to interact with, do that
-                if (t.attachedGameObject != null) {
-                    Structure structureOnTile = t.attachedGameObject.GetComponent<Structure>();
-                    if (structureOnTile != null) {
-                        /*
-                        Structure interactablePart = structureOnTile.getInteractableStructure();
-                        if (interactablePart != null) {
-                            gameAction = new GameAction(GameAction.ActionType.INTERACT, targetPosInt);
-                            gameAction.customData = interactablePart.gameObject;
-                            addAction(gameAction);
+                    // if there is a structure to interact with, do that
+                    if (t.attachedGameObject != null) {
+                        Structure structureOnTile = t.attachedGameObject.GetComponent<Structure>();
+                        if (structureOnTile != null) {
+                            /*
+                            Structure interactablePart = structureOnTile.getInteractableStructure();
+                            if (interactablePart != null) {
+                                gameAction = new GameAction(GameAction.ActionType.INTERACT, targetPosInt);
+                                gameAction.customData = interactablePart.gameObject;
+                                addAction(gameAction);
+                            }
+                            */
                         }
-                        */
                     }
                 }
             }

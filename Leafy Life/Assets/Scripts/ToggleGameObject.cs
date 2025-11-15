@@ -24,7 +24,7 @@ public class ToggleGameObject : MonoBehaviour
     void Update() {
 
         // tap to toggle
-        if (Input.GetMouseButtonDown(0)) {
+        if (GlobalRaycast.IsPointerDown()) {
             if (GlobalRaycast.IsTappedInUI(toggleGameObject)) {
                 toggle();
             }

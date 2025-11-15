@@ -20,15 +20,13 @@ public class DragInteractController : MonoBehaviour
 
     protected virtual void Update()
     {
-        Vector2 mouseWorldPos = MapController.pixelPos2WorldPos(Input.mousePosition);
-        
-        if (Input.GetMouseButtonDown(0)) {
+        if (GlobalRaycast.IsPointerDown()) {
             if (GlobalRaycast.IsTappedInWorld(this.gameObject)) {
                 handleTappedInWorld();
             }
         }
 
-        if (Input.GetMouseButtonDown(0)) {
+        if (GlobalRaycast.IsPointerDown()) {
             if (GlobalRaycast.IsTappedInUI(this.gameObject)) {
                 handleTappedInUI(null);
             }
@@ -38,7 +36,10 @@ public class DragInteractController : MonoBehaviour
         if (currentDragged != null) {
 
             // position visual at mouse position
-            dragVisualsInstance.transform.position = new Vector3(mouseWorldPos.x, mouseWorldPos.y, 0);
+            if (GlobalRaycast.GetPointerPosition(out Vector2 pointerPos)) {
+                Vector2 mouseWorldPos = MapController.pixelPos2WorldPos(pointerPos);
+                dragVisualsInstance.transform.position = new Vector3(mouseWorldPos.x, mouseWorldPos.y, 0);
+            }
 
             handleDragging();
         }
@@ -83,8 +84,6 @@ public class DragInteractController : MonoBehaviour
     }
 
     private void handleDragging() {
-        Vector2 mouseWorldPos = MapController.pixelPos2WorldPos(Input.mousePosition);
-
         PlayerController playerController = WorldConstants.Instance.getPlayerController();
         Shopkeeper[] shopKeepers = GameObject.FindObjectsOfType<Shopkeeper>();
 
@@ -108,16 +107,20 @@ public class DragInteractController : MonoBehaviour
                         .OnComplete(() => { });
                 });
         } else {
-
+            
             // snap visual to possible build location
-            foreach (Vector2Int loc in currentBuildLocations) {
-                if (mouseWorldPos.x > loc.x && mouseWorldPos.x < loc.x + 1 && mouseWorldPos.y > loc.y && mouseWorldPos.y < loc.y + 1) {
-                    dragVisualsInstance.transform.position = new Vector3(loc.x, loc.y, 0);
+            if (GlobalRaycast.GetPointerPosition(out Vector2 pointerPos)) {
+                Vector2 mouseWorldPos = MapController.pixelPos2WorldPos(pointerPos);
 
-                    currentBuildLocation = loc;
-                    canBuild = true;
+                foreach (Vector2Int loc in currentBuildLocations) {
+                    if (mouseWorldPos.x > loc.x && mouseWorldPos.x < loc.x + 1 && mouseWorldPos.y > loc.y && mouseWorldPos.y < loc.y + 1) {
+                        dragVisualsInstance.transform.position = new Vector3(loc.x, loc.y, 0);
 
-                    break;
+                        currentBuildLocation = loc;
+                        canBuild = true;
+
+                        break;
+                    }
                 }
             }
         }
@@ -125,7 +128,7 @@ public class DragInteractController : MonoBehaviour
 
         // drop food on player to eat it
         // or dropstructure on buildLocation to build it
-        if (Input.GetMouseButtonUp(0)) {
+        if (GlobalRaycast.IsPointerUp()) {
             foreach (Shopkeeper shopKeeper in shopKeepers) {
                 if (GlobalRaycast.IsTappedInUI(shopKeeper.sellArea)) {
                     draggedOntoShop = true;

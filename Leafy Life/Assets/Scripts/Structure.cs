@@ -54,7 +54,7 @@ public class Structure : MonoBehaviour {
     void Update() {
 
         // interact on tap
-        if (Input.GetMouseButtonDown(0)) {
+        if (GlobalRaycast.IsPointerDown()) {
             if (GlobalRaycast.IsTappedInWorld(this.gameObject)) {
                 Crop crop = this.GetComponentInChildren<Crop>();
                 if (crop != null) {

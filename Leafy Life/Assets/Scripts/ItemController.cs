@@ -63,9 +63,10 @@ public class ItemController : DragInteractController
             inventory.removeItem(itemData);
             inventory.depositGold(itemData.sellValue);
 
-            Vector3 effectSpawnPos = MapController.pixelPos2WorldPos(Input.mousePosition);
-            FindObjectOfType<ResourceCollector>()
+            if (GlobalRaycast.GetPointerPosition(out Vector2 effectSpawnPos)) {
+                FindObjectOfType<ResourceCollector>()
                 .Collect(ResourceCollector.Preset.COIN, null, itemData.sellValue, effectSpawnPos);
+            }
         }
     }
 

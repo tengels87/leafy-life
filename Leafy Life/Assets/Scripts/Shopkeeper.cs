@@ -17,7 +17,7 @@ public class Shopkeeper : MonoBehaviour {
     }
 
     void Update() {
-        if (Input.GetMouseButtonDown(0)) {
+        if (GlobalRaycast.IsPointerDown()) {
             if (GlobalRaycast.IsTappedInWorld(this.gameObject)) {
                 setUIenabled(true);
             }
