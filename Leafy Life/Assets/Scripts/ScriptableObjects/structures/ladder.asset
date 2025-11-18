@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e34a71cb529389a41b34607b68bc43b0, type: 3}
-  m_Name: shop_household
+  m_Name: ladder
   m_EditorClassIdentifier: 
-  id: cf2cab3eefdd4defb4fcffe1db8f9015
-  prefab: {fileID: 6328117217270616688, guid: f1540c4a61cdbb34593f47a4a0594269, type: 3}
+  id: cea08b7326694d108f7b0495a13b5018
+  prefab: {fileID: 6328117217270616688, guid: df3f5fe28c35c374e94ce62f3065704b, type: 3}
   version: 1

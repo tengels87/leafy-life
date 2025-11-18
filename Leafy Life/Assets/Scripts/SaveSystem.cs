@@ -87,7 +87,7 @@ public class SaveSystem : MonoBehaviour {
         public int version = 1;
         public int seed = -1;
 
-        public int goldAmount = 0;
+        public int goldAmount;
         public List<string> inventoryItemsUidList = new List<string>();
 
         public float nutritionValue;

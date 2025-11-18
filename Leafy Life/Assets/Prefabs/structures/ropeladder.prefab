@@ -304,7 +304,7 @@ MonoBehaviour:
   spriteRenderer: {fileID: 6540633000498382401}
   structureType: 2
   attachesToPlatform: 0
-  buildOnStructure: 1073741824
+  buildOnStructure: 0
   buildType: 0
   isInteractable: 0
   interactionType: 0

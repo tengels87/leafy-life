@@ -128,7 +128,7 @@ public class MapController : MonoBehaviour {
                         if (targetType == Structure.StructureType.LADDER) {
                             if (s.structureType == Structure.StructureType.PLATFORM) {
                                 if (isEmpty(up)) locations.Add(up);
-                                if (isEmpty(down)) locations.Add(down);
+                                //if (isEmpty(down)) locations.Add(down);
                             }
                         }
                     }

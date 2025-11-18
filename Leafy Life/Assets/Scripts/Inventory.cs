@@ -29,11 +29,16 @@ public class Inventory : MonoBehaviour
         if (!isInitialized) {
             SaveSystem.GameData saveData = WorldConstants.Instance.getSaveSystem().getLoadedData();
             if (saveData != null) {
+
+                // restore saved inventory items
                 foreach (string itemId in saveData.inventoryItemsUidList) {
                     if (ItemDefs.TryGet(itemId, out ItemData _itemData)) {
                         addItem(_itemData);
                     }
                 }
+
+                // restore saved gold
+                depositGold(saveData.goldAmount);
             }
 
             isInitialized = true;
