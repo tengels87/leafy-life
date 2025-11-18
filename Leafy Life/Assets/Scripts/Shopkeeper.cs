@@ -11,17 +11,21 @@ public class Shopkeeper : MonoBehaviour {
 
     private ShopItem lastOffer;
 
+    void OnEnable() {
+        UnifiedInputModule.Instance.OnTap += OnTap;
+    }
+
+    void OnDisable() {
+        UnifiedInputModule.Instance.OnTap -= OnTap;
+    }
+
     void Awake() {
         setUIenabled(false);
         hideConfirmDialog();
     }
 
     void Update() {
-        if (GlobalRaycast.IsPointerDown()) {
-            if (GlobalRaycast.IsTappedInWorld(this.gameObject)) {
-                setUIenabled(true);
-            }
-        }
+
     }
 
     public void setUIenabled(bool val) {
@@ -63,6 +67,12 @@ public class Shopkeeper : MonoBehaviour {
                 inventory_player.withdrawGold(lastOffer.itemPrice);
                 ItemController.OnCollectedEvent?.Invoke(lastOffer.data);
             }
+        }
+    }
+
+    private void OnTap(Vector2 tapPos) {
+        if (GlobalRaycast.IsTappedInWorld(this.gameObject)) {
+            setUIenabled(true);
         }
     }
 }

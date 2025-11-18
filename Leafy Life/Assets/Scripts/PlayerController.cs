@@ -33,10 +33,12 @@ public class PlayerController : MonoBehaviour {
     private Coroutine coroutineInteraction;
 
     void OnEnable() {
+        UnifiedInputModule.Instance.OnTap += OnTap;
         AnimationEventHandler.AminationFinishedEvent += playSoundCrafting;
     }
 
     void OnDisable() {
+        UnifiedInputModule.Instance.OnTap -= OnTap;
         AnimationEventHandler.AminationFinishedEvent -= playSoundCrafting;
     }
 
@@ -62,46 +64,6 @@ public class PlayerController : MonoBehaviour {
         Camera cam = Camera.main;
         if (cam != null) {
             cam.transform.position = this.gameObject.transform.position + new Vector3(0, 1, -10);
-        }
-
-        // move on tap
-        if (GlobalRaycast.IsPointerDown()) {
-            if (GlobalRaycast.IsPointerOverUI()) {
-                return;
-            }
-
-            if (GlobalRaycast.GetPointerPosition(out Vector2 pointerPos)) {
-                Vector2 targetPos = MapController.pixelPos2WorldPos(pointerPos);
-
-                MapController mapController = WorldConstants.Instance.getMapController();
-
-                Vector2Int targetPosInt = new Vector2Int((int)targetPos.x, (int)targetPos.y);
-
-                MapController.Tile t = mapController.getTile(targetPosInt);
-
-                if (t != null) {
-
-                    // set walk target there
-                    GameAction gameAction = new GameAction(GameAction.ActionType.WALKTO, targetPosInt);
-                    gameAction.customData = t.attachedGameObject;
-                    addAction(gameAction);
-
-                    // if there is a structure to interact with, do that
-                    if (t.attachedGameObject != null) {
-                        Structure structureOnTile = t.attachedGameObject.GetComponent<Structure>();
-                        if (structureOnTile != null) {
-                            /*
-                            Structure interactablePart = structureOnTile.getInteractableStructure();
-                            if (interactablePart != null) {
-                                gameAction = new GameAction(GameAction.ActionType.INTERACT, targetPosInt);
-                                gameAction.customData = interactablePart.gameObject;
-                                addAction(gameAction);
-                            }
-                            */
-                        }
-                    }
-                }
-            }
         }
 
         processAllActions();
@@ -352,6 +314,45 @@ public class PlayerController : MonoBehaviour {
 
         if (animName == "craft") {
             WorldConstants.Instance.getAudioPool().playImmediate(audio_craft);
+        }
+    }
+
+    private void OnTap(Vector2 tapPos) {
+        if (GlobalRaycast.IsPointerOverUI()) {
+            return;
+        }
+
+        Vector2 pointerPos = UnifiedInputModule.Instance.PointerPosition;
+
+        Vector2 targetPos = MapController.pixelPos2WorldPos(pointerPos);
+
+        MapController mapController = WorldConstants.Instance.getMapController();
+
+        Vector2Int targetPosInt = new Vector2Int((int)targetPos.x, (int)targetPos.y);
+
+        MapController.Tile t = mapController.getTile(targetPosInt);
+
+        if (t != null) {
+
+            // set walk target there
+            GameAction gameAction = new GameAction(GameAction.ActionType.WALKTO, targetPosInt);
+            gameAction.customData = t.attachedGameObject;
+            addAction(gameAction);
+
+            // if there is a structure to interact with, do that
+            if (t.attachedGameObject != null) {
+                Structure structureOnTile = t.attachedGameObject.GetComponent<Structure>();
+                if (structureOnTile != null) {
+                    /*
+                    Structure interactablePart = structureOnTile.getInteractableStructure();
+                    if (interactablePart != null) {
+                        gameAction = new GameAction(GameAction.ActionType.INTERACT, targetPosInt);
+                        gameAction.customData = interactablePart.gameObject;
+                        addAction(gameAction);
+                    }
+                    */
+                }
+            }
         }
     }
 

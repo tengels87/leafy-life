@@ -47,22 +47,32 @@ public class Structure : MonoBehaviour {
     [SerializeField]
     public List<GridFootprint> gridFootprint = new List<GridFootprint>(1);
 
+    void OnEnable() {
+        UnifiedInputModule.Instance.OnTap += OnTap;
+    }
+
+    void OnDisable() {
+        UnifiedInputModule.Instance.OnTap -= OnTap;
+    }
+
     void Start() {
 
     }
 
     void Update() {
 
+    }
+
+    private void OnTap(Vector2 tapPos) {
+
         // interact on tap
-        if (GlobalRaycast.IsPointerDown()) {
-            if (GlobalRaycast.IsTappedInWorld(this.gameObject)) {
-                Crop crop = this.GetComponentInChildren<Crop>();
-                if (crop != null) {
-                    bool harvested = crop.harvestAll();
-                    if (harvested) {
-                        if (crop.destroyOnHarvest) {
-                            UnityEngine.Object.Destroy(this.gameObject);
-                        }
+        if (GlobalRaycast.IsTappedInWorld(this.gameObject)) {
+            Crop crop = this.GetComponentInChildren<Crop>();
+            if (crop != null) {
+                bool harvested = crop.harvestAll();
+                if (harvested) {
+                    if (crop.destroyOnHarvest) {
+                        UnityEngine.Object.Destroy(this.gameObject);
                     }
                 }
             }

@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using DG.Tweening;
+using UnityEngine.InputSystem;
 
 public class DragInteractController : MonoBehaviour
 {
@@ -13,35 +14,39 @@ public class DragInteractController : MonoBehaviour
     private List<Vector2Int> currentBuildLocations = new List<Vector2Int>();
     private List<GameObject> buildLocationVisualizers = new List<GameObject>();
 
+    protected virtual void OnEnable() {
+        UnifiedInputModule.Instance.OnPress += OnPointerPressed;
+    }
+
+    protected virtual void OnDisable() {
+        UnifiedInputModule.Instance.OnPress -= OnPointerPressed;
+    }
+
     protected virtual void Start()
     {
         
     }
 
-    protected virtual void Update()
-    {
-        if (GlobalRaycast.IsPointerDown()) {
-            if (GlobalRaycast.IsTappedInWorld(this.gameObject)) {
-                handleTappedInWorld();
-            }
-        }
-
-        if (GlobalRaycast.IsPointerDown()) {
-            if (GlobalRaycast.IsTappedInUI(this.gameObject)) {
-                handleTappedInUI(null);
-            }
-        }
-
+    protected virtual void Update() {
         // visualize drag with structure sprite
         if (currentDragged != null) {
 
             // position visual at mouse position
-            if (GlobalRaycast.GetPointerPosition(out Vector2 pointerPos)) {
-                Vector2 mouseWorldPos = MapController.pixelPos2WorldPos(pointerPos);
-                dragVisualsInstance.transform.position = new Vector3(mouseWorldPos.x, mouseWorldPos.y, 0);
-            }
+            Vector2 pointerPos = UnifiedInputModule.Instance.PointerPosition;
+            Vector2 mouseWorldPos = MapController.pixelPos2WorldPos(pointerPos);
+            dragVisualsInstance.transform.position = new Vector3(mouseWorldPos.x - 0.5f, mouseWorldPos.y - 0.5f, 0);
 
             handleDragging();
+        }
+    }
+
+    private void OnPointerPressed(Vector2 tapPos) {
+        if (GlobalRaycast.IsTappedInWorld(this.gameObject)) {
+            handleTappedInWorld();
+        }
+
+        if (GlobalRaycast.IsTappedInUI(this.gameObject)) {
+            handleTappedInUI(null);
         }
     }
 
@@ -107,12 +112,12 @@ public class DragInteractController : MonoBehaviour
                         .OnComplete(() => { });
                 });
         } else {
-            
-            // snap visual to possible build location
-            if (GlobalRaycast.GetPointerPosition(out Vector2 pointerPos)) {
-                Vector2 mouseWorldPos = MapController.pixelPos2WorldPos(pointerPos);
 
-                foreach (Vector2Int loc in currentBuildLocations) {
+            // snap visual to possible build location
+            Vector2 pointerPos = UnifiedInputModule.Instance.PointerPosition;
+            Vector2 mouseWorldPos = MapController.pixelPos2WorldPos(pointerPos);
+
+            foreach (Vector2Int loc in currentBuildLocations) {
                     if (mouseWorldPos.x > loc.x && mouseWorldPos.x < loc.x + 1 && mouseWorldPos.y > loc.y && mouseWorldPos.y < loc.y + 1) {
                         dragVisualsInstance.transform.position = new Vector3(loc.x, loc.y, 0);
 
@@ -122,13 +127,13 @@ public class DragInteractController : MonoBehaviour
                         break;
                     }
                 }
-            }
+            //}
         }
 
 
         // drop food on player to eat it
         // or dropstructure on buildLocation to build it
-        if (GlobalRaycast.IsPointerUp()) {
+        if (UnifiedInputModule.UpThisFrame) {
             foreach (Shopkeeper shopKeeper in shopKeepers) {
                 if (GlobalRaycast.IsTappedInUI(shopKeeper.sellArea)) {
                     draggedOntoShop = true;
@@ -140,29 +145,40 @@ public class DragInteractController : MonoBehaviour
             } else if (draggedOntoPlayer) {
                 handleDragFinishedOnPlayer(playerController);
             } else if (canBuild) {
-                MapController mapController = WorldConstants.Instance.getMapController();
 
-                // get position to walk to before building
-                Vector2 playerPos2d = playerController.getPosition2D();
-                Vector2Int playerPosInt = new Vector2Int(Mathf.RoundToInt(playerPos2d.x), Mathf.RoundToInt(playerPos2d.y));
-                MapController.Tile walkableTile = mapController.getNearestWalkableTile(currentBuildLocation, playerPosInt);
-                if (walkableTile != null) {
+                if (currentPrefabDef != null) {
+                    MapController mapController = WorldConstants.Instance.getMapController();
 
-                    // add walk and build actions
-                    Vector2 walktoPosition = new Vector2(walkableTile.gridX, walkableTile.gridY);
+                    // get position to walk to before building
+                    Vector2 playerPos2d = playerController.getPosition2D();
+                    Vector2Int playerPosInt = new Vector2Int(Mathf.RoundToInt(playerPos2d.x), Mathf.RoundToInt(playerPos2d.y));
 
-                    // walk to action
-                    GameAction gameAction = new GameAction(GameAction.ActionType.WALKTO, walktoPosition);
-                    playerController.addAction(gameAction);
+                    // check it for every structure footprint location
+                    Structure currentStructureToBuild = currentPrefabDef.Prefab.GetComponent<Structure>();
 
-                    // build action
-                    if (currentPrefabDef != null) {
-                        gameAction = new GameAction(GameAction.ActionType.BUILD, currentBuildLocation, () => {
-                            handleBuildAction(currentPrefabDef);
-                        });
+                    foreach (Structure.GridFootprint structureFootPrint in currentStructureToBuild.gridFootprint) {
+                        //MapController.Tile walkableTile = mapController.getNearestWalkableTile(currentBuildLocation, playerPosInt);
+                        MapController.Tile walkableTile = mapController.getNearestWalkableTile(currentBuildLocation + new Vector2Int(structureFootPrint.gridX, structureFootPrint.gridY), playerPosInt);
 
-                        gameAction.customData = currentPrefabDef;
-                        playerController.addAction(gameAction);
+                        if (walkableTile != null) {
+
+                            // add walk and build actions
+                            Vector2 walktoPosition = new Vector2(walkableTile.gridX, walkableTile.gridY);
+
+                            // walk to action
+                            GameAction gameAction = new GameAction(GameAction.ActionType.WALKTO, walktoPosition);
+                            playerController.addAction(gameAction);
+
+                            // build action
+                            gameAction = new GameAction(GameAction.ActionType.BUILD, currentBuildLocation, () => {
+                                handleBuildAction(currentPrefabDef);
+                            });
+
+                            gameAction.customData = currentPrefabDef;
+                            playerController.addAction(gameAction);
+
+                            break;
+                        }
                     }
                 }
             }
