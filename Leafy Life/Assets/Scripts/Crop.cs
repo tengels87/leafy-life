@@ -7,20 +7,21 @@ public class Crop : MonoBehaviour {
     enum GrowthState {
         SEED,
         MATURE,
-        DONE
+        RIPE_FRUIT
     }
 
-    public GameObject seedGameobject;
-    public GameObject matureGameobject;
-    public GameObject prefab_itemToSpawn;
-    public Transform itemToSpawnContainer;
+    [SerializeField] private GameObject seedGameobject;
+    [SerializeField] private GameObject matureGameobject;
+    [SerializeField] private GameObject prefab_itemToSpawn;
+    [SerializeField] private Transform itemToSpawnContainer;
+    [SerializeField] private Structure parentStructure;
     public int numberOfItems = 1;
     public bool initializeOnStart = false;
 
     [Tooltip("units per ingame hour")]
     public float timeToGrow = 2;
     public float timeToFinish = 4;
-    public bool destroyOnHarvest = false;
+    public bool destroyOnHarvest = true;
 
     private bool isInitialized = false;
     private float age = 0;
@@ -67,8 +68,8 @@ public class Crop : MonoBehaviour {
         matureGameobject.SetActive(true);
     }
 
-    public void setDoneState() {
-        growthState = GrowthState.DONE;
+    public void setRipeState() {
+        growthState = GrowthState.RIPE_FRUIT;
 
         seedGameobject.SetActive(false);
         matureGameobject.SetActive(false);
@@ -99,39 +100,54 @@ public class Crop : MonoBehaviour {
         }
     }
 
-    public bool harvestAll() {
-        bool canHarvest = (harvestables.Count > 0);
-        if (canHarvest) {
-            foreach (GameObject harvest in harvestables) {
-                ItemController collectable = harvest.GetComponent<ItemController>();
+    private bool checkGatheredAll() {
+        foreach (GameObject fruit in harvestables) {
+            if (fruit != null) {
+                ItemController collectable = fruit.GetComponent<ItemController>();
                 if (collectable != null) {
-                    collectable.collect();
+                    return false;
                 }
             }
-
-            // reset crop
-            age = 0;
-            harvestables.Clear();
-            setSeedState();
         }
 
-        return canHarvest;
+        return true;
     }
 
     private void OnHourTick(float timestamp) {
 
-        if (growthState == GrowthState.DONE)
-            return;
+        if (growthState != GrowthState.RIPE_FRUIT) {
 
-        /// grow 1 unit per hour
-        age = age + 1;
+            /// grow 1 unit per hour
+            age = age + 1;
 
-        if (age >= timeToGrow && growthState == GrowthState.SEED) {
-            setMatureState();
-        }
+            if (age >= timeToGrow && growthState == GrowthState.SEED) {
+                setMatureState();
+            }
 
-        if (age >= timeToFinish && growthState == GrowthState.MATURE) {
-            setDoneState();
+            if (age >= timeToFinish && growthState == GrowthState.MATURE) {
+                setRipeState();
+            }
+        } else {
+
+            // check for harbested state
+            bool gatheredAll = checkGatheredAll();
+
+            if (gatheredAll) {
+
+                if (destroyOnHarvest) {
+
+                    // destroy parent, so crops lifecycle is finished
+                    if (parentStructure != null) {
+                        Object.Destroy(parentStructure.gameObject);
+                    }
+                } else {
+
+                    // reset crop state
+                    age = 0;
+                    harvestables.Clear();
+                    setSeedState();
+                }
+            }
         }
     }
 }

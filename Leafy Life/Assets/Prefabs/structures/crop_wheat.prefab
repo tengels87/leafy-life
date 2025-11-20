@@ -388,8 +388,9 @@ MonoBehaviour:
   matureGameobject: {fileID: 4561774496797424244}
   prefab_itemToSpawn: {fileID: 6328117217270616688, guid: a6e2a9175dcae3a45b8f2fcc2091e83b, type: 3}
   itemToSpawnContainer: {fileID: 1598592473102668407}
+  parentStructure: {fileID: 6328117217270616693}
   numberOfItems: 1
-  initializeOnStart: 1
+  initializeOnStart: 0
   timeToGrow: 3
   timeToFinish: 4
   destroyOnHarvest: 1

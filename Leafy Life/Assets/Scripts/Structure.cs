@@ -57,6 +57,13 @@ public class Structure : MonoBehaviour {
 
     void Start() {
 
+        // init crop on start, if needed
+        Crop crop = this.gameObject.GetComponentInChildren<Crop>();
+        if (crop != null) {
+            if (crop.initializeOnStart == false) {
+                crop.init();
+            }
+        }
     }
 
     void Update() {
@@ -64,19 +71,7 @@ public class Structure : MonoBehaviour {
     }
 
     private void OnTap(Vector2 tapPos) {
-
         // interact on tap
-        if (GlobalRaycast.IsTappedInWorld(this.gameObject)) {
-            Crop crop = this.GetComponentInChildren<Crop>();
-            if (crop != null) {
-                bool harvested = crop.harvestAll();
-                if (harvested) {
-                    if (crop.destroyOnHarvest) {
-                        UnityEngine.Object.Destroy(this.gameObject);
-                    }
-                }
-            }
-        }
     }
 
     [Serializable]
