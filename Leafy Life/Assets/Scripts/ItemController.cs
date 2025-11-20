@@ -1,12 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Events;
+using DG.Tweening;
 
 public class ItemController : DragInteractController
 {
-    public static UnityAction<ItemData> OnCollectedEvent;
-
     public ItemData itemData;
     public int itemCount;
 
@@ -24,7 +24,7 @@ public class ItemController : DragInteractController
 
     protected override void handleTappedInWorld() {
         base.handleTappedInWorld();
-        collect();
+        tryCollect();
     }
 
     protected override void handleTappedInUI(Object obj) {
@@ -63,7 +63,8 @@ public class ItemController : DragInteractController
             inventory.removeItem(itemData);
             inventory.depositGold(itemData.sellValue);
 
-            Vector2 effectSpawnPos = UnifiedInputModule.Instance.PointerPosition;
+            Vector2 pointerPos = UnifiedInputModule.Instance.PointerPosition;
+            Vector2 effectSpawnPos = MapController.pixelPos2WorldPos(pointerPos);
             FindObjectOfType<ResourceCollector>()
                 .Collect(ResourceCollector.Preset.COIN, null, itemData.sellValue, effectSpawnPos);
         }
@@ -77,19 +78,38 @@ public class ItemController : DragInteractController
         }
     }
 
-    public void collect() {
+    public bool tryCollect() {
         if (!isCollected) {
             isCollected = true;
 
-            // unlink, because parent will probably be deleted
-            this.transform.SetParent(null);
+            Inventory inventory = WorldConstants.Instance.getInventory();
 
-            // tween
-            FindObjectOfType<ResourceCollector>()
-                .Collect(ResourceCollector.Preset.CUSTOM, itemData.iconSprite, itemCount, this.transform.position);
+            if (inventory != null) {
+                if (inventory.tryAddItem(itemData)) {
 
-            OnCollectedEvent?.Invoke(this.itemData);
-            Object.Destroy(this.gameObject);
+                    // unlink, because parent will probably be deleted
+                    this.transform.SetParent(null);
+
+                    // tween
+                    FindObjectOfType<ResourceCollector>()
+                        .Collect(ResourceCollector.Preset.CUSTOM, itemData.iconSprite, itemCount, this.transform.position);
+
+                    Object.Destroy(this.gameObject);
+
+                    return true;
+                } else {
+
+                    // do not collect, inentory full
+                    Vector3 targetPos = this.gameObject.transform.position;
+                    this.gameObject.transform.DOJump(targetPos, 1, 1, 1.0f).OnComplete(() => {
+                        isCollected = false;
+                    });
+
+                    return false;
+                }
+            }
         }
+
+        return false;
     }
 }

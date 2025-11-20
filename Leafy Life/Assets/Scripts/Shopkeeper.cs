@@ -64,8 +64,9 @@ public class Shopkeeper : MonoBehaviour {
         Inventory inventory_player = WorldConstants.Instance.getInventory();
         if (inventory_player != null) {
             if (inventory_player.getGoldAmount() >= lastOffer.itemPrice) {
-                inventory_player.withdrawGold(lastOffer.itemPrice);
-                ItemController.OnCollectedEvent?.Invoke(lastOffer.data);
+                if (inventory_player.tryAddItem(lastOffer.data)) {
+                    inventory_player.withdrawGold(lastOffer.itemPrice);
+                }
             }
         }
     }

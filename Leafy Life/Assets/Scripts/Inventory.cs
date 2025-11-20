@@ -10,18 +10,12 @@ public class Inventory : MonoBehaviour
     public static UnityAction<ItemData, bool> ItemRemovedEvent;
     public static UnityAction<int> GoldChangedEvent;
 
+    public int maxCapacity = 9;
+
     private Dictionary<ItemData, int> items = new Dictionary<ItemData, int>();
     private int goldCount = 0;
 
     private bool isInitialized = false;
-
-    void OnEnable() {
-        ItemController.OnCollectedEvent += addItem;
-    }
-
-    void OnDisable() {
-        ItemController.OnCollectedEvent -= addItem;
-    }
 
     void Start()
     {
@@ -74,7 +68,17 @@ public class Inventory : MonoBehaviour
         }
     }
 
-    public void addItem(ItemData item) {
+    public bool tryAddItem(ItemData item) {
+        if (items.Count < maxCapacity || items.ContainsKey(item)) {
+            addItem(item);
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private void addItem(ItemData item) {
         if (items.ContainsKey(item)) {
             items[item]++;
             ItemAddedEvent?.Invoke(item, false);
