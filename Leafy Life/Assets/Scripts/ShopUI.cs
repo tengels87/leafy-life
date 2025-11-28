@@ -38,7 +38,6 @@ public class ShopUI : MonoBehaviour {
             GameObject itemButton = Instantiate(shopItemPrefab, itemListParent);
             ShopItemController shopItemController = itemButton.GetComponent<ShopItemController>();
             shopItemController.imageItemIcon.sprite = item.data.iconSprite;
-            shopItemController.textItemName.text = item.data.itemName;
             shopItemController.textItemCosts.text = "" + item.itemPrice;
 
             // add listener to the button to show confirm dialog
@@ -48,16 +47,22 @@ public class ShopUI : MonoBehaviour {
         }
     }
 
-    private void OnGoldChanged(int goldAmount) {
+    public void updateShopItemsState(int goldAmount) {
         foreach (ShopItemController controller in shopItemControllerList) {
-            if (int.TryParse(controller.textItemCosts.text, out int result)) {
-                if (result <= goldAmount) {
+            if (int.TryParse(controller.textItemCosts.text, out int itemCosts)) {
+                if (itemCosts <= goldAmount) {
                     controller.setEnabled(true);
                 } else {
                     controller.setEnabled(false);
                 }
+            } else {
+                controller.setEnabled(false);
             }
         }
+    }
+
+    private void OnGoldChanged(int goldAmount) {
+        updateShopItemsState(goldAmount);
     }
 }
 

@@ -7,7 +7,6 @@ using TMPro;
 public class ShopItemController : MonoBehaviour
 {
     public Image imageItemIcon;
-    public TextMeshProUGUI textItemName;
     public TextMeshProUGUI textItemCosts;
     public Image imageDisabledOverlay;
 

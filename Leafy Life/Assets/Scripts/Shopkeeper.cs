@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 
 public class Shopkeeper : MonoBehaviour {
+    public ShopUI shopUIScript;
     public GameObject shopCanvasUI;
     public GameObject confirmDialogUI;
     public GameObject sellArea;
@@ -33,9 +34,13 @@ public class Shopkeeper : MonoBehaviour {
 
         // open player inventory when opening shop
         // close inventory when leaving shop
-        InventoryController inventoryController = WorldConstants.Instance.getInventory()?.GetComponent<InventoryController>();
+        Inventory inventory_player = WorldConstants.Instance.getInventory();
+        InventoryController inventoryController = inventory_player?.GetComponent<InventoryController>();
         if (inventoryController != null) {
             inventoryController.setOpen(val);
+
+            // update shop items state based on gold amount
+            shopUIScript.updateShopItemsState(inventory_player.getGoldAmount());
         }
     }
 
@@ -72,8 +77,11 @@ public class Shopkeeper : MonoBehaviour {
     }
 
     private void OnTap(Vector2 tapPos) {
-        if (GlobalRaycast.IsTappedInWorld(this.gameObject)) {
-            setUIenabled(true);
+        if (!GlobalRaycast.IsPointerOverUI()) {
+            if (GlobalRaycast.IsTappedInWorld(this.gameObject)) {
+                setUIenabled(true);
+                print("open shop");
+            }
         }
     }
 }
