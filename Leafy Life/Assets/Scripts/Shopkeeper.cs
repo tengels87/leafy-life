@@ -71,6 +71,12 @@ public class Shopkeeper : MonoBehaviour {
             if (inventory_player.getGoldAmount() >= lastOffer.itemPrice) {
                 if (inventory_player.tryAddItem(lastOffer.data)) {
                     inventory_player.withdrawGold(lastOffer.itemPrice);
+                } else {
+                    // play audio
+                    AudioFactory audioFactory = WorldConstants.Instance.getAudioFactory();
+                    if (audioFactory != null) {
+                        audioFactory.playAudio(audioFactory.voiceInventoryFull);
+                    }
                 }
             }
         }

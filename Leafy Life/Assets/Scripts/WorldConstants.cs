@@ -25,6 +25,7 @@ public sealed class WorldConstants {
     public PlayerController playerController;
     public Inventory inventory;
     public DaytimeManager daytimeManager;
+    public AudioFactory audioFactory;
     public AudioPool audioPool;
     public SaveSystem saveSystem;
 
@@ -134,6 +135,14 @@ public sealed class WorldConstants {
         }
 
         return daytimeManager;
+    }
+
+    public AudioFactory getAudioFactory() {
+        if (audioFactory == null) {
+            audioFactory = GameObject.Find(objName_audioManager).GetComponent<AudioFactory>();
+        }
+
+        return audioFactory;
     }
 
     public AudioPool getAudioPool() {

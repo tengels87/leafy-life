@@ -105,6 +105,12 @@ public class ItemController : DragInteractController
                         isCollected = false;
                     });
 
+                    // play audio
+                    AudioFactory audioFactory = WorldConstants.Instance.getAudioFactory();
+                    if (audioFactory != null) {
+                        audioFactory.playAudio(audioFactory.voiceInventoryFull);
+                    }
+
                     return false;
                 }
             }

@@ -9,6 +9,7 @@ public class AudioFactory : MonoBehaviour
     public AudioSource musicNight;
     public AudioSource voiceHungry;
     public AudioSource voiceDelicious;
+    public AudioSource voiceInventoryFull;
     public AudioSource voiceTired;
     public AudioSource voiceNightshift;
 
@@ -48,6 +49,10 @@ public class AudioFactory : MonoBehaviour
         
     }
 
+    public void playAudio(AudioSource audioSource) {
+        audioPool.playImmediate(audioSource);
+    }
+
     private void changeMusicTrack(AudioSource newTrack) {
         if (currentPlaying == null) {
             currentPlaying = newTrack;
@@ -59,7 +64,7 @@ public class AudioFactory : MonoBehaviour
         }
     }
 
-    public IEnumerator crossFade(AudioSource nextTrack) {
+    private IEnumerator crossFade(AudioSource nextTrack) {
         float time = 0;
         float CrossFadeDuration = 2f;
 
@@ -84,6 +89,8 @@ public class AudioFactory : MonoBehaviour
 
     private void OnNighttimeStarted() {
         changeMusicTrack(musicNight);
+
+        playAudio(voiceNightshift);
     }
 
     private void OnNighttimeFinished() {
