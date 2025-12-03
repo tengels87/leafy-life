@@ -77,6 +77,10 @@ public class Shopkeeper : MonoBehaviour {
     }
 
     private void OnTap(Vector2 tapPos) {
+        if (SceneManager.Instance.isSceneLoading()) {
+            return;
+        }
+
         if (!GlobalRaycast.IsPointerOverUI()) {
             if (GlobalRaycast.IsTappedInWorld(this.gameObject)) {
                 setUIenabled(true);

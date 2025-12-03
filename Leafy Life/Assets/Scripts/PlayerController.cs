@@ -322,6 +322,10 @@ public class PlayerController : MonoBehaviour {
             return;
         }
 
+        if (SceneManager.Instance.isSceneLoading()) {
+            return;
+        }
+
         Vector2 pointerPos = UnifiedInputModule.Instance.PointerPosition;
 
         Vector2 targetPos = MapController.pixelPos2WorldPos(pointerPos);

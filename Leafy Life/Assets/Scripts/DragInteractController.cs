@@ -41,6 +41,10 @@ public class DragInteractController : MonoBehaviour
     }
 
     private void OnPointerPressed(Vector2 tapPos) {
+        if (SceneManager.Instance.isSceneLoading()) {
+            return;
+        }
+
         if (GlobalRaycast.IsTappedInWorld(this.gameObject)) {
             handleTappedInWorld();
         }

@@ -71,6 +71,10 @@ public class Structure : MonoBehaviour {
     }
 
     private void OnTap(Vector2 tapPos) {
+        if (SceneManager.Instance.isSceneLoading()) {
+            return;
+        }
+
         // interact on tap
     }
 
