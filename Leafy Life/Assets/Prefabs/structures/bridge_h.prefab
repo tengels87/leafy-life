@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &2498685850052074644
+--- !u!1 &808278890305515736
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,37 +8,37 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4310985330965613962}
-  - component: {fileID: 3362796705297262132}
+  - component: {fileID: 3067604824146539239}
+  - component: {fileID: 1850309898133549393}
   m_Layer: 0
-  m_Name: sprite_grass (1)
+  m_Name: sprite_bridge
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4310985330965613962
+--- !u!4 &3067604824146539239
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2498685850052074644}
+  m_GameObject: {fileID: 808278890305515736}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 3}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 1, y: 0.5, z: 1}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6328117217270616690}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &3362796705297262132
+--- !u!212 &1850309898133549393
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2498685850052074644}
+  m_GameObject: {fileID: 808278890305515736}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -73,7 +73,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: -1
-  m_Sprite: {fileID: 21300000, guid: 0b6107d814e54eb4181ea48f32769f1e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 83792d076a2c1e6419e0cffc8eebc95c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -84,7 +84,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1 &2750797451593797335
+--- !u!1 &1650472176022736391
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -92,37 +92,37 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 8640446292666934798}
-  - component: {fileID: 572498319941443823}
+  - component: {fileID: 2218973391539963270}
+  - component: {fileID: 3150655052169409301}
   m_Layer: 0
-  m_Name: sprite_pinetree
+  m_Name: sprite_water (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &8640446292666934798
+--- !u!4 &2218973391539963270
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2750797451593797335}
+  m_GameObject: {fileID: 1650472176022736391}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.5, y: 1, z: 3}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1, y: 0, z: 3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6328117217270616690}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &572498319941443823
+--- !u!212 &3150655052169409301
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2750797451593797335}
+  m_GameObject: {fileID: 1650472176022736391}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -156,13 +156,13 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 5
-  m_Sprite: {fileID: 21300000, guid: 211700a5a65f4eb4898317a677394efc, type: 3}
+  m_SortingOrder: -1
+  m_Sprite: {fileID: 21300000, guid: 5e13a2cf682263a4a8b84a86b5e36bc1, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 3.3, y: 3.91}
+  m_Size: {x: 4.171875, y: 1.0625}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -264,7 +264,7 @@ GameObject:
   - component: {fileID: 6328117217270616693}
   - component: {fileID: 6328117217270616691}
   m_Layer: 0
-  m_Name: pinetree
+  m_Name: bridge_h
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -284,8 +284,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6328117217153012983}
-  - {fileID: 4310985330965613962}
-  - {fileID: 8640446292666934798}
+  - {fileID: 2218973391539963270}
+  - {fileID: 3067604824146539239}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6328117217270616693
@@ -303,7 +303,7 @@ MonoBehaviour:
   spriteRenderer: {fileID: 6328117217153012982}
   structureType: 33554432
   attachesToPlatform: 0
-  buildOnStructure: 32
+  buildOnStructure: 0
   buildType: 0
   isInteractable: 0
   interactionType: 0
@@ -311,13 +311,13 @@ MonoBehaviour:
   gridFootprint:
   - gridX: 0
     gridY: 0
-    canConnectAt: 
-    isWalkable: 0
+    canConnectAt: 13
+    isWalkable: 1
     hasSlot: 0
-  - gridX: 0
-    gridY: 1
-    canConnectAt: 
-    isWalkable: 0
+  - gridX: 1
+    gridY: 0
+    canConnectAt: 13
+    isWalkable: 1
     hasSlot: 0
 --- !u!61 &6328117217270616691
 BoxCollider2D:

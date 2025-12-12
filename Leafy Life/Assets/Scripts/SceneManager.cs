@@ -47,6 +47,7 @@ public class SceneManager : MonoBehaviour
         mapsDict.Add(MapController.MapType.FOREST_STARTER, "scene_forest_starter");
         mapsDict.Add(MapController.MapType.GARDEN, "scene_garden");
         mapsDict.Add(MapController.MapType.TREEHOUSE, "scene_treehouse");
+        mapsDict.Add(MapController.MapType.MARKETPLACE, "scene_marketplace");
 
         mapsList = new List<KeyValuePair<MapController.MapType, string>>(mapsDict);
     }

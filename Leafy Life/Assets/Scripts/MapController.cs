@@ -7,7 +7,8 @@ public class MapController : MonoBehaviour {
     public enum MapType {
         GARDEN,
         TREEHOUSE,
-        FOREST_STARTER
+        FOREST_STARTER,
+        MARKETPLACE
     }
     public Sprite gridBackground;
 

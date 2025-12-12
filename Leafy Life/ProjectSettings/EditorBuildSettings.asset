@@ -17,4 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/scene_treehouse.unity
     guid: 63558c2cdb219734b9e1a35cc8a8b490
+  - enabled: 1
+    path: Assets/Scenes/scene_marketplace.unity
+    guid: b53ac3e13d6495b43b09e2207ae2f9fa
   m_configObjects: {}
