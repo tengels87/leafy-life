@@ -35,9 +35,16 @@ public class LoadingManager : MonoBehaviour
         return userBuiltTilesList;
     }
 
-    public void addUserBuildTile(string prefabDefId, MapController.MapType mapType, int x, int y) {
-        MapController.TileData tileData = new MapController.TileData(prefabDefId, mapType, x, y);
+    public void addUserBuildTile(string prefabDefId, MapController.MapType mapType, int x, int y, string uuid) {
+        MapController.TileData tileData = new MapController.TileData(prefabDefId, mapType, x, y, uuid);
         
         userBuiltTilesList.Add(tileData);
+    }
+
+    public void removeUserBuildTile(string uuid) {
+        MapController.TileData tileData = userBuiltTilesList.Find(t => t.uuid == uuid);
+
+        bool success = userBuiltTilesList.Remove(tileData);
+        print(success);
     }
 }

@@ -200,8 +200,10 @@ public class PlayerController : MonoBehaviour {
                             stopInteraction();
 
                             if (dataPrefabDef != null) {
-                                mapController.buildTileFromPrefabId(dataPrefabDef.Id, targetPositionInt.x, targetPositionInt.y);
-                                loadingManager.addUserBuildTile(dataPrefabDef.Id, mapController.getMapType(), targetPositionInt.x, targetPositionInt.y);
+                                GameObject gameObjectRef = mapController.buildTileFromPrefabId(dataPrefabDef.Id, targetPositionInt.x, targetPositionInt.y);
+                                UUIDComponent uuidComponent = gameObjectRef.AddComponent<UUIDComponent>();
+                                string uuid = uuidComponent.generateUUID();
+                                loadingManager.addUserBuildTile(dataPrefabDef.Id, mapController.getMapType(), targetPositionInt.x, targetPositionInt.y, uuid);
 
                                 buildingDoneCalback?.Invoke();
                             }

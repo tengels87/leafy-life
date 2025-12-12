@@ -94,7 +94,7 @@ public class Crop : MonoBehaviour {
             foreach (Transform itemSlot in itemSlots) {
                 GameObject instance = Instantiate(prefab_itemToSpawn);
                 instance.transform.position = itemSlot.position;
-                instance.transform.SetParent(null);
+                instance.transform.SetParent(this.transform);
                 harvestables.Add(instance);
             }
         }
@@ -138,6 +138,11 @@ public class Crop : MonoBehaviour {
 
                     // destroy parent, so crops lifecycle is finished
                     if (parentStructure != null) {
+                        UUIDComponent uuidComponent = parentStructure.GetComponent<UUIDComponent>();
+                        if (uuidComponent != null) {
+                            WorldConstants.Instance.getLoadingManager().removeUserBuildTile(uuidComponent.UUID);
+                        }
+
                         Object.Destroy(parentStructure.gameObject);
                     }
                 } else {

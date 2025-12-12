@@ -2326,7 +2326,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8daf421cd7a2f354398d05f348744a04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dayLengthInSeconds: 400
+  dayLengthInSeconds: 30
   globalLight: {fileID: 421836917}
   playerLight: {fileID: 1355886435}
   colorDaytime: {r: 0, g: 0, b: 0, a: 0}

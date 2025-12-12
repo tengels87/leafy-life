@@ -208,8 +208,12 @@ public class MapController : MonoBehaviour {
         if (loadingManager != null) {
             foreach (TileData tileData in loadingManager.getUserBuildTiles()) {
                 if (tileData.mapType == this.mapType) {     // only build tiles registered for this map
-                    if (PrefabDefs.TryGet(tileData.tilePrefabID, out PrefabDef prefabDef))
-                    buildTile(prefabDef.Prefab, tileData.x, tileData.y);
+                    if (PrefabDefs.TryGet(tileData.tilePrefabID, out PrefabDef prefabDef)) {
+                        GameObject gameObjectRef = buildTile(prefabDef.Prefab, tileData.x, tileData.y);
+
+                        UUIDComponent uuidComponent = gameObjectRef.AddComponent<UUIDComponent>();
+                        uuidComponent.setUUID(tileData.uuid);
+                    }
                 }
             }
         }
@@ -218,7 +222,7 @@ public class MapController : MonoBehaviour {
         isInitiated = true;
     }
 
-    public void buildTile(GameObject prefab, int x, int y) {
+    public GameObject buildTile(GameObject prefab, int x, int y) {
         GameObject buildable = (GameObject)Object.Instantiate(prefab);
 
         buildable.name = buildable.name + "_" + rnd.Next();
@@ -256,11 +260,17 @@ public class MapController : MonoBehaviour {
                 placeTile(t);
             }
         }
+
+        return buildable;
     }
 
-    public void buildTileFromPrefabId(string id, int x, int y) {
+    public GameObject buildTileFromPrefabId(string id, int x, int y) {
         if (PrefabDefs.TryGet(id, out PrefabDef prefabDef)) {
-            buildTile(prefabDef.Prefab, x, y);
+            GameObject gameObjectRef = buildTile(prefabDef.Prefab, x, y);
+
+            return gameObjectRef;
+        } else {
+            return null;
         }
     }
 
@@ -475,12 +485,14 @@ public class MapController : MonoBehaviour {
         public MapType mapType;
         public int x;
         public int y;
+        public string uuid;
 
-        public TileData(string tilePrefabID, MapType mapType, int x, int y) {
+        public TileData(string tilePrefabID, MapType mapType, int x, int y, string uuid) {
             this.tilePrefabID = tilePrefabID;
             this.mapType = mapType;
             this.x = x;
             this.y = y;
+            this.uuid = uuid;
         }
 
         public override bool Equals(object obj) {
