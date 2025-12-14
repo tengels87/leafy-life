@@ -13,6 +13,7 @@ public class DragInteractController : MonoBehaviour
     protected PrefabDef currentPrefabDef;
     protected ItemData currentItemDataDef;
     private List<Vector2Int> currentBuildLocations = new List<Vector2Int>();
+    private List<Structure.GridFootprint> currentFootprint = new List<Structure.GridFootprint>();
     private List<GameObject> buildLocationVisualizers = new List<GameObject>();
 
     protected virtual void OnEnable() {
@@ -77,6 +78,7 @@ public class DragInteractController : MonoBehaviour
                 // get all locations where structure can be placed
                 MapController mapController = WorldConstants.Instance.getMapController();
                 currentBuildLocations = mapController.getBuildLocations(structure);
+                currentFootprint = structure.gridFootprint;
 
                 // clean and instantiate location visualizers
                 foreach (GameObject locationVis in buildLocationVisualizers) {
@@ -123,9 +125,19 @@ public class DragInteractController : MonoBehaviour
             // snap visual to possible build location
             Vector2 pointerPos = UnifiedInputModule.Instance.PointerPosition;
             Vector2 mouseWorldPos = MapController.pixelPos2WorldPos(pointerPos);
+            bool canFullyBuild = true;
 
             foreach (Vector2Int loc in currentBuildLocations) {
-                    if (mouseWorldPos.x > loc.x && mouseWorldPos.x < loc.x + 1 && mouseWorldPos.y > loc.y && mouseWorldPos.y < loc.y + 1) {
+                if (mouseWorldPos.x > loc.x && mouseWorldPos.x < loc.x + 1 && mouseWorldPos.y > loc.y && mouseWorldPos.y < loc.y + 1) {
+
+                    // check for whole structure footprint
+                    foreach (Structure.GridFootprint footprint in currentFootprint) {
+                        if (footprint.isWalkable && !currentBuildLocations.Contains(new Vector2Int(loc.x + footprint.gridX, loc.y + footprint.gridY))) {
+                            canFullyBuild = false;
+                        }
+                    }
+
+                    if (canFullyBuild) {
                         dragVisualsInstance.transform.position = new Vector3(loc.x, loc.y, 0);
 
                         currentBuildLocation = loc;
@@ -134,7 +146,7 @@ public class DragInteractController : MonoBehaviour
                         break;
                     }
                 }
-            //}
+            }
         }
 
 
