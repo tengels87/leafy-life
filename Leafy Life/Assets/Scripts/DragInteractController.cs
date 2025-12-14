@@ -11,6 +11,7 @@ public class DragInteractController : MonoBehaviour
     private GameObject currentDragged;
     protected GameObject dragVisualsInstance;
     protected PrefabDef currentPrefabDef;
+    protected ItemData currentItemDataDef;
     private List<Vector2Int> currentBuildLocations = new List<Vector2Int>();
     private List<GameObject> buildLocationVisualizers = new List<GameObject>();
 
@@ -101,9 +102,11 @@ public class DragInteractController : MonoBehaviour
         bool draggedOntoShop = false;
         bool canBuild = false;
         Vector2Int currentBuildLocation = Vector2Int.zero;
-        
-        if (Vector3.Distance(dragVisualsInstance.transform.position, playerController.transform.position + new Vector3(0.5f, 0.75f, 0)) < 0.8f) {
-            draggedOntoPlayer = true;
+
+        if (currentItemDataDef != null && currentItemDataDef.itemType == ItemData.ItemType.FOOD) {
+            if (Vector3.Distance(dragVisualsInstance.transform.position, playerController.transform.position + new Vector3(0.5f, 0.75f, 0)) < 0.8f) {
+                draggedOntoPlayer = true;
+            }
         }
 
         if (draggedOntoPlayer) {
@@ -210,6 +213,7 @@ public class DragInteractController : MonoBehaviour
 
         currentDragged = null;
         currentPrefabDef = null;
+        currentItemDataDef = null;
 
         foreach (var locationVis in buildLocationVisualizers) {
             Destroy(locationVis);

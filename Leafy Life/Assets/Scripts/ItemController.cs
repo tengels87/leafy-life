@@ -31,6 +31,7 @@ public class ItemController : DragInteractController
         Object dragVisual = itemData.spawnPrefabDef != null ? itemData.spawnPrefabDef.Prefab : itemData.iconSprite;
 
         currentPrefabDef = itemData.spawnPrefabDef;
+        currentItemDataDef = itemData;
 
         base.handleTappedInUI(dragVisual);
     }
