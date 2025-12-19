@@ -63,6 +63,10 @@ public class MapController : MonoBehaviour {
         testLocations.Add(targetLocation + Vector2Int.left);
         testLocations.Add(targetLocation + Vector2Int.right);
 
+        if (testLocations.Contains(startLocation)) {
+            return grid[startLocation.x, startLocation.y];
+        }
+
         foreach (Vector2Int loc in testLocations) {
             if (isInBounds(loc)) {
                 if (grid[loc.x, loc.y] != null) {

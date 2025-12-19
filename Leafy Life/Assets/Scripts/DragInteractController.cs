@@ -176,8 +176,8 @@ public class DragInteractController : MonoBehaviour
                     Structure currentStructureToBuild = currentPrefabDef.Prefab.GetComponent<Structure>();
 
                     foreach (Structure.GridFootprint structureFootPrint in currentStructureToBuild.gridFootprint) {
-                        //MapController.Tile walkableTile = mapController.getNearestWalkableTile(currentBuildLocation, playerPosInt);
-                        MapController.Tile walkableTile = mapController.getNearestWalkableTile(currentBuildLocation + new Vector2Int(structureFootPrint.gridX, structureFootPrint.gridY), playerPosInt);
+                        Vector2Int testWalkablePosInt = currentBuildLocation + new Vector2Int(structureFootPrint.gridX, structureFootPrint.gridY);
+                        MapController.Tile walkableTile = mapController.getNearestWalkableTile(testWalkablePosInt, playerPosInt);
 
                         if (walkableTile != null) {
 
