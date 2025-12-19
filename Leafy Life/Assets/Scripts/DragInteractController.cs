@@ -132,7 +132,7 @@ public class DragInteractController : MonoBehaviour
 
                     // check for whole structure footprint
                     foreach (Structure.GridFootprint footprint in currentFootprint) {
-                        if (footprint.isWalkable && !currentBuildLocations.Contains(new Vector2Int(loc.x + footprint.gridX, loc.y + footprint.gridY))) {
+                        if (footprint.isBuildAnker && !currentBuildLocations.Contains(new Vector2Int(loc.x + footprint.gridX, loc.y + footprint.gridY))) {
                             canFullyBuild = false;
                         }
                     }

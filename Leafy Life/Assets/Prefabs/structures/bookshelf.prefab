@@ -58,12 +58,14 @@ MonoBehaviour:
   - gridX: 0
     gridY: 0
     canConnectAt: 
-    isWalkable: 0
+    isWalkable: 1
+    isBuildAnker: 1
     hasSlot: 0
   - gridX: 0
     gridY: 1
     canConnectAt: 
     isWalkable: 0
+    isBuildAnker: 1
     hasSlot: 0
 --- !u!61 &6328117217270616691
 BoxCollider2D:

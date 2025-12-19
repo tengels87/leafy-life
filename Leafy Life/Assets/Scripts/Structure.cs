@@ -84,6 +84,7 @@ public class Structure : MonoBehaviour {
         public int gridY;
         public string canConnectAt = "0123";
         public bool isWalkable;
+        public bool isBuildAnker;   // this footprint has to match the available build locations
         public bool hasSlot;
 
         public GridFootprint() { }
