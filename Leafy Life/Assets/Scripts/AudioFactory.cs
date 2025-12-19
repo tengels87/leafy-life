@@ -94,7 +94,10 @@ public class AudioFactory : MonoBehaviour
     }
 
     private void OnNighttimeFinished() {
-        chooseAndplayIngameMusic(MapController.MapType.GARDEN);
+        MapController lastActiveMapController = WorldConstants.Instance.getLastActiveMapController();
+        if (lastActiveMapController != null) {
+            chooseAndplayIngameMusic(lastActiveMapController.getMapType());
+        }
     }
 
     private void chooseAndplayIngameMusic(MapController.MapType mapType) {

@@ -18,6 +18,7 @@ public sealed class WorldConstants {
     public GameManager gameManager;
     public SceneManager sceneManager;
     public MapController mapController;
+    public MapController lastActiveMapController;
     public HudManager hudManager;
     public StatsController statsController;
     public PrefabDefRegistryManager prefabDefRegistryManager;
@@ -71,11 +72,17 @@ public sealed class WorldConstants {
     }
 
     public MapController getMapController() {
-        //if (mapController == null) {
-            mapController = GameObject.Find(objName_mapController).GetComponent<MapController>();
-        //}
+        mapController = GameObject.Find(objName_mapController).GetComponent<MapController>();
 
-         return mapController;
+        if (mapController != null) {
+            lastActiveMapController = mapController;
+        }
+        
+        return mapController;
+    }
+
+    public MapController getLastActiveMapController() {
+        return lastActiveMapController;
     }
 
     public HudManager getHudManager() {
