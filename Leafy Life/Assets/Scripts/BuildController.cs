@@ -22,6 +22,15 @@ public class BuildController : DragInteractController
         SceneManager.MapChangedEvent += OnMapChanged;
     }
 
+    
+
+    private void OnDestroy() {
+        Inventory.ItemAddedEvent -= OnItemAdded;
+        Inventory.ItemRemovedEvent -= OnItemRemoved;
+
+        SceneManager.MapChangedEvent -= OnMapChanged;
+    }
+
     protected override void Start()
     {
         base.Start();
